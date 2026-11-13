@@ -1,4 +1,2 @@
-/* Endereço do backend (Apps Script, termina em /exec).
-   Deixe vazio e o app pede o endereço na tela de entrada (fica salvo só neste aparelho).
-   Se quiser fixar, cole aqui entre as aspas. */
-window.FORJA_API_URL = '';
+/* Endereço do servidor (Apps Script). Já configurado: o app abre direto na tela de e-mail e senha. */
+window.FORJA_API_URL = 'https://script.google.com/macros/s/AKfycbzgskGj47HKHA-k4dTuKqDcZdL-K9paYPIEEVT4lMj2OonRfgQMEhFSP4le4tNFe5GTXw/exec';
