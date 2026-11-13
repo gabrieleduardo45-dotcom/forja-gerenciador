@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;600&display=swap">
 <script src="config.js" onerror="void 0"></script>
 <style>
-/* Forja · Gerenciador v1.1 · interface no padrão do Meu Dia (v.08 leve + v.13 relatório) */
+/* Forja · Gerenciador v1.2 · interface no padrão do Meu Dia (v.08 leve + v.13 relatório) */
 :root{
   --ferro:#14100E;--aco:#3A3532;--escoria:#6E6663;--brasa:#D4500F;--chama:#F07A1E;--faisca:#FFC24A;--temperado:#2F5D3A;--cal:#F2F0ED;
   --bg:#F5F3F0;--card:#FFFFFF;--surf:#EFECE8;--surf2:#E5E0DB;--ink:#14100E;--ink2:#3A3532;--ink3:#6E6663;
@@ -239,6 +239,8 @@ select.sel{background:var(--card);border:1px solid var(--rule);border-radius:999
 .toast.err{box-shadow:inset 0 0 0 2px var(--brasa)}
 
 /* login */
+.pw{display:flex;gap:8px;align-items:center}.pw input{flex:1;min-width:0}.pw .bt{flex:0 0 auto}
+.conta{display:flex;align-items:center;gap:14px;padding:16px}.conta .av{width:48px;height:48px;font-size:17px}
 .login{max-width:420px;margin:0 auto;padding:calc(10vh + env(safe-area-inset-top,0px)) 16px 40px}
 .login .ident{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .login .ident svg{width:48px;height:48px;display:block}
@@ -316,7 +318,9 @@ function merge(tabela,obj){const k=tabela==='CONFIG'?'chave':'id';const L=S.d[ta
 async function salvar(tabela,reg,msg){const r=await run('salvar',{tabela,registro:reg},msg===undefined?'Salvo.':msg);if(!r)return null;merge(tabela,r.data);return r.data}
 async function lote(tabela,regs,msg){if(!regs.length)return[];const r=await run('salvarLote',{tabela,registros:regs},msg);if(!r)return null;r.data.forEach(o=>merge(tabela,o));return r.data}
 async function excluir(tabela,id,msg){const r=await run('excluir',{tabela,id},msg||'Excluído.');if(!r)return false;const k=tabela==='CONFIG'?'chave':'id';S.d[tabela]=S.d[tabela].filter(x=>x[k]!==id);if(tabela==='CLIENTES')S.d.ATIVIDADES=S.d.ATIVIDADES.filter(a=>a.cliente_id!==id);return true}
-async function carregar(){const r=await run('dados');if(!r)return false;S.d=r.data;return true}
+async function carregar(){const r=await run('dados');if(!r)return false;S.d=r.data;S.eu=r.data.eu||null;return true}
+const souAdmin=()=>!!(S.eu&&S.eu.papel==='admin');
+const primeiroNome=()=>((S.eu&&S.eu.nome)||'').trim().split(/\s+/)[0]||'';
 
 
 /* ---------- cálculos do negócio ---------- */
@@ -461,7 +465,7 @@ const FIMPL=()=>[
   {k:'cmv_base',l:'CMV · linha de base (%)',t:'num'},{k:'cmv_atual',l:'CMV · atual (%)',t:'num'},{k:'economia_mes',l:'Economia medida por mês (R$)',t:'num',h:'Só entra quando medida.'},{k:'autorizada_case',l:'Autorizada para case?',t:'sel',o:()=>cat('autorizada')}];
 function passos(c){const s=D('PITCHES').filter(p=>p.ativo!=='Não');return{etapa:s.filter(p=>p.etapa===c.estagio).sort((a,b)=>num(a.ordem)-num(b.ordem)),geral:s.filter(p=>!p.etapa).sort((a,b)=>num(a.ordem)-num(b.ordem))}}
 function preencher(txt,c){
-  const v=c?{nome:c.contato,casa:c.nome||c.codigo,dor:(c.dor||'').toLowerCase(),tipo:(c.tipo||'').toLowerCase(),valor_rx:num(c.valor_rx||cfg('preco_raiox')).toLocaleString('pt-BR'),vazamento:c.vazamento_mes?num(c.vazamento_mes).toLocaleString('pt-BR'):'',data_proxima:c.data_proxima?fdl(c.data_proxima):'',meu_nome:cfg('nome_exibicao')}:{};
+  const v=c?{nome:c.contato,casa:c.nome||c.codigo,dor:(c.dor||'').toLowerCase(),tipo:(c.tipo||'').toLowerCase(),valor_rx:num(c.valor_rx||cfg('preco_raiox')).toLocaleString('pt-BR'),vazamento:c.vazamento_mes?num(c.vazamento_mes).toLocaleString('pt-BR'):'',data_proxima:c.data_proxima?fdl(c.data_proxima):'',meu_nome:primeiroNome()||cfg('nome_exibicao')}:{};
   return String(txt).replace(/\{(\w+)\}/g,(m,k)=>v[k]?v[k]:'⟦'+k+'⟧');
 }
 function txPit(t){return e(t).replace(/⟦(\w+)⟧/g,'<mark>[$1]</mark>')}
@@ -602,21 +606,24 @@ const logo=px=>`<svg width="${px}" height="${px}" viewBox="0 0 48 48" aria-label
 function aplicaTema(){const t=ls('forja_tema');const r=document.documentElement;if(t==='claro')r.dataset.theme='light';else if(t==='escuro')r.dataset.theme='dark';else delete r.dataset.theme}
 
 /* ---------- sessão ---------- */
-function sair(exp){S.tok=null;S.d=null;ss('forja_tok',null);if(exp)toast('Sessão expirada. Entre de novo.',true);rota()}
+function sair(exp){S.tok=null;S.d=null;S.eu=null;S.us=null;ss('forja_tok',null);if(exp)toast('Sessão expirada. Entre de novo.',true);rota()}
 async function entrar(ev){
-  ev.preventDefault();const cod=$('#cod').value.trim();
+  ev.preventDefault();const email=$('#em').value.trim().toLowerCase(),senha=$('#sn').value;
   if(!GS()&&$('#url')){const u=$('#url').value.trim();if(!/^https:\/\/script\.google\.com\/.+\/exec/.test(u)){toast('Endereço inválido. Cole o link que termina em /exec.',true);return}ls('forja_api',u)}
-  if(!cod){toast('Digite o código.',true);return}
-  const r=await run('login',{codigo:cod});if(!r)return;
-  S.tok=r.data.token;ss('forja_tok',S.tok);
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){toast('Digite um e-mail válido.',true);$('#em').focus();return}
+  if(!senha){toast('Digite a senha.',true);$('#sn').focus();return}
+  const btn=$('#fl button[type=submit]');btn.disabled=true;
+  const r=await run('login',{email,senha});btn.disabled=false;if(!r)return;
+  ls('forja_email',email);S.tok=r.data.token;S.eu=r.data.usuario;ss('forja_tok',S.tok);
   if(await carregar())rota();
 }
 function telaLogin(){
-  const precisaUrl=!GS()&&!window.FORJA_API_URL;
+  const precisaUrl=!GS()&&!window.FORJA_API_URL;const em=ls('forja_email')||'';
   $('#app').innerHTML=`<div class="login"><div class="ident">${logo(48)}<div><h1>Forja</h1><div class="nota">Gerenciador de clientes</div></div></div>
-  <form class="card" id="fl" novalidate><label class="f">Código de acesso<input id="cod" type="password" autocomplete="current-password" autofocus></label>
+  <form class="card" id="fl" novalidate><label class="f">E-mail<input id="em" type="email" autocomplete="username" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" value="${e(em)}" ${em?'':'autofocus'}></label>
+  <label class="f">Senha<span class="pw"><input id="sn" type="password" autocomplete="current-password" ${em?'autofocus':''}><button type="button" class="bt mini sec" data-act="verSenha">Mostrar</button></span></label>
   ${precisaUrl?`<label class="f">Endereço do servidor (Apps Script, termina em /exec)<input id="url" type="url" placeholder="https://script.google.com/macros/s/.../exec" value="${e(ls('forja_api'))}"></label>`:''}
-  <button class="bt pri cheio" type="submit">Entrar</button></form><p class="rodape">Padrão que se instala. Não se discute.</p></div>`;
+  <button class="bt pri cheio" type="submit">Entrar</button></form><p class="rodape">Esqueceu a senha? Peça ao administrador para redefinir. Padrão que se instala. Não se discute.</p></div>`;
   $('#fl').addEventListener('submit',entrar);
 }
 
@@ -653,7 +660,7 @@ function rota(){
   if(!S.tok||!S.d){telaLogin();return}
   const p=location.hash.replace(/^#\/?/,'').split('/');const t=p[0]||'painel';
   S.tit='';S.kk=dow(hoje())+', '+fdl(hoje());
-  const T={painel:vPainel,clientes:vClientes,cliente:()=>vCliente(p[1]),agenda:vAgenda,pitches:vPitches,mais:vMais,conteudo:vConteudo,config:vConfig}[t]||vPainel;
+  const T={painel:vPainel,clientes:vClientes,cliente:()=>vCliente(p[1]),agenda:vAgenda,pitches:vPitches,mais:vMais,conteudo:vConteudo,config:vConfig,usuarios:vUsuarios}[t]||vPainel;
   const html=T();
   casca(t);
   $('#main').innerHTML=html;
@@ -680,7 +687,7 @@ function chBarras(vals,labs){
 }
 function vPainel(){
   const h=new Date().getHours(),saud=h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
-  S.tit=saud+(cfg('nome_exibicao')?', '+cfg('nome_exibicao'):'');
+  {const nm=primeiroNome()||cfg('nome_exibicao');S.tit=saud+(nm?', '+nm:'')}
   const K=indicadores(),it=acoesHoje(),PRIN=['ativos','parados','venc','impl','carga','fila'];
   const KS=S.verTodos?K:K.filter(k=>PRIN.includes(k.k));
   const tot=D('CLIENTES').length;
@@ -823,12 +830,50 @@ function vConfig(){
 
 /* ---------- MAIS ---------- */
 function vMais(){
-  S.tit='Mais';S.kk='Forja · Gerenciador v1.1';
+  S.tit='Mais';S.kk='Forja · Gerenciador v1.2';
   const tema=ls('forja_tema')||'auto';
-  return `<section><div class="lista"><a class="row lk" href="#/conteudo" style="text-decoration:none"><div class="av">C</div><div><div class="nm">Conteúdo</div><div class="sb">Calendário de posts e métricas</div></div><span class="go">›</span></a><a class="row lk" href="#/config" style="text-decoration:none"><div class="av">⚙</div><div><div class="nm">Config</div><div class="sb">Categorias, preços, prazos e limites</div></div><span class="go">›</span></a></div>
+  const eu=S.eu||{};const adm=souAdmin();
+  return `<section><div class="card conta"><div class="av">${e(ini({nome:eu.nome||eu.email||'?'}))}</div><div style="min-width:0;flex:1"><div class="nm">${e(eu.nome||'—')}</div><div class="sb" style="overflow-wrap:anywhere">${e(eu.email||'')}</div></div><span class="chip ${adm?'sf':''}">${adm?'Administrador':'Consultor'}</span></div>
+  <div class="lista" style="margin-top:12px"><div class="row"><div><div class="nm">Minha senha</div><div class="sb">Troque quando quiser</div></div><span></span><button class="bt mini sec" data-act="minhaSenha">Trocar</button></div>${adm?`<a class="row lk" href="#/usuarios" style="text-decoration:none"><div class="av">U</div><div><div class="nm">Usuários</div><div class="sb">Quem acessa o app, com e-mail e senha</div></div><span class="go">›</span></a>`:''}</div>
+  <h3>Trabalho</h3><div class="lista"><a class="row lk" href="#/conteudo" style="text-decoration:none"><div class="av">C</div><div><div class="nm">Conteúdo</div><div class="sb">Calendário de posts e métricas</div></div><span class="go">›</span></a><a class="row lk" href="#/config" style="text-decoration:none"><div class="av">⚙</div><div><div class="nm">Config</div><div class="sb">Categorias, preços, prazos e limites</div></div><span class="go">›</span></a></div>
   <h3>Aparência</h3><div class="seg-ctl">${[['auto','Automático'],['claro','Claro'],['escuro','Escuro']].map(x=>`<button data-act="tema" data-v="${x[0]}" class="${tema===x[0]?'on':''}">${x[1]}</button>`).join('')}</div>
   <h3>Dados</h3><div class="lista"><div class="row"><div><div class="nm">Atualizar</div><div class="sb">Recarrega da planilha</div></div><span></span><button class="bt mini sec" data-act="atualizar">Atualizar</button></div><div class="row"><div><div class="nm">Exportar clientes</div><div class="sb">Arquivo CSV</div></div><span></span><button class="bt mini sec" data-act="csv">Exportar</button></div><div class="row"><div><div class="nm">Sair</div><div class="sb">Encerra a sessão neste aparelho</div></div><span></span><button class="bt mini perigo" data-act="sair">Sair</button></div></div>
   <p class="rodape">Os dados ficam na sua planilha Google (abas CLIENTES, ATIVIDADES, PITCHES, CONTEUDO, CATEGORIAS, CONFIG). Não edite à mão.</p></section>`;
+}
+
+/* ---------- usuários (administrador) ---------- */
+function vUsuarios(){
+  S.tit='Usuários';S.kk='Acesso ao app';
+  if(!souAdmin())return `<p class="nota">Só o administrador gerencia usuários.</p>`;
+  if(!S.us){run('usuarios').then(r=>{if(r){S.us=r.data;if(location.hash==='#/usuarios')rota()}});return `<p class="nota">Carregando…</p>`}
+  return `<section><a class="nota" href="#/mais" style="color:var(--acento);font-weight:700;text-decoration:none">‹ Mais</a>
+  <p class="nota" style="font-size:15px;margin:10px 0 14px">Cada pessoa entra com o próprio e-mail e senha. A senha nunca fica gravada: só o hash. Para quem esqueceu, redefina aqui.</p>
+  <button class="bt pri" data-act="novoUsuario" style="margin-bottom:14px">+ Novo usuário</button>
+  <div class="lista">${S.us.map(u=>`<div class="row lk" data-act="editarUsuario" data-id="${e(u.id)}"><div class="av">${e(ini({nome:u.nome}))}<i class="${u.ativo==='Sim'?'ok':'cr'}"></i></div><div style="min-width:0"><div class="nm">${e(u.nome)}</div><div class="sb" style="overflow-wrap:anywhere">${e(u.email)}</div><div class="sb">${u.ultimo_login?'Último acesso '+e(fdl(u.ultimo_login.slice(0,10))):'Nunca entrou'}</div></div><div class="rt"><span class="chip ${u.papel==='admin'?'sf':''}">${u.papel==='admin'?'Administrador':'Consultor'}</span>${u.ativo!=='Sim'?'<span class="chip cr">Desativado</span>':''}</div></div>`).join('')}</div></section>`;
+}
+function modalUsuario(u){
+  const novo=!u;u=u||{papel:'consultor',ativo:'Sim'};
+  const F=[{k:'nome',l:'Nome',req:1},{k:'email',l:'E-mail',t:'email',req:1,h:'É com ele que a pessoa entra.'},{k:'papel',l:'Papel',t:'sel',o:[['consultor','Consultor · usa o app'],['admin','Administrador · também gerencia usuários']]},{k:'ativo',l:'Acesso',t:'sel',o:[['Sim','Ativo'],['Não','Desativado']]},{k:'senha',l:novo?'Senha (mín. 8 caracteres)':'Nova senha (deixe vazio para manter)',t:'password',req:novo?1:0,h:novo?'Combine com a pessoa como ela recebe a senha. Ela pode trocar depois, em Mais.':'Se preencher, a pessoa precisa entrar de novo.'}];
+  formModal(novo?'Novo usuário':'Editar usuário',F,u,async v=>{
+    const form=$('#mf');const senha=form.querySelector('[name=senha]').value;
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email)){const lb=form.querySelector('[data-k=email]');lb.classList.add('erro');lb.querySelector('.msg').textContent='E-mail inválido.';return false}
+    if(senha&&senha.length<8){const lb=form.querySelector('[data-k=senha]');lb.classList.add('erro');lb.querySelector('.msg').textContent='Mínimo 8 caracteres.';return false}
+    const r=await run('usuarioSalvar',{registro:Object.assign({},u.id?{id:u.id}:{},{nome:v.nome,email:v.email,papel:v.papel||'consultor',ativo:v.ativo||'Sim',senha})},novo?'Usuário criado.':'Usuário atualizado.');
+    if(!r)return false;S.us=null;if(S.eu&&r.data.id===S.eu.id)S.eu=Object.assign(S.eu,r.data);rota();
+  });
+}
+function modalMinhaSenha(){
+  abrirModal(`<h2>Trocar minha senha</h2><form id="ms" novalidate><div class="grade">
+  <label class="f">Senha atual<input name="atual" type="password" autocomplete="current-password"></label>
+  <label class="f">Nova senha (mín. 8 caracteres)<input name="nova" type="password" autocomplete="new-password"></label>
+  <label class="f">Repita a nova senha<input name="rep" type="password" autocomplete="new-password"></label></div>
+  <div class="macts"><button type="button" class="bt sec" data-act="fechar">Cancelar</button><button class="bt pri" type="submit">Trocar</button></div></form>`);
+  $('#ms').addEventListener('submit',async ev=>{ev.preventDefault();const f=ev.target;const atual=f.atual.value,nova=f.nova.value,rep=f.rep.value;
+    if(!atual){toast('Digite a senha atual.',true);return}
+    if(nova.length<8){toast('A nova senha precisa de pelo menos 8 caracteres.',true);return}
+    if(nova!==rep){toast('As duas senhas novas não são iguais.',true);return}
+    const r=await run('senhaPropria',{atual,nova},'Senha trocada.');if(!r)return;
+    S.tok=r.data.token;ss('forja_tok',S.tok);fechar()});
 }
 
 /* ---------- salvar cliente e ações novas ---------- */
@@ -842,6 +887,8 @@ async function salvarCliente(form){
 Object.assign(A,{
   cliAba:el=>{const v=el.dataset.v;S.cliAba=v;document.querySelectorAll('[data-pan]').forEach(p=>{p.hidden=p.dataset.pan!==v});document.querySelectorAll('.pags button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.v===v)));const sb=$('#sb');if(sb)sb.hidden=!['dados','impl'].includes(v)},
   verTodos:()=>{S.verTodos=!S.verTodos;rota()},
+  verSenha:el=>{const i=el.closest('label').querySelector('input');const m=i.type==='password';i.type=m?'text':'password';el.textContent=m?'Ocultar':'Mostrar'},
+  novoUsuario:()=>modalUsuario(null),editarUsuario:el=>modalUsuario((S.us||[]).find(u=>u.id===el.dataset.id)),minhaSenha:()=>modalMinhaSenha(),
   tema:el=>{ls('forja_tema',el.dataset.v==='auto'?null:el.dataset.v);aplicaTema();rota()},
   fab:()=>abrirModal(`<h2>Registrar</h2><div class="acoes-rap"><button class="acao quente" data-act="fabNovo" data-v="cliente"><b>Novo cliente</b><span>Lead ou casa</span></button><button class="acao" data-act="fabNovo" data-v="atv"><b>Atividade</b><span>Visita, Raio-X, tarefa</span></button><button class="acao" data-act="fabNovo" data-v="pit"><b>Pitch</b><span>Roteiro de venda</span></button><button class="acao" data-act="fabNovo" data-v="con"><b>Peça de conteúdo</b><span>Post, story, reel</span></button></div>`),
   fabNovo:el=>{fechar();const v=el.dataset.v;if(v==='cliente')location.hash='#/cliente/novo';else if(v==='atv')modalAtv(null);else if(v==='pit')modalPit();else modalCon()}
