@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;600&display=swap">
 <script src="config.js" onerror="void 0"></script>
 <style>
-/* Forja · Gerenciador v1.4 · interface no padrão do Meu Dia (v.08 leve + v.13 relatório) */
+/* Forja · Gerenciador v1.5 · interface no padrão do Meu Dia (v.08 leve + v.13 relatório) */
 :root{
   --ferro:#14100E;--aco:#3A3532;--escoria:#6E6663;--brasa:#D4500F;--chama:#F07A1E;--faisca:#FFC24A;--temperado:#2F5D3A;--cal:#F2F0ED;
   --bg:#F5F3F0;--card:#FFFFFF;--surf:#EFECE8;--surf2:#E5E0DB;--ink:#14100E;--ink2:#3A3532;--ink3:#6E6663;
@@ -392,6 +392,62 @@ select.sel{font-family:var(--f-m);font-size:12px;letter-spacing:.04em;text-trans
 .rodape{font-family:var(--f-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--escoria)}
 a{text-underline-offset:3px}
 @media print{.capa,.tabbar,.fab,.savebar{display:none!important}.card,.lista,.kg,.pit{clip-path:none}}
+/* v1.5 · PLANOS */
+.pl-abas{display:flex;border:2px solid var(--ferro,#14100E);background:var(--card)}
+.pl-abas button{flex:1;min-height:44px;border:0;background:transparent;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);cursor:pointer}
+.pl-abas button.on,.pl-tg button.on{background:#14100E;color:#F2F0ED}
+.pl-bar{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.pl-tg{display:inline-flex;border:2px solid #14100E}
+.pl-tg button{min-height:38px;padding:0 14px;border:0;background:transparent;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);cursor:pointer}
+.pl h3{margin:22px 0 8px}
+.pl h4{font-family:'Archivo Black',Arial Black,sans-serif;font-weight:400;font-size:19px;line-height:1.15;margin:6px 0}
+.pl-promo{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:12px;padding:12px;border:2px solid #14100E;background:var(--card);font-size:14px}
+.pl-promo>b,.pl .rot{font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
+.pl-promo>b{background:#14100E;color:#F2F0ED;padding:6px 8px}
+.pl-vagas{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;max-width:340px}
+.pl-vagas i{aspect-ratio:1;border:2px solid #6E6663}
+.pl-vagas i.ok{background:#D4500F;border-color:#D4500F}
+.pl-vagas.peq{grid-template-columns:repeat(10,10px);gap:3px}.pl-vagas.peq i{width:10px;height:10px;border-width:1.5px}
+.pl-grid{display:grid;gap:10px;margin-top:10px}
+.pl-card{background:var(--card);border:1px solid var(--rule);padding:16px;display:flex;flex-direction:column;gap:8px}
+.pl-card.meio{border:2px solid #14100E}
+.pl-fase{font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6E6663}
+.pl-card p{margin:0;font-size:15px}
+.pl-preco{margin-top:auto;padding-top:12px;border-top:1px solid var(--rule)}
+.pl-preco s{display:block;font:12px 'IBM Plex Mono',monospace;color:#6E6663}
+.pl-preco b{display:block;font-family:'Archivo Black',Arial Black,sans-serif;font-weight:400;font-size:26px}
+.pl-preco span{font:12px 'IBM Plex Mono',monospace;color:#6E6663}
+.pl-anual{margin-top:12px;background:#14100E;color:#F2F0ED;padding:16px;display:grid;gap:12px}
+.pl-anual p{margin:0;color:#A79F99;font-size:14px}
+.pl-anual .val{font-family:'IBM Plex Mono',monospace}.pl-anual .val b{display:block;font-size:28px;color:#F2F0ED}.pl-anual .val s,.pl-anual .val span{display:block;font-size:12px;color:#A79F99;margin-bottom:8px}
+.pl-tab{margin-top:8px;border:1px solid var(--rule);background:var(--card);overflow-x:auto}
+.pl-tab table{width:100%;border-collapse:collapse;font-size:14px}
+.pl-tab th{background:#3A3532;color:#F2F0ED;font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;padding:9px 10px;text-align:left}
+.pl-tab td{padding:9px 10px;border-bottom:1px solid var(--rule)}.pl-tab .r{text-align:right}.pl-tab td small{display:block;color:#6E6663;font-size:11px}
+.pl-sob-cta{margin-top:16px;border:2px solid #D4500F;padding:14px;display:flex;gap:12px;align-items:center;justify-content:space-between}.pl-sob-cta p{margin:0;font-size:14px}
+.pl-pre{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:12px}.pl-pre span{font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6E6663;width:100%}
+.pl-dur{display:flex;gap:8px}.pl-dur input{flex:1;min-width:0}.pl-dur select{flex:1.2;min-width:0}
+.pl-it{background:var(--card);border:1px solid var(--rule);padding:12px;margin-top:8px}
+.pl-it1{display:flex;gap:8px}.pl-it1 input{flex:1;min-width:0;font-weight:700}
+.pl-it2{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-top:8px}
+.pl-sub{margin-top:8px;font:600 13px 'IBM Plex Mono',monospace;text-align:right;color:#D4500F}
+.pl-res{margin-top:14px;background:#14100E;color:#F2F0ED;padding:18px;display:grid;gap:8px;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%)}
+.pl-res .rot,.pl-calc .sai .rot{color:#A79F99}
+.pl-res .grande,.pl-calc .grande{font-family:'Archivo Black',Arial Black,sans-serif;font-weight:400;font-size:40px;line-height:1;color:#F07A1E;word-break:break-word}
+.pl-parc{display:flex;justify-content:space-between;align-items:baseline;gap:8px;border-top:1px solid #3A3532;padding-top:8px}.pl-parc b{font-size:20px;color:#F2F0ED}
+.pl-lin{display:flex;justify-content:space-between;gap:10px;font:13px 'IBM Plex Mono',monospace;color:#CFC8C2}.pl-lin b{color:#F2F0ED;font-weight:400;text-align:right}
+.pl-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.pl-acts .bt{flex:1 1 140px}
+.pl-hero{margin-top:14px}.pl-hero em{font-style:normal;color:#D4500F}
+.pl-conta{margin-top:12px;background:#14100E;color:#CFC8C2;padding:16px;display:grid;gap:8px;font:14px 'IBM Plex Mono',monospace}.pl-conta>div{display:flex;justify-content:space-between}.pl-conta b{color:#F2F0ED;font-weight:400}.pl-conta .rot{color:#A79F99}.pl-conta .tot{border-top:1px solid #3A3532;padding-top:10px}.pl-conta .tot b{font-family:'Archivo Black',sans-serif;font-size:30px;color:#F07A1E}
+.pl-dores,.pl-cases{display:grid;gap:10px}.pl-dores>div,.pl-cases>div{border-top:2px solid #14100E;padding-top:10px}.pl-dores p,.pl-cases p{margin:4px 0 0;font-size:14px}
+.pl-cases b{display:block;font-family:'Archivo Black',sans-serif;font-weight:400;font-size:34px;color:#2F5D3A;margin-top:6px}.pl-cases s{font-size:20px;color:#6E6663}.pl-cases small{display:block;margin-top:6px;font:11px 'IBM Plex Mono',monospace;color:#6E6663}
+.pl-calc{margin-top:10px;border:2px solid #14100E;display:grid}.pl-calc .ent{padding:16px;display:grid;gap:14px;background:var(--card)}.pl-calc .sai{padding:16px;background:#14100E;color:#F2F0ED;display:grid;gap:8px}.pl-calc .sai p{margin:0;font-size:13px;color:#A79F99}.pl-calc .ano{color:#CFC8C2;font-size:14px}
+.pl-rg{display:grid;gap:4px}.pl-rg span{display:flex;justify-content:space-between;font:600 12px 'IBM Plex Mono',monospace;text-transform:uppercase}.pl-rg input{width:100%;accent-color:#D4500F}
+.pl-gar{border-top:2px solid #D4500F;padding-top:8px}.pl-gar>div{padding:10px 0;border-bottom:1px solid var(--rule);font-size:14px}.pl-gar>div span{display:block;font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.pl-fund{background:#14100E;color:#CFC8C2;padding:16px}.pl-fund .rot{margin:10px 0;color:#A79F99}.pl-fund ul{margin:0;padding:0;list-style:none;display:grid;gap:10px;font-size:14px}.pl-fund li::before{content:"";display:inline-block;width:10px;height:3px;background:#F07A1E;margin-right:8px;vertical-align:middle}.pl-fund b{color:#F2F0ED}
+.pl-faq details{border-bottom:1px solid var(--rule)}.pl-faq summary{cursor:pointer;padding:12px 24px 12px 0;font-weight:700;font-size:15px;list-style:none;position:relative}.pl-faq summary::-webkit-details-marker{display:none}.pl-faq summary::after{content:"+";position:absolute;right:2px;font-family:'IBM Plex Mono',monospace}.pl-faq details[open] summary::after{content:"−"}.pl-faq p{margin:0 0 12px;font-size:14px}
+.pl-fim{margin-top:22px;background:#14100E;color:#CFC8C2;padding:18px;display:grid;gap:10px;justify-items:start}.pl-fim h4{color:#F2F0ED;font-size:24px}.pl-fim p{margin:0;font-size:14px}.pl-fim .rot{color:#A79F99}
+@media(min-width:720px){.pl-grid{grid-template-columns:repeat(3,1fr)}.pl-dores,.pl-cases{grid-template-columns:repeat(3,1fr)}.pl-calc{grid-template-columns:1fr 1fr}.pl-anual{grid-template-columns:1fr auto;align-items:center}}
 </style>
 </head>
 <body>
@@ -406,8 +462,8 @@ const NAV=[['painel','Painel'],['clientes','Clientes'],['agenda','Agenda'],['pit
 const S={tok:null,d:null,f:{q:'',estagio:'',resp:'',vista:'lista',esp:''},ag:'todas',pitEtapa:null,pitCli:'',cfgLista:'estagio',cliAba:'roteiro',n:0};
 const LISTAS={estagio:'Estágios do funil',origem:'Origens',tipo:'Tipos de casa',porte:'Portes',dor:'Dores declaradas',responsavel:'Responsáveis',plano:'Planos',status_impl:'Status da implantação',autorizada:'Autorização de case',atv_tipo:'Tipos de atividade',atv_status:'Status da atividade',pit_categoria:'Categorias de pitch',cont_tipo:'Tipos de conteúdo',cont_linha:'Linhas da rotação',cont_status:'Status do conteúdo',cont_gate:'Veredito do gate'};
 const PROPAGA={estagio:[['CLIENTES','estagio'],['PITCHES','etapa']],origem:[['CLIENTES','origem']],tipo:[['CLIENTES','tipo']],porte:[['CLIENTES','porte']],dor:[['CLIENTES','dor']],responsavel:[['CLIENTES','responsavel']],plano:[['CLIENTES','plano']],status_impl:[['CLIENTES','status_impl']],autorizada:[['CLIENTES','autorizada_case']],atv_tipo:[['ATIVIDADES','tipo']],atv_status:[['ATIVIDADES','status']],pit_categoria:[['PITCHES','categoria']],cont_tipo:[['CONTEUDO','tipo']],cont_linha:[['CONTEUDO','linha']],cont_status:[['CONTEUDO','status']],cont_gate:[['CONTEUDO','gate']]};
-const PARAMS=[['Capacidade (hipóteses a calibrar)',[['horas_semana','Horas semanais disponíveis','h'],['teto_implantacoes','Teto de implantações simultâneas','casas'],['h_raiox','Horas por Raio-X','h'],['h_implantacao','Horas por implantação ativa (semana)','h'],['h_conteudo','Horas de conteúdo (semana)','h'],['h_comercial','Horas comerciais (semana)','h'],['h_gestao','Horas de gestão (semana)','h'],['cap_faisca','Capacidade em Faísca a partir de (0 a 1)',''],['cap_brasa','Capacidade em Brasa a partir de (0 a 1)','']]],['Preços (conferir com a tabela vigente)',[['preco_raiox','Diagnóstico · preço fundador','R$'],['preco_raiox_cheio','Diagnóstico · preço cheio','R$'],['preco_start','Start','R$'],['preco_forjaos','Forja OS','R$'],['preco_mensal','Sistema Forja OS (mensal)','R$'],['fator_garantia','Fator da garantia (× valor do Raio-X)','×']]],['Prazos e alertas',[['prazo_relatorio_h','Prazo do relatório do Raio-X','h'],['alerta_relatorio_h','Alerta de relatório (horas para vencer)','h'],['lead_faisca_d','Lead parado em Faísca a partir de','dias'],['lead_brasa_d','Lead parado em Brasa a partir de','dias'],['rdo_brasa_d','Casa sem RDO em Brasa a partir de','dias'],['fila_faisca_d','Fila de posts em Faísca abaixo de','dias'],['fila_brasa_d','Fila de posts em Brasa abaixo de','dias'],['cmv_faisca_pt','CMV em Faísca até (pontos acima da base)','pontos']]],['Você',[['nome_exibicao','Seu nome nos pitches',''],['whatsapp_gabriel','Seu WhatsApp (com DDD)','']]]];
-const CFG_PAD={cmv_faisca_pt:'2'};
+const PARAMS=[['Capacidade (hipóteses a calibrar)',[['horas_semana','Horas semanais disponíveis','h'],['teto_implantacoes','Teto de implantações simultâneas','casas'],['h_raiox','Horas por Raio-X','h'],['h_implantacao','Horas por implantação ativa (semana)','h'],['h_conteudo','Horas de conteúdo (semana)','h'],['h_comercial','Horas comerciais (semana)','h'],['h_gestao','Horas de gestão (semana)','h'],['cap_faisca','Capacidade em Faísca a partir de (0 a 1)',''],['cap_brasa','Capacidade em Brasa a partir de (0 a 1)','']]],['Preços (conferir com a tabela vigente)',[['preco_raiox','Diagnóstico · preço fundador','R$'],['preco_raiox_cheio','Diagnóstico · preço cheio','R$'],['preco_start','Start','R$'],['preco_forjaos','Forja OS','R$'],['preco_mensal','Sistema Forja OS (mensal)','R$'],['fator_garantia','Fator da garantia (× valor do Raio-X)','×'],['vagas_total','Casas fundadoras · total de vagas','casas'],['vagas_fechadas','Casas fundadoras · já fechadas','casas']]],['Prazos e alertas',[['prazo_relatorio_h','Prazo do relatório do Raio-X','h'],['alerta_relatorio_h','Alerta de relatório (horas para vencer)','h'],['lead_faisca_d','Lead parado em Faísca a partir de','dias'],['lead_brasa_d','Lead parado em Brasa a partir de','dias'],['rdo_brasa_d','Casa sem RDO em Brasa a partir de','dias'],['fila_faisca_d','Fila de posts em Faísca abaixo de','dias'],['fila_brasa_d','Fila de posts em Brasa abaixo de','dias'],['cmv_faisca_pt','CMV em Faísca até (pontos acima da base)','pontos']]],['Você',[['nome_exibicao','Seu nome nos pitches',''],['whatsapp_gabriel','Seu WhatsApp (com DDD)','']]]];
+const CFG_PAD={cmv_faisca_pt:'2',vagas_total:'10',vagas_fechadas:'4'};
 
 /* ---------- utilitários ---------- */
 const ev=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -740,6 +796,7 @@ const IC={
  painel:'<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v6H4z"/></svg>',
  clientes:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 5.2a3.4 3.4 0 010 6.6M18.5 14.8c1.7.7 2.8 2.3 3 5.2"/></svg>',
  agenda:'<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+ planos:'<svg viewBox="0 0 24 24"><path d="M4 4h16v4H4zM4 10h7v10H4zM13 10h7v4h-7zM13 16h7v4h-7z"/></svg>',
  pitches:'<svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>',
  mais:'<svg viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01" stroke-width="3.4"/></svg>',
  plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
@@ -790,9 +847,9 @@ function formModal(titulo,fields,vals,onSave,onDel){
 
 /* ---------- casca ---------- */
 function casca(t){
-  const ativo={painel:'painel',clientes:'clientes',cliente:'clientes',agenda:'agenda',pitches:'pitches'}[t]||'mais';
+  const ativo={painel:'painel',clientes:'clientes',cliente:'clientes',agenda:'agenda',planos:'planos'}[t]||'mais';
   const hj=acoesHoje(),n=hj.length,atras=hj.some(x=>x.n===2);
-  const tabs=[['painel','Painel'],['clientes','Clientes'],['agenda','Agenda'],['pitches','Scripts'],['mais','Mais']];
+  const tabs=[['painel','Painel'],['clientes','Clientes'],['agenda','Agenda'],['planos','Planos'],['mais','Mais']];
   $('#app').innerHTML=`<header class="capa"><div class="lin"><a class="marca" href="#/painel">${logo(38)}</a><div class="tt"><div class="kk">${e(S.kk)}</div><h1>${e(S.tit)}</h1></div>
   <div class="dir"><a class="pill ${n?(atras?'cr':'at'):''}" href="#/painel">${n?n+' hoje':'Em dia'}</a><button class="ib" data-act="atualizar" aria-label="Atualizar dados">${IC.refresh}</button></div></div></header>
   <main class="wrap" id="main"></main>
@@ -803,7 +860,7 @@ function rota(){
   if(!S.tok||!S.d){telaLogin();return}
   const p=location.hash.replace(/^#\/?/,'').split('/');const t=p[0]||'painel';
   S.tit='';S.kk=dow(hoje())+', '+fdl(hoje());
-  const T={painel:vPainel,clientes:vClientes,cliente:()=>vCliente(p[1]),agenda:vAgenda,pitches:vPitches,mais:vMais,conteudo:vConteudo,config:vConfig,usuarios:vUsuarios}[t]||vPainel;
+  const T={painel:vPainel,clientes:vClientes,cliente:()=>vCliente(p[1]),agenda:vAgenda,pitches:vPitches,mais:vMais,planos:vPlanos,conteudo:vConteudo,config:vConfig,usuarios:vUsuarios}[t]||vPainel;
   const html=T();
   casca(t);
   $('#main').innerHTML=html;
@@ -1004,14 +1061,262 @@ function vConfig(){
 
 /* ---------- MAIS ---------- */
 function vMais(){
-  S.tit='Mais';S.kk='Forja · Gerenciador v1.4';
+  S.tit='Mais';S.kk='Forja · Gerenciador v1.5';
   const tema=ls('forja_tema')||'auto';
   const eu=S.eu||{};const adm=souAdmin();
   return `<section><div class="card conta"><div class="av">${e(ini({nome:eu.nome||eu.email||'?'}))}</div><div style="min-width:0;flex:1"><div class="nm">${e(eu.nome||'—')}</div><div class="sb" style="overflow-wrap:anywhere">${e(eu.email||'')}</div></div><span class="chip ${adm?'sf':''}">${adm?'Administrador':'Consultor'}</span></div>
   <div class="lista" style="margin-top:12px"><div class="row"><div><div class="nm">Minha senha</div><div class="sb">Troque quando quiser</div></div><span></span><button class="bt mini sec" data-act="minhaSenha">Trocar</button></div>${adm?`<a class="row lk" href="#/usuarios" style="text-decoration:none"><div class="av">U</div><div><div class="nm">Usuários</div><div class="sb">Quem acessa o app, com e-mail e senha</div></div><span class="go">›</span></a>`:''}</div>
-  <h3>Trabalho</h3><div class="lista"><a class="row lk" href="#/config" style="text-decoration:none"><div class="av">⚙</div><div><div class="nm">Config</div><div class="sb">Categorias, preços, prazos e limites</div></div><span class="go">›</span></a></div>
+  <h3>Trabalho</h3><div class="lista"><a class="row lk" href="#/pitches" style="text-decoration:none"><div class="av">✎</div><div><div class="nm">Scripts</div><div class="sb">Roteiros de conversa por etapa</div></div><span class="go">›</span></a><a class="row lk" href="#/config" style="text-decoration:none"><div class="av">⚙</div><div><div class="nm">Config</div><div class="sb">Categorias, preços, prazos e limites</div></div><span class="go">›</span></a></div>
   <h3>Dados</h3><div class="lista"><div class="row"><div><div class="nm">Atualizar</div><div class="sb">Recarrega da planilha</div></div><span></span><button class="bt mini sec" data-act="atualizar">Atualizar</button></div><div class="row"><div><div class="nm">Exportar clientes</div><div class="sb">Arquivo CSV</div></div><span></span><button class="bt mini sec" data-act="csv">Exportar</button></div><div class="row"><div><div class="nm">Sair</div><div class="sb">Encerra a sessão neste aparelho</div></div><span></span><button class="bt mini perigo" data-act="sair">Sair</button></div></div>
   <p class="rodape">Os dados ficam na sua planilha Google (abas CLIENTES, ATIVIDADES, PITCHES, CONTEUDO, CATEGORIAS, CONFIG). Não edite à mão.</p></section>`;
+}
+
+/* ---------- PLANOS (v1.5) ---------- */
+const PL_P={raiox:[497,597],start:[1990,2390],os:[4900,5890],comp:[9900,11890],sis:[297,357],duas:[677,812],sem:[797,957],avul:[190,228],eng:[990,1190],fich:[400,480],trein:[390,470],pops:[690,830],aRest:[991,1190],aMarm:[863,1037]};
+const PL_PAR={start:[497,598],os:[817,982]};
+const PL_DIAS={sem:7,mes:30.4375,ano:365.25};
+const PL_UN={sem:['semana','semanas','por semana'],mes:['mês','meses','por mês'],ano:['ano','anos','por ano']};
+const PL_FQ=[['Preciso parar a cozinha?','Não. O diagnóstico acontece durante o serviço normal. É no movimento de verdade que aparece onde o dinheiro vaza.'],['Não entendo de planilha nem de CMV.','Não precisa. A casa recebe o painel pronto no celular, em linguagem de cozinha: o que tem, o que comprar, qual prato está caro.'],['Minha equipe vai resistir.','O padrão é montado com quem está na praça, fica na parede e é treinado na bancada. O que se mede é o processo, não a pessoa.'],['Em quanto tempo vejo resultado?','O tamanho do vazamento aparece em 48 horas, no relatório do diagnóstico. A queda de custo aparece quando o padrão entra na rotina. Prazo exato só depois de medir a casa.'],['E se não der resultado?','Cumprindo os 5 compromissos da casa, o risco é nosso: devolvemos o diagnóstico se não achar o vazamento, e voltamos sem cobrar se ele não cair pela metade em 90 dias. Se a casa não deixar mudar, nenhuma consultoria resolve.'],['Por que não é mais caro?','Porque o sistema já existe. Instalamos um método pronto e ajustamos à casa. E estes são preços de casa fundadora: valem até a 10ª casa. Depois, a tabela sobe 20%.']];
+const plIdx=()=>{const t=S.pl.tab||(plAbertas()>0?'f':'c');return t==='f'?0:1};
+const plVTot=()=>cfgN('vagas_total')||10;
+const plFech=()=>Math.min(plVTot(),cfgN('vagas_fechadas'));
+const plAbertas=()=>Math.max(0,plVTot()-plFech());
+const plP=k=>PL_P[k][plIdx()];
+const plR=v=>'R$ '+Math.round(v).toLocaleString('pt-BR');
+const plR2=v=>'R$ '+(Math.round(v*100)/100).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:2});
+const plZap=txt=>wa(cfg('whatsapp_gabriel')||'5512992318239',txt);
+S.pl={aba:'planos',tab:null,seg:'rest',cm:'porcao',h:{n:100,e:37,b:19,bp:30,u:127,up:12,af:50,cm:60},c:{pr:150,g:20,kg:45,fat:150000,hj:36,meta:30}};
+S.sm=null;
+
+function plVagas(cls){const T=plVTot(),F=plFech();return `<div class="pl-vagas ${cls||''}">${'<i class="ok"></i>'.repeat(F)+'<i></i>'.repeat(Math.max(0,T-F))}</div>`}
+function plPreco(k,sub){return `<div class="pl-preco">${plIdx()===0&&plAbertas()>0?`<s>depois da ${plVTot()}ª casa: ${plR(PL_P[k][1])}</s>`:''}<b class="mono">${plR(plP(k))}</b>${sub?`<span>${sub}</span>`:''}</div>`}
+
+function vPlanos(){
+  S.tit='Planos';S.kk='Produtos e preços';
+  const a=S.pl.aba;
+  const abas=[['planos','Planos'],['sob','Sob medida'],['hot','Hotmart'],['casa','Argumentos']];
+  return `<section class="pl"><div class="pl-abas">${abas.map(x=>`<button type="button" data-act="plAba" data-v="${x[0]}" class="${a===x[0]?'on':''}">${x[1]}</button>`).join('')}</div>
+  ${a==='planos'?plPlanos():a==='sob'?plSob():a==='hot'?plHot():plCasa()}</section>`;
+}
+
+function plPlanos(){
+  const rest=S.pl.seg==='rest',i=plIdx();
+  const T=S.pl.tab||(plAbertas()>0?'f':'c');
+  const passos=[
+    {fase:'Passo 1 · 1 visita',t:'Diagnóstico',d:rest?'Pesamos os pratos que mais vendem, conferimos o que chega na porta e a casa recebe o vazamento em reais em 48 horas.':'Custo real de cada marmita, pesagem da montagem, compra e sobra. Resultado em 48 horas.',k:'raiox',s:'com garantia'},
+    rest?{fase:'Passo 2 · 45 dias',t:'Implantação Forja OS',d:'Fichas, porção padrão, estoque, compras e perdas rodando, equipe treinada e o painel no celular.',k:'os',s:'ou 6× '+plR(PL_PAR.os[i])+' · com garantia',meio:1}
+         :{fase:'Passo 2 · 30 dias',t:'Implantação Start',d:'Ficha por marmita, porcionador por cor, compra pela produção do dia e o painel no celular.',k:'start',s:'ou 4× '+plR(PL_PAR.start[i])+' · com garantia',meio:1},
+    {fase:'Passo 3 · todo mês',t:'Forja OS + visita semanal',d:'O sistema no celular e uma visita por semana na cozinha: CMV conferido, porção pesada, padrão checado.',k:'sem',s:'/mês · com garantia · só o sistema: '+plR(plP('sis'))+'/mês · visita avulsa: '+plR(plP('avul'))}
+  ];
+  const aK=rest?'aRest':'aMarm',sep=rest?13757:11644,eco=rest?1867:1285;
+  return `<div class="pl-bar"><div class="pl-tg" role="group" aria-label="Tabela"><button type="button" data-act="plTab" data-v="f" class="${T==='f'?'on':''}">Fundadora</button><button type="button" data-act="plTab" data-v="c" class="${T==='c'?'on':''}">Cheia</button></div>
+  <div class="pl-tg" role="group" aria-label="Tipo de operação"><button type="button" data-act="plSeg" data-v="rest" class="${rest?'on':''}">Restaurante</button><button type="button" data-act="plSeg" data-v="marm" class="${rest?'':'on'}">Marmitaria</button></div></div>
+  <div class="pl-promo"><b>${plAbertas()>0?'Casa fundadora':'Tabela cheia'}</b>${plVagas('peq')}<span>${plAbertas()>0?`Estes preços valem até a ${plVTot()}ª casa. Faltam <strong>${plAbertas()} vaga${plAbertas()>1?'s':''}</strong>. Depois, a tabela sobe 20%.`:`As ${plVTot()} vagas de fundadora fecharam. Tabela cheia em vigor.`}</span></div>
+  <h3>Os 3 passos</h3><p class="nota" style="margin:-4px 0 0">O cliente só avança se a conta fechar.</p>
+  <div class="pl-grid">${passos.map(p=>`<article class="pl-card ${p.meio?'meio':''}"><span class="pl-fase">${e(p.fase)}</span><h4>${e(p.t)}</h4><p>${e(p.d)}</p>${p.k==='sem'?`<div class="pl-preco">${plIdx()===0&&plAbertas()>0?`<s>depois da ${plVTot()}ª casa: ${plR(PL_P.sem[1])}/mês</s>`:''}<b class="mono">${plR(plP('sem'))}/mês</b><span>${e(p.s.replace('/mês · ',''))}</span></div>`:plPreco(p.k,e(p.s))}</article>`).join('')}</div>
+  <div class="pl-anual"><div><span class="pl-fase" style="color:var(--chama)">Plano anual · tudo de uma vez</span><h4>Os três passos num contrato só, com parcela fixa.</h4><p>${rest?'Diagnóstico + Implantação Forja OS + 10 meses de sistema e visita semanal + treino da equipe.':'Diagnóstico + Implantação Start + 11 meses de sistema e visita semanal + treino da equipe.'} Com os 5 compromissos cumpridos, todas as garantias valem.</p></div>
+  <div class="val">${plIdx()===0&&plAbertas()>0?`<s>depois da ${plVTot()}ª casa: 12× ${plR(PL_P[aK][1])}</s>`:''}<b class="mono">12× ${plR(plP(aK))}</b><span>separado: ${plR(sep)} · economia ${plR(eco)}</span><button type="button" class="bt mini pri" data-act="smPreset" data-v="${rest?'aRest':'aMarm'}">Montar essa proposta</button></div></div>
+  <h3>Outras opções</h3>
+  <div class="pl-tab"><table><thead><tr><th>Produto</th><th class="r">${T==='f'?'Fundadora':'Cheia'}</th><th class="r">Depois da ${plVTot()}ª</th></tr></thead><tbody>
+  ${[['Implantação Start','start','4 semanas · parcelável'],['Implantação Forja OS','os','6 semanas · parcelável'],['Implantação Completa','comp','a partir de'],['Sistema Forja OS (mensal)','sis',''],['Sistema + 2 visitas (mensal)','duas',''],['Forja OS + visita semanal (mensal)','sem',''],['Visita avulsa','avul',''],['Engenharia de cardápio','eng',''],['10 fichas técnicas','fich',''],['Treino de equipe','trein',''],['POPs','pops','']].map(r=>`<tr><td>${e(r[0])}${r[2]?`<small>${e(r[2])}</small>`:''}</td><td class="r mono"><b>${plR(PL_P[r[1]][T==='f'?0:1])}</b></td><td class="r mono">${plR(PL_P[r[1]][1])}</td></tr>`).join('')}
+  <tr><td>Kit de placas</td><td class="r mono" colspan="2">custo + 30%</td></tr></tbody></table></div>
+  <p class="nota">Preço de fundadora travado por 24 meses. O contador de vagas é público e verdadeiro; vaga fechada não reabre. Diga “a tabela sobe 20% depois da ${plVTot()}ª casa”, nunca “20% de desconto”. Edite as vagas em Config.</p>
+  <div class="pl-sob-cta"><div><h4>Sob medida</h4><p>Escopo, prazo e preço montados caso a caso. Duração em semanas, meses ou anos, itens livres, desconto e parcelas.</p></div><button class="bt pri" data-act="plAba" data-v="sob">Montar proposta</button></div>`;
+}
+
+/* ----- construtor sob medida ----- */
+function smNovo(base){
+  const i=plIdx();
+  const it=(n,tp,v,q,un)=>({n,tp,v:String(v),q:q==null?'':String(q),un:un||'mes'});
+  const B={
+    branco:{nome:'Proposta sob medida',dur:'3',un:'mes',itens:[it('Diagnóstico','u',plP('raiox'),1),it('Implantação','u',0,1),it('Acompanhamento','r',plP('sem'),'','mes')]},
+    start:{nome:'Start',dur:'1',un:'mes',itens:[it('Diagnóstico','u',plP('raiox'),1),it('Implantação Start','u',plP('start'),1)]},
+    os:{nome:'Forja OS',dur:'45',un:'dia',itens:[it('Diagnóstico','u',plP('raiox'),1),it('Implantação Forja OS','u',plP('os'),1)]},
+    aRest:{nome:'Plano anual · restaurante',dur:'12',un:'mes',itens:[it('Diagnóstico (incluído)','u',0,1),it('Implantação Forja OS (−20%)','u',Math.round(plP('os')*0.8),1),it('Forja OS + visita semanal','r',plP('sem'),10,'mes'),it('Treino da equipe (bônus)','u',0,1)]},
+    aMarm:{nome:'Plano anual · marmitaria',dur:'12',un:'mes',itens:[it('Diagnóstico (incluído)','u',0,1),it('Implantação Start (−20%)','u',Math.round(plP('start')*0.8),1),it('Forja OS + visita semanal','r',plP('sem'),11,'mes'),it('Treino da equipe (bônus)','u',0,1)]}
+  }[base||'branco'];
+  if(B.un==='dia'){B.dur='1.5';B.un='mes'}
+  return Object.assign({id:'',cli:'',desc:'0',descV:'0',ent:'0',np:'1',freq:'mes',obs:''},B);
+}
+function smCalc(m){
+  const dur=num(m.dur),dd=dur*PL_DIAS[m.un];
+  let unico=0,rec=0;
+  const L=m.itens.map(x=>{
+    let n,sub;
+    if(x.tp==='u'){n=x.q===''?1:num(x.q);sub=num(x.v)*n;unico+=sub}
+    else{n=x.q===''?Math.round(dd/PL_DIAS[x.un]*100)/100:num(x.q);sub=num(x.v)*n;rec+=sub}
+    return {n,sub};
+  });
+  const bruto=unico+rec,liq=bruto*(1-Math.min(100,num(m.desc))/100),vista=liq*(1-Math.min(100,num(m.descV))/100);
+  const ent=liq*Math.min(100,num(m.ent))/100,np=Math.max(1,Math.round(num(m.np))||1),parc=(liq-ent)/np;
+  return {dur,dd,L,unico,rec,bruto,liq,vista,ent,np,parc,mes:dd>0?liq/(dd/PL_DIAS.mes):0,sem:dd>0?liq/(dd/7):0};
+}
+const smDurTxt=m=>{const d=num(m.dur);return (Math.round(d*100)/100).toString().replace('.',',')+' '+PL_UN[m.un][d===1?0:1]};
+function smTexto(m){
+  const c=smCalc(m),cl=cli(m.cli);
+  const l=['*Proposta Forja'+(cl?' · '+nomeC(cl):'')+'*',m.nome?m.nome:'','','Duração: '+smDurTxt(m),'','*O que entra*'];
+  m.itens.forEach((x,i)=>{const r=c.L[i];l.push('• '+x.n+' — '+(x.tp==='u'?(r.n!==1?r.n+' × '+plR2(num(x.v)):plR2(num(x.v))):plR2(num(x.v))+' '+PL_UN[x.un][2]+' × '+(Math.round(r.n*100)/100).toString().replace('.',',')+' = '+plR2(r.sub)))});
+  l.push('');if(num(m.desc)>0)l.push('Subtotal: '+plR2(c.bruto),'Desconto '+num(m.desc)+'%: −'+plR2(c.bruto-c.liq));
+  l.push('*Total: '+plR2(c.liq)+'*');
+  const fq={sem:'semanais',mes:'mensais',ano:'anuais'}[m.freq];
+  if(c.np>1||c.ent>0){l.push((c.ent>0?'Entrada de '+plR2(c.ent)+' + ':'')+c.np+' parcelas '+fq+' de '+plR2(c.parc))}
+  if(num(m.descV)>0)l.push('À vista: '+plR2(c.vista)+' ('+num(m.descV)+'% a menos)');
+  if(m.obs)l.push('',m.obs);
+  l.push('','Forja · padrão para restaurantes');
+  return l.join('\n');
+}
+function plSob(){
+  const props=D('CONFIG').filter(x=>/^prop_/.test(x.chave)).map(x=>{try{return JSON.parse(x.valor)}catch(_){return null}}).filter(Boolean).sort((a,b)=>(b.at||'')<(a.at||'')?-1:1);
+  if(!S.sm)S.sm=smNovo('branco');
+  return `<div class="pl-box" id="smBox">${smForm()}</div>
+  <h3>Propostas salvas</h3>${props.length?`<div class="lista">${props.map(p=>{const c=smCalc(p),cl=cli(p.cli);return `<div class="row lk" data-act="smAbrir" data-id="${ev(p.id)}"><div style="min-width:0"><div class="nm">${e(p.nome||'Proposta')}</div><div class="sb">${e(cl?nomeC(cl)+' · ':'')}${e(smDurTxt(p))} · ${p.at?fdl(p.at):''}</div></div><span class="mono" style="font-weight:700">${plR(c.liq)}</span><span class="go">›</span></div>`}).join('')}</div>`:'<p class="nota">Nenhuma ainda. Monte uma acima e toque em Salvar.</p>'}`;
+}
+function smSel(k,v,o,extra){return `<select data-sm="${k}" ${extra||''}>${o.map(x=>`<option value="${ev(x[0])}" ${String(x[0])===String(v)?'selected':''}>${e(x[1])}</option>`).join('')}</select>`}
+function smForm(){
+  const m=S.sm;
+  const un=[['sem','semanas'],['mes','meses'],['ano','anos']];
+  return `<div class="pl-pre"><span>Começar de</span>${[['branco','Em branco'],['start','Start'],['os','Forja OS'],['aRest','Anual · rest.'],['aMarm','Anual · marm.']].map(x=>`<button type="button" class="bt mini sec" data-act="smPreset" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>
+  <div class="card"><div class="grade">
+   <label class="f">Nome da proposta<input data-sm="nome" value="${ev(m.nome)}"></label>
+   <label class="f">Cliente<select data-sm="cli"><option value="">— sem cliente —</option>${D('CLIENTES').map(c=>`<option value="${ev(c.id)}" ${c.id===m.cli?'selected':''}>${e(nomeC(c))}</option>`).join('')}</select></label>
+   <label class="f">Duração<div class="pl-dur"><input data-sm="dur" inputmode="decimal" value="${ev(m.dur)}">${smSel('un',m.un,un)}</div><span class="h">Livre: 6 semanas, 18 meses, 2 anos, 1,5…</span></label>
+  </div></div>
+  <h3>Itens</h3>
+  <div id="smItens">${m.itens.map((x,i)=>smItem(x,i)).join('')}</div>
+  <button type="button" class="bt sec cheio" data-act="smAdd" style="margin-top:8px">+ Adicionar item</button>
+  <div class="card"><h3 style="margin-top:0">Condições</h3><div class="grade">
+   <label class="f">Desconto no total (%)<input data-sm="desc" inputmode="decimal" value="${ev(m.desc)}"></label>
+   <label class="f">Desconto à vista (%)<input data-sm="descV" inputmode="decimal" value="${ev(m.descV)}"></label>
+   <label class="f">Entrada (% do total)<input data-sm="ent" inputmode="decimal" value="${ev(m.ent)}"></label>
+   <label class="f">Parcelas<div class="pl-dur"><input data-sm="np" inputmode="numeric" value="${ev(m.np)}">${smSel('freq',m.freq,[['sem','semanais'],['mes','mensais'],['ano','anuais']])}</div></label>
+   <label class="f" style="grid-column:1/-1">Observações para o cliente<textarea data-sm="obs" rows="2">${ev(m.obs)}</textarea></label>
+  </div></div>
+  <div class="pl-res" id="smRes" aria-live="polite">${smRes()}</div>
+  <div class="pl-acts"><button class="bt pri" data-act="smSalvar">Salvar proposta</button><button class="bt sec" data-act="smCopiar">Copiar texto</button><button class="bt sec" data-act="smZap">Enviar no WhatsApp</button>${m.id?`<button class="bt perigo" data-act="smExcluir" style="flex:0 0 auto">Excluir</button>`:''}</div>`;
+}
+function smItem(x,i){
+  const rec=x.tp==='r';
+  return `<div class="pl-it" data-i="${i}"><div class="pl-it1"><input data-sm="n" data-i="${i}" value="${ev(x.n)}" placeholder="Nome do item" aria-label="Nome do item"><button type="button" class="bt mini perigo" data-act="smDel" data-i="${i}" aria-label="Remover item">✕</button></div>
+  <div class="pl-it2"><label class="f">Tipo<select data-sm="tp" data-i="${i}"><option value="u" ${rec?'':'selected'}>Valor único</option><option value="r" ${rec?'selected':''}>Recorrente</option></select></label>
+  <label class="f">Valor (R$)<input data-sm="v" data-i="${i}" inputmode="decimal" value="${ev(x.v)}"></label>
+  ${rec?`<label class="f">Cobrado<select data-sm="un" data-i="${i}">${[['sem','por semana'],['mes','por mês'],['ano','por ano']].map(o=>`<option value="${o[0]}" ${x.un===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></label>`:''}
+  <label class="f">${rec?'Períodos':'Quantidade'}<input data-sm="q" data-i="${i}" inputmode="decimal" value="${ev(x.q)}" placeholder="${rec?'auto':'1'}"></label></div>
+  <div class="pl-sub" data-sub="${i}"></div></div>`;
+}
+function smRes(){
+  const m=S.sm,c=smCalc(m);
+  const fq={sem:'semanais',mes:'mensais',ano:'anuais'}[m.freq];
+  const par=(c.np>1||c.ent>0)?`<div class="pl-parc"><span class="rot">${c.ent>0?'Entrada de '+plR2(c.ent)+' + ':''}${c.np}× ${fq}</span><b class="mono">${plR2(c.parc)}</b></div>`:'';
+  return `<span class="rot">Total · ${e(smDurTxt(m))}</span><b class="grande mono">${plR2(c.liq)}</b>
+  ${par}
+  <div class="pl-lin"><span>Único</span><b class="mono">${plR2(c.unico)}</b></div><div class="pl-lin"><span>Recorrente</span><b class="mono">${plR2(c.rec)}</b></div>
+  ${num(m.desc)>0?`<div class="pl-lin"><span>Desconto ${num(m.desc)}%</span><b class="mono">−${plR2(c.bruto-c.liq)}</b></div>`:''}
+  ${num(m.descV)>0?`<div class="pl-lin"><span>À vista</span><b class="mono">${plR2(c.vista)}</b></div>`:''}
+  <div class="pl-lin"><span>Equivale a</span><b class="mono">${plR2(c.mes)}/mês · ${plR2(c.sem)}/sem</b></div>`;
+}
+function smAtual(){
+  const m=S.sm,c=smCalc(m);
+  const r=$('#smRes');if(r)r.innerHTML=smRes();
+  document.querySelectorAll('[data-sub]').forEach(el=>{const i=+el.dataset.sub,x=m.itens[i],l=c.L[i];if(!x||!l)return;el.textContent=x.tp==='u'?(l.n!==1?l.n+' × '+plR2(num(x.v))+' = ':'')+plR2(l.sub):(Math.round(l.n*100)/100).toString().replace('.',',')+' '+PL_UN[x.un][l.n===1?0:1]+' × '+plR2(num(x.v))+' = '+plR2(l.sub)});
+}
+function smRender(){const b=$('#smBox');if(b){b.innerHTML=smForm();smAtual()}}
+
+
+/* ----- Hotmart / produtos digitais (plano estratégico) ----- */
+function plHotCalc(){
+  const H=S.pl.h,n=H.n,ent=n*H.e,bump=n*H.bp/100*H.b,up=n*H.up/100*H.u,sem=ent,tot=ent+bump+up;
+  const com=tot*H.af/100*H.cm/100;
+  return {ent,bump,up,sem,tot,com,liq:tot-com,tk:n?tot/n:0,alta:sem?(tot/sem-1)*100:0};
+}
+function plHotAtual(){
+  const H=S.pl.h,c=plHotCalc();
+  const set=(k,t)=>{const el=document.querySelector('[data-o="'+k+'"]');if(el)el.textContent=t};
+  set('hn',H.n);set('he','R$ '+H.e);set('hb','R$ '+H.b);set('hbp',H.bp+'%');set('hu','R$ '+H.u);set('hup',H.up+'%');set('haf',H.af+'%');set('hcm',H.cm+'%');
+  set('htot',plR(c.tot));set('hsem','Sem a escada: '+plR(c.sem)+' · com a escada: +'+Math.round(c.alta)+'%');set('hcom','Comissão de afiliados: −'+plR(c.com));set('hliq',plR(c.liq)+' antes da taxa da plataforma');set('htk','Ticket médio: '+plR2(c.tk));
+}
+function plHot(){
+  const H=S.pl.h,c=plHotCalc();
+  const rg=(k,l,mn,mx,st,fmt)=>`<label class="pl-rg"><span>${l}<output data-o="h${k}">${fmt(H[k])}</output></span><input type="range" data-hot="${k}" min="${mn}" max="${mx}" step="${st}" value="${H[k]}"></label>`;
+  const L=[['Isca grátis','R$ 0','Gera a lista de WhatsApp. Meta: 300 nomes em 60 dias.'],['Entrada','R$ 37','O produto que o afiliado promove.'],['Order bump','R$ 19','Complemento no checkout, sem redigitar cartão.'],['Upsell','R$ 127','Página de obrigado, após a compra.']];
+  return `<div class="pl-hero"><span class="pl-fase">Produto digital · Hotmart</span><h4>A escada que leva o dono da planilha até a consultoria.</h4><p>Quem não tem orçamento para consultoria entra pela planilha. Cerca de 30% dos compradores voltam pedindo ajuda. O Gerenciador acompanha esse caminho: lead de planilha vira cliente de diagnóstico, Start ou Forja OS.</p></div>
+  <h3>Escada de produtos</h3>
+  <div class="pl-grid">${[['Planilha Essencial','R$ 297','Arquivo + licença própria. Dono que quer resolver sozinho.'],['Implantação Assistida','R$ 597','Arquivo + 2 calls de setup. Dono que precisa de guia.'],['Licença Consultor','R$ 1.497','Arquivo + direito de usar em clientes. Consultor independente.']].map(x=>`<article class="pl-card"><span class="pl-fase">Planilha · pagamento único</span><h4>${x[0]}</h4><p>${x[1+1]}</p><div class="pl-preco"><b class="mono">${x[1]}</b></div></article>`).join('')}</div>
+  <div class="pl-grid"><article class="pl-card"><span class="pl-fase">Recorrência</span><h4>Club</h4><p>Call mensal de 30 min, suporte no WhatsApp, templates novos e rede de donos. Quem termina um ciclo tem boa chance de entrar.</p><div class="pl-preco"><b class="mono">R$ 297 a 497/mês</b></div></article>
+  <article class="pl-card"><span class="pl-fase">Passivo</span><h4>Rebate de fornecedor</h4><p>Shortlist de fornecedores confiáveis no Club e nas propostas. Rebate de 2% a 5% sobre a compra via indicação.</p><div class="pl-preco"><b class="mono">2 a 5%</b></div></article>
+  <article class="pl-card"><span class="pl-fase">Escala</span><h4>Licença de consultores</h4><p>Consultor treinado paga licença mensal e usa o método. A Forja fica com parte do resultado e o sistema continua dela.</p><div class="pl-preco"><b class="mono">R$ 2.000/mês</b><span>+ 20% do resultado</span></div></article></div>
+  <p class="nota">Atenção ao nome: “Planilha Essencial” (R$ 297 uma vez) e “Sistema Forja OS” (R$ 297/mês) têm o mesmo número e são produtos diferentes. Diga sempre “uma vez” ou “por mês”.</p>
+  <h3>Calculadora da escada</h3>
+  <p class="nota" style="margin:-4px 0 0">Mesmo tráfego e mesmo esforço, com a escada montada.</p>
+  <div class="pl-calc"><div class="ent">${rg('n','Compradores da entrada',10,500,10,v=>v)+rg('e','Preço da entrada',9,197,1,v=>'R$ '+v)+rg('b','Order bump',5,97,1,v=>'R$ '+v)+rg('bp','Quem leva o bump',0,60,1,v=>v+'%')+rg('u','Upsell',27,497,1,v=>'R$ '+v)+rg('up','Quem leva o upsell',0,40,1,v=>v+'%')+rg('af','Vendas feitas por afiliados',0,100,5,v=>v+'%')+rg('cm','Comissão do afiliado',30,80,5,v=>v+'%')}</div>
+  <div class="sai" aria-live="polite"><span class="rot">Receita bruta no mês</span><b class="grande mono" data-o="htot">${plR(c.tot)}</b><span class="ano mono" data-o="hsem">Sem a escada: ${plR(c.sem)} · com a escada: +${Math.round(c.alta)}%</span><span class="ano mono" data-o="hcom">Comissão de afiliados: −${plR(c.com)}</span><span class="ano mono" data-o="hliq">${plR(c.liq)} antes da taxa da plataforma</span><p data-o="htk">Ticket médio: ${plR2(c.tk)}</p><p>A taxa da Hotmart não entra na conta: confira no painel da plataforma. Metas do plano de 90 dias: 160 vendas/mês, ticket R$ 58.</p></div></div>
+  <h3>Funil da escada</h3><div class="lista">${L.map(r=>`<div class="row"><div><div class="nm">${r[0]} · ${r[1]}</div><div class="sb">${r[2]}</div></div></div>`).join('')}</div>
+  <h3>Checklist da Hotmart</h3><div class="lista">${['Material de divulgação subido dentro do produto (levanta o Blueprint)','Descrição e página de vendas 100% preenchidas','Afiliação com aprovação automática, comissão de 60 a 70%','Order bump no checkout','Funil pós-compra com upsell na página de obrigado','Entrega em área de membros, nunca anexo por e-mail','E-mail automático pedindo avaliação no D+3','Pix ativo e parcelamento revisado','Recuperação de venda: carrinho abandonado e boleto','Garantia de 7 dias em destaque'].map((t,i)=>`<div class="row"><div class="av">${i+1}</div><div><div class="nm" style="font-weight:600">${e(t)}</div></div></div>`).join('')}</div>
+  <p class="nota">Regra do plano de 90 dias: nenhum produto novo. O estoque já basta; falta oferta, prova, distribuição e pedido. Cada lead que chega de planilha deve entrar aqui com origem “Hotmart” e ser levado ao diagnóstico.</p>`;
+}
+
+/* ----- argumentos (landing) ----- */
+function plCasa(){
+  const C=S.pl.c,m=S.pl.cm;
+  let tit,mes,nota;
+  if(m==='porcao'){mes=C.pr*C.g/1000*C.kg*30;tit='Vai embora por mês';nota='Estimativa de um item só. O número real sai pesado na bancada.'}
+  else{const dif=Math.max(0,C.hj-C.meta);mes=C.fat*dif/100;tit=dif?'Acima da meta, por mês':'Na meta';nota=dif?'Cada ponto de CMV vale '+plR(C.fat/100)+' por mês. Recuperando só um terço, sobram '+plR(mes/3)+'.':'Bom sinal. O diagnóstico confere se esse número é real.'}
+  const rg=(k,l,mn,mx,st,fmt)=>`<label class="pl-rg"><span>${l}<output data-o="${k}">${fmt(C[k])}</output></span><input type="range" data-calc="${k}" min="${mn}" max="${mx}" step="${st}" value="${C[k]}"></label>`;
+  return `<div class="pl-hero"><span class="pl-fase">Para restaurantes e marmitarias</span><h4>Sua cozinha não tem problema de receita. Tem problema de <em>repetição.</em></h4><p>A gente pesa o que sai do prato, mostra em reais quanto se perde e instala o padrão que fica.</p>
+  <div class="pl-conta"><span class="rot">A conta que ninguém faz</span><div><span>Carne a mais por prato</span><b>20 g</b></div><div><span>Pratos por dia</span><b>150</b></div><div><span>Preço da carne</span><b>R$ 45/kg</b></div><div class="tot"><span>POR MÊS</span><b class="mono">R$ 4.050</b></div></div></div>
+  <h3>As dores</h3><div class="pl-dores"><div><b>Cada um serve de um jeito</b><p>A porção muda com quem está na chapa.</p></div><div><b>Ninguém sabe o custo do prato</b><p>O preço foi chutado e o fornecedor já subiu três vezes.</p></div><div><b>O dono é o sistema</b><p>Se ele sai da cozinha, o padrão sai junto.</p></div></div>
+  <h3>Calculadora do cliente</h3><div class="pl-tg" style="margin-top:8px"><button type="button" data-act="plCm" data-v="porcao" class="${m==='porcao'?'on':''}">Pela porção</button><button type="button" data-act="plCm" data-v="cmv" class="${m==='cmv'?'on':''}">Pelo CMV</button></div>
+  <div class="pl-calc"><div class="ent">${m==='porcao'?rg('pr','Pratos ou marmitas por dia',20,800,10,v=>v)+rg('g','Gramas a mais por prato',5,80,5,v=>v+' g')+rg('kg','Preço do item por kg',5,150,1,v=>'R$ '+v):rg('fat','Faturamento por mês',20000,800000,5000,plR)+rg('hj','CMV hoje',20,55,1,v=>v+'%')+rg('meta','Meta da casa',18,45,1,v=>v+'%')}</div>
+  <div class="sai" aria-live="polite"><span class="rot" data-o="tit">${tit}</span><b class="grande mono" data-o="mes">${plR(mes)}</b><span class="ano mono" data-o="ano">${plR(mes*12)} por ano</span><p data-o="nota">${nota}</p></div></div>
+  <h3>Resultados</h3><div class="pl-cases"><div><span class="rot">Restaurante · R$ 250 mil/mês</span><b>−3 pts</b><p>de CMV em um mês. Cerca de R$ 7.500 por mês de volta ao caixa.</p><small>Período e base: [CAMPO A PREENCHER]</small></div><div><span class="rot">Buffet</span><b><s>47%</s> 28%</b><p>de CMV. Porção, reposição e sobra passaram a ter número.</p><small>Período e base: [CAMPO A PREENCHER]</small></div><div><span class="rot">Lanchonete</span><b><s>35%</s> 27%</b><p>de CMV com o mesmo cardápio. A diferença estava na montagem e na compra.</p><small>Período e base: [CAMPO A PREENCHER]</small></div></div>
+  <h3>Garantia</h3><div class="pl-gar"><p><b>Risco zero, com uma condição: a casa deixa mudar.</b></p><div><span>Diagnóstico</span>Se não mostrarmos pelo menos R$ 1.000/mês de vazamento, devolvemos o valor do diagnóstico.</div><div><span>Implantação</span>Entrega no prazo. 90 dias depois, se o vazamento medido não cair pela metade, voltamos toda semana sem cobrar até cair.</div><div><span>Todo mês</span>Visita perdida é reposta ou sai da mensalidade. CMV fora da meta 2 meses seguidos: o mês seguinte é por nossa conta.</div>
+  <p class="nota"><b>Os 5 compromissos da casa:</b> notas e vendas toda segunda · contagem semanal no app · alguém que decide em cada visita · ações combinadas feitas · nenhuma mudança de ficha, porção ou fornecedor sem registro. A casa pode dizer não a qualquer mudança; só não dá para dizer não e cobrar o resultado dela. O índice de compromisso aparece toda semana no relatório.</p></div>
+  <h3>O que o cliente recebe · Forja OS</h3><div class="lista">${[['Produto','Ficha técnica e porção padrão na parede.'],['Custo','Custo real de cada prato e alerta de preço do fornecedor.'],['Estoque','O que tem, o que está baixo e o pedido pronto por fornecedor.'],['Equipe','Treino na bancada e checklist de abertura e fechamento.'],['Dono','Um painel no celular com tudo isso, sem montar planilha.']].map(r=>`<div class="row"><div><div class="nm">${r[0]}</div><div class="sb">${r[1]}</div></div></div>`).join('')}</div>
+  <h3>Casas fundadoras</h3><div class="pl-fund">${plVagas()}<p class="rot">${plFech()} fechadas · ${plAbertas()} abertas · na ${plVTot()+1}ª casa o preço sobe 20%</p><ul><li><b>Preço de fundadora.</b> A tabela de hoje, que sobe 20% depois da ${plVTot()}ª casa.</li><li><b>Assinatura travada por 24 meses.</b> O valor não sobe, nem depois do reajuste.</li><li><b>App Forja OS sem custo extra</b> por 12 meses quando for lançado.</li><li><b>Prioridade de agenda</b> e voz no que o app vai ter.</li><li><b>Selo Casa Fundadora</b> na parede da cozinha.</li><li>Em troca, a casa autoriza mostrar os números dela sem nome, só setor e porte.</li></ul></div>
+  <h3>Perguntas de quem está cansado</h3><div class="pl-faq">${PL_FQ.map(q=>`<details><summary>${e(q[0])}</summary><p>${e(q[1])}</p></details>`).join('')}</div>
+  <div class="pl-fim"><h4>Me chama para jantar na sua cozinha.</h4><p>Uma conversa de 15 minutos no WhatsApp e dizemos se o diagnóstico faz sentido. Se não fizer, falamos.</p><a class="bt pri" target="_blank" rel="noopener" href="${ev(plZap('Oi, Gabriel! Vi a página da Forja e quero entender o diagnóstico para a minha cozinha.'))}">Chamar no WhatsApp</a><p class="rot">(12) 99231-8239 · @somosforja.br</p></div>`;
+}
+function plCalcAtual(){
+  const C=S.pl.c,m=S.pl.cm;let tit,mes,nota;
+  if(m==='porcao'){mes=C.pr*C.g/1000*C.kg*30;tit='Vai embora por mês';nota='Estimativa de um item só. O número real sai pesado na bancada.'}
+  else{const dif=Math.max(0,C.hj-C.meta);mes=C.fat*dif/100;tit=dif?'Acima da meta, por mês':'Na meta';nota=dif?'Cada ponto de CMV vale '+plR(C.fat/100)+' por mês. Recuperando só um terço, sobram '+plR(mes/3)+'.':'Bom sinal. O diagnóstico confere se esse número é real.'}
+  const set=(k,t)=>{const el=document.querySelector('[data-o="'+k+'"]');if(el)el.textContent=t};
+  set('tit',tit);set('mes',plR(mes));set('ano',plR(mes*12)+' por ano');set('nota',nota);
+  set('pr',C.pr);set('g',C.g+' g');set('kg','R$ '+C.kg);set('fat',plR(C.fat));set('hj',C.hj+'%');set('meta',C.meta+'%');
+}
+Object.assign(A,{
+  plAba:el=>{S.pl.aba=el.dataset.v;rota()},
+  plTab:el=>{S.pl.tab=el.dataset.v;rota()},
+  plSeg:el=>{S.pl.seg=el.dataset.v;rota()},
+  plCm:el=>{S.pl.cm=el.dataset.v;rota()},
+  smPreset:el=>{S.sm=smNovo(el.dataset.v);S.pl.aba='sob';if(location.hash!=='#/planos')location.hash='#/planos';else rota();window.scrollTo(0,0)},
+  smAdd:()=>{S.sm.itens.push({n:'Novo item',tp:'u',v:'0',q:'',un:'mes'});smRender()},
+  smDel:el=>{S.sm.itens.splice(+el.dataset.i,1);smRender()},
+  smAbrir:el=>{const x=D('CONFIG').find(r=>r.chave==='prop_'+el.dataset.id);if(!x)return;try{S.sm=JSON.parse(x.valor)}catch(_){return}smRender();window.scrollTo(0,0)},
+  smSalvar:async()=>{
+    const m=S.sm;if(!String(m.nome).trim()){toast('Dê um nome à proposta.',true);return}
+    if(!m.id)m.id=uid();m.at=hoje();
+    const r=await salvar('CONFIG',{chave:'prop_'+m.id,valor:JSON.stringify(m)},'Proposta salva.');
+    if(r){S.pl.aba='sob';rota()}
+  },
+  smExcluir:()=>{const id=S.sm.id;confirma('Excluir proposta?','Esta proposta sai da lista.','Excluir',async()=>{if(await excluir('CONFIG','prop_'+id,'Proposta excluída.')){S.sm=smNovo('branco');rota()}},true)},
+  smCopiar:async()=>{const t=smTexto(S.sm);try{await navigator.clipboard.writeText(t);toast('Texto copiado.')}catch(_){toast('Não foi possível copiar.',true)}},
+  smZap:()=>{const c=cli(S.sm.cli);window.open(wa(c&&c.whatsapp,smTexto(S.sm))||('https://wa.me/?text='+encodeURIComponent(smTexto(S.sm))),'_blank','noopener')}
+});
+document.addEventListener('input',ev=>{
+  const t=ev.target;
+  if(t.dataset&&t.dataset.hot){S.pl.h[t.dataset.hot]=num(t.value);plHotAtual();return}
+  if(t.dataset&&t.dataset.calc){S.pl.c[t.dataset.calc]=num(t.value);plCalcAtual();return}
+  if(t.dataset&&t.dataset.sm&&!/^(SELECT)$/.test(t.tagName))smCampo(t);
+});
+document.addEventListener('change',ev=>{
+  const t=ev.target;
+  if(t.dataset&&t.dataset.sm&&t.tagName==='SELECT'){smCampo(t);if(t.dataset.sm==='tp'||(t.dataset.sm==='un'&&t.dataset.i!==undefined))smRender()}
+});
+function smCampo(t){
+  const k=t.dataset.sm,m=S.sm;if(!m)return;
+  if(t.dataset.i!==undefined){const x=m.itens[+t.dataset.i];if(!x)return;x[k]=t.value}
+  else m[k]=t.value;
+  smAtual();
 }
 
 /* ---------- usuários (administrador) ---------- */
