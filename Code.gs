@@ -12,6 +12,7 @@
 
 var VERSAO = '1.0.0';
 var TOKEN_HORAS = 12;
+var TOKEN_HORAS_LEMBRAR = 720; /* 30 dias quando o aparelho é de confiança */
 
 var ESQUEMA = {
   CLIENTES: { id: 'id', cols: ['id','codigo','nome','contato','whatsapp','tipo','porte','cidade','origem','dor','estagio','responsavel','vazamento_mes','ultima_interacao','proxima_acao','data_proxima','plano','status_impl','inicio','semanas','p_produto','p_custo','p_gente','p_conduta','p_rotina','cmv_base','cmv_atual','economia_mes','valor_rx','autorizada_case','motivo','notas','criado_em','atualizado_em'], req: [] },
@@ -155,7 +156,8 @@ function login_(c) {
     return erro_('Código incorreto.');
   }
   cache.remove('tentativas');
-  var exp = Date.now() + TOKEN_HORAS * 3600 * 1000;
+  var horas = c.lembrar ? TOKEN_HORAS_LEMBRAR : TOKEN_HORAS;
+  var exp = Date.now() + horas * 3600 * 1000;
   var carga = 'dono.' + exp;
   return ok_({ token: carga + '.' + assinar_(carga), expira: exp, versao: VERSAO }, 'Bem-vindo.');
 }

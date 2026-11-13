@@ -7,26 +7,30 @@
 <title>Forja · Gerenciador</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Forja">
+<meta name="format-detection" content="telephone=no">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;600&display=swap">
 <script src="config.js" onerror="void 0"></script>
 <style>
 /* Forja · Gerenciador v1.1 · interface no padrão do Meu Dia (v.08 leve + v.13 relatório) */
 :root{
-  --ferro:#14100E;--aco:#3A3532;--escoria:#6E6663;--brasa:#D4500F;--chama:#F07A1E;--faisca:#FFC24A;--temperado:#2F5D3A;--cal:#F2F0ED;
+  --ferro:#14100E;--aco:#3A3532;--escoria:#6E6663;--brasa:#D4500F;--chama:#FE590B;--faisca:#FFC24A;--temperado:#2F5D3A;--cal:#F2F0ED;
   --bg:#F5F3F0;--card:#FFFFFF;--surf:#EFECE8;--surf2:#E5E0DB;--ink:#14100E;--ink2:#3A3532;--ink3:#6E6663;
-  --rule:rgba(20,16,14,.08);--trilho:#D9D2CB;--acento:#D4500F;--ok:#2F5D3A;--alertabg:#FFC24A;--alerta:#8A6100;
-  --tile:#14100E;--hdr:rgba(245,243,240,.86);--navbg:rgba(255,255,255,.92);--acc-soft:rgba(212,80,15,.11);
+  --rule:rgba(20,16,14,.08);--trilho:#D9D2CB;--acento:#FE590B;--ok:#2F5D3A;--alertabg:#FFC24A;--alerta:#8A6100;
+  --tile:#14100E;--hdr:rgba(245,243,240,.86);--navbg:rgba(255,255,255,.92);--acc-soft:rgba(254,89,11,.12);
   --r:20px;--r2:14px;--sh:0 1px 2px rgba(20,16,14,.04),0 8px 24px -14px rgba(20,16,14,.18);color-scheme:light}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#121010;--card:#1C1917;--surf:#25211E;--surf2:#2F2925;--ink:#F2F0ED;--ink2:#CFC8C2;--ink3:#9A918C;
-  --rule:rgba(242,240,237,.09);--trilho:#2B2522;--acento:#F07A1E;--ok:#6FA97F;--alerta:#FFC24A;--tile:#2A2420;
-  --hdr:rgba(18,16,16,.86);--navbg:rgba(29,24,21,.92);--acc-soft:rgba(240,122,30,.15);
+  --rule:rgba(242,240,237,.09);--trilho:#2B2522;--acento:#FE590B;--ok:#6FA97F;--alerta:#FFC24A;--tile:#2A2420;
+  --hdr:rgba(18,16,16,.86);--navbg:rgba(29,24,21,.92);--acc-soft:rgba(254,89,11,.17);
   --sh:0 1px 0 rgba(255,255,255,.04) inset,0 12px 30px -16px rgba(0,0,0,.7);color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#121010;--card:#1C1917;--surf:#25211E;--surf2:#2F2925;--ink:#F2F0ED;--ink2:#CFC8C2;--ink3:#9A918C;
-  --rule:rgba(242,240,237,.09);--trilho:#2B2522;--acento:#F07A1E;--ok:#6FA97F;--alerta:#FFC24A;--tile:#2A2420;
-  --hdr:rgba(18,16,16,.86);--navbg:rgba(29,24,21,.92);--acc-soft:rgba(240,122,30,.15);
+  --rule:rgba(242,240,237,.09);--trilho:#2B2522;--acento:#FE590B;--ok:#6FA97F;--alerta:#FFC24A;--tile:#2A2420;
+  --hdr:rgba(18,16,16,.86);--navbg:rgba(29,24,21,.92);--acc-soft:rgba(254,89,11,.17);
   --sh:0 1px 0 rgba(255,255,255,.04) inset,0 12px 30px -16px rgba(0,0,0,.7);color-scheme:dark}
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0}
@@ -88,6 +92,8 @@ label.f{display:block;font-size:12px;font-weight:700;color:var(--ink3);margin-bo
 label.f input,label.f select,label.f textarea{display:block;width:100%;margin-top:5px;background:var(--surf);border:0;border-radius:var(--r2);padding:10px 12px;min-height:46px;font-family:"Archivo",sans-serif;font-size:16px;color:var(--ink);font-weight:500;-webkit-appearance:none;appearance:none}
 label.f select{background-image:linear-gradient(45deg,transparent 50%,var(--ink3) 50%),linear-gradient(135deg,var(--ink3) 50%,transparent 50%);background-position:calc(100% - 18px) 52%,calc(100% - 13px) 52%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
 label.f textarea{min-height:110px;resize:vertical;font-family:"Source Serif 4",Georgia,serif;line-height:1.5}
+label.chk{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:15px;color:var(--ink2);font-weight:500;cursor:pointer}
+label.chk input{width:22px;height:22px;min-height:0;margin:0;accent-color:var(--acento)}
 label.f input:focus,label.f select:focus,label.f textarea:focus{outline:0;box-shadow:0 0 0 2.5px var(--acento)}
 label.f.erro input,label.f.erro select,label.f.erro textarea{box-shadow:0 0 0 2px var(--brasa)}
 label.f .msg{display:none;color:var(--acento);font-size:12.5px;margin-top:4px;font-weight:600}
@@ -607,14 +613,19 @@ async function entrar(ev){
   ev.preventDefault();const cod=$('#cod').value.trim();
   if(!GS()&&$('#url')){const u=$('#url').value.trim();if(!/^https:\/\/script\.google\.com\/.+\/exec/.test(u)){toast('Endereço inválido. Cole o link que termina em /exec.',true);return}ls('forja_api',u)}
   if(!cod){toast('Digite o código.',true);return}
-  const r=await run('login',{codigo:cod});if(!r)return;
+  const lembrar=(document.querySelector('#lembrar')||{}).checked!==false;
+  const r=await run('login',{codigo:cod,lembrar:lembrar});if(!r)return;
   S.tok=r.data.token;ss('forja_tok',S.tok);
   if(await carregar())rota();
 }
 function telaLogin(){
   const precisaUrl=!GS()&&!window.FORJA_API_URL;
   $('#app').innerHTML=`<div class="login"><div class="ident">${logo(48)}<div><h1>Forja</h1><div class="nota">Gerenciador de clientes</div></div></div>
-  <form class="card" id="fl" novalidate><label class="f">Código de acesso<input id="cod" type="password" autocomplete="current-password" autofocus></label>
+  <form class="card" id="fl" method="post" action="#" novalidate>
+  <input type="text" id="usr" name="username" autocomplete="username" value="forja" readonly
+         aria-hidden="true" tabindex="-1" style="position:absolute;opacity:0;height:0;width:0;padding:0;margin:0;border:0;pointer-events:none">
+  <label class="f">Código de acesso<input id="cod" name="password" type="password" autocomplete="current-password" enterkeyhint="go" autofocus></label>
+  <label class="chk"><input type="checkbox" id="lembrar" checked> Manter conectado neste aparelho</label>
   ${precisaUrl?`<label class="f">Endereço do servidor (Apps Script, termina em /exec)<input id="url" type="url" placeholder="https://script.google.com/macros/s/.../exec" value="${e(ls('forja_api'))}"></label>`:''}
   <button class="bt pri cheio" type="submit">Entrar</button></form><p class="rodape">Padrão que se instala. Não se discute.</p></div>`;
   $('#fl').addEventListener('submit',entrar);
