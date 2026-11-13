@@ -8,33 +8,23 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;600&display=swap">
 <script src="config.js" onerror="void 0"></script>
 <style>
-/* Forja · Gerenciador v1.3 · interface no padrão do Meu Dia (v.08 leve + v.13 relatório) */
+/* Forja · Gerenciador v1.4 · interface no padrão do Meu Dia (v.08 leve + v.13 relatório) */
 :root{
   --ferro:#14100E;--aco:#3A3532;--escoria:#6E6663;--brasa:#D4500F;--chama:#F07A1E;--faisca:#FFC24A;--temperado:#2F5D3A;--cal:#F2F0ED;
   --bg:#F5F3F0;--card:#FFFFFF;--surf:#EFECE8;--surf2:#E5E0DB;--ink:#14100E;--ink2:#3A3532;--ink3:#6E6663;
   --rule:rgba(20,16,14,.08);--trilho:#D9D2CB;--acento:#D4500F;--ok:#2F5D3A;--alertabg:#FFC24A;--alerta:#8A6100;
   --tile:#14100E;--hdr:rgba(245,243,240,.86);--navbg:rgba(255,255,255,.92);--acc-soft:rgba(212,80,15,.11);
   --r:20px;--r2:14px;--sh:0 1px 2px rgba(20,16,14,.04),0 8px 24px -14px rgba(20,16,14,.18);color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#121010;--card:#1C1917;--surf:#25211E;--surf2:#2F2925;--ink:#F2F0ED;--ink2:#CFC8C2;--ink3:#9A918C;
-  --rule:rgba(242,240,237,.09);--trilho:#2B2522;--acento:#F07A1E;--ok:#6FA97F;--alerta:#FFC24A;--tile:#2A2420;
-  --hdr:rgba(18,16,16,.86);--navbg:rgba(29,24,21,.92);--acc-soft:rgba(240,122,30,.15);
-  --sh:0 1px 0 rgba(255,255,255,.04) inset,0 12px 30px -16px rgba(0,0,0,.7);color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#121010;--card:#1C1917;--surf:#25211E;--surf2:#2F2925;--ink:#F2F0ED;--ink2:#CFC8C2;--ink3:#9A918C;
-  --rule:rgba(242,240,237,.09);--trilho:#2B2522;--acento:#F07A1E;--ok:#6FA97F;--alerta:#FFC24A;--tile:#2A2420;
-  --hdr:rgba(18,16,16,.86);--navbg:rgba(29,24,21,.92);--acc-soft:rgba(240,122,30,.15);
-  --sh:0 1px 0 rgba(255,255,255,.04) inset,0 12px 30px -16px rgba(0,0,0,.7);color-scheme:dark}
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0}
 html{-webkit-text-size-adjust:100%}
-body{background:var(--bg);color:var(--ink);font-family:"Archivo",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);font-family:"Source Serif 4",Georgia,serif;font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 body.trava{overflow:hidden}
 [hidden]{display:none!important}
-h1,h2,h3{margin:0;font-family:"Archivo",sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+h1,h2,h3{margin:0;font-family:var(--f-b);font-weight:700;letter-spacing:-.02em;line-height:1.15}
 .mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
 a{color:inherit}
 button{cursor:pointer;font-family:inherit}
@@ -85,7 +75,7 @@ h3.sec::before{display:none}
 .bt.cheio{width:100%;min-height:52px;border-radius:16px;font-size:15px}
 .bt[disabled]{opacity:.4;cursor:not-allowed}
 label.f{display:block;font-size:12px;font-weight:700;color:var(--ink3);margin-bottom:12px;letter-spacing:.01em}
-label.f input,label.f select,label.f textarea{display:block;width:100%;margin-top:5px;background:var(--surf);border:0;border-radius:var(--r2);padding:10px 12px;min-height:46px;font-family:"Archivo",sans-serif;font-size:16px;color:var(--ink);font-weight:500;-webkit-appearance:none;appearance:none}
+label.f input,label.f select,label.f textarea{display:block;width:100%;margin-top:5px;background:var(--surf);border:0;border-radius:var(--r2);padding:10px 12px;min-height:46px;font-family:var(--f-b);font-size:16px;color:var(--ink);font-weight:500;-webkit-appearance:none;appearance:none}
 label.f select{background-image:linear-gradient(45deg,transparent 50%,var(--ink3) 50%),linear-gradient(135deg,var(--ink3) 50%,transparent 50%);background-position:calc(100% - 18px) 52%,calc(100% - 13px) 52%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
 label.f textarea{min-height:110px;resize:vertical;font-family:"Source Serif 4",Georgia,serif;line-height:1.5}
 label.f input:focus,label.f select:focus,label.f textarea:focus{outline:0;box-shadow:0 0 0 2.5px var(--acento)}
@@ -147,7 +137,7 @@ select.sel{background:var(--card);border:1px solid var(--rule);border-radius:999
 .fn .n{text-align:right;font-weight:700;font-size:13px}
 .fn .n small{color:var(--ink3);font-weight:600}
 .graf{width:100%;height:auto;display:block}
-.graf text{font-family:"Archivo",sans-serif;font-size:10px;fill:var(--ink3)}
+.graf text{font-family:var(--f-b);font-size:10px;fill:var(--ink3)}
 .graf text.vv{font-size:11px;font-weight:700;fill:var(--ink)}
 .graf rect.b1{fill:var(--ink3)}.graf rect.b2{fill:var(--acento)}
 .mini3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
@@ -250,75 +240,158 @@ select.sel{background:var(--card);border:1px solid var(--rule);border-radius:999
 .rodape{margin-top:28px;color:var(--ink3);font-size:11.5px;font-family:"IBM Plex Mono",monospace}
 @media print{.capa,.tabbar,.fab,.savebar{display:none}}
 
-/* ===== v1.3 · pele BI · identidade Forja: arestas retas, ferro e brasa ===== */
-:root{--r:3px;--r2:2px;--sh:0 0 0 rgba(0,0,0,0)}
-body{font-size:17px}
-.capa{background:var(--ferro);-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:3px solid var(--brasa)}
-.capa .tt .kk{color:#B5ABA5}.capa .tt h1{color:#F2F0ED}
+/* ===== v1.4 · PELE FORJA · mesma pele das páginas de campo (forja.css v.01) e da planilha =====
+   Ferro e Cal ~70% · Aço e Escória ~25% · laranjas ≤5%. Temperado = no padrão · Faísca = atenção · Brasa = crítico.
+   Arestas retas, canto inferior direito cortado, zero arredondado, zero sombra, zero degradê.
+   Archivo Black (títulos) · Source Serif 4 (texto) · IBM Plex Mono (dado, rótulo). */
+:root{
+  --linha:#D8D3CE;--palha:#E6E1DC;--okbg:#DCE7DF;--atbg:#FBEBC2;--crbg:#F6D9CC;--faiscaesc:#7F6010;--sobre:#A79F99;
+  --f-d:"Archivo Black","Arial Black","Helvetica Neue",Arial,sans-serif;--f-b:"Source Serif 4",Georgia,"Times New Roman",serif;--f-m:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --bg:#F2F0ED;--card:#FFFFFF;--surf:#E6E1DC;--surf2:#D8D3CE;--ink:#14100E;--ink2:#3A3532;--ink3:#6E6663;--rule:#D8D3CE;--trilho:#D8D3CE;
+  --acento:#D4500F;--ok:#2F5D3A;--alertabg:#FFC24A;--alerta:#7F6010;--tile:#14100E;--acc-soft:#E6E1DC;--corte:12px;color-scheme:light}
+*,*::before,*::after{border-radius:0!important;box-shadow:none!important;text-shadow:none!important}
+html,body{background:var(--bg)!important}
+body{font-family:var(--f-b);font-size:17px;line-height:1.5}
+:focus-visible{outline:3px solid var(--brasa)!important;outline-offset:2px!important}
+.mono,.cd,.dd,.ordem,.av{font-family:var(--f-m)}
+/* capa: faixa de Ferro com o fio de Brasa */
+.capa{background:var(--ferro)!important;-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:3px solid var(--brasa);padding-top:calc(9px + env(safe-area-inset-top,0px));padding-bottom:9px}
+.capa .tt .kk{font-family:var(--f-m);font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--sobre)}
+.capa .tt h1{font-family:var(--f-d);font-weight:400;font-size:clamp(15px,4.4vw,21px);text-transform:uppercase;letter-spacing:-.005em;color:var(--cal);line-height:1.1}
 .capa .marca svg rect{fill:#2A2420}
-.capa .pill{background:#2A2420;border-color:transparent;color:#F2F0ED}
-.capa .ib{background:#2A2420;color:#F2F0ED}
-.pill,.chip,.ordem,.seg-ctl,.seg-ctl button,select.sel,.etapas button,.toast,.alca i,.bi-kpi::after{border-radius:2px}
-.pill::before,.dot,.av i,.tli::before,h3::before{border-radius:0}
-h3::before{width:10px;height:3px}
-.av,.caixa,.fab,.tabbar,.tabbar a,.sheet,.ib{border-radius:3px}
-.sheet{border-radius:6px 6px 0 0}
-.card,.lista,.pit,.kc,.col,.acao,.vazio,.tiles div,.bi-kpi,.bt,.bt.cheio,.bt.mini,.busca,label.f input,label.f select,label.f textarea,.mini3 div,.pit .tx{border-radius:3px}
-.card,.lista,.pit,.bi-kpi,.acao{border:1px solid var(--rule);box-shadow:none}
-.fab{border-radius:3px;box-shadow:none;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%)}
-.tabbar{box-shadow:none;border-top:2px solid var(--ferro)}
-.tabbar a.on{background:transparent;color:var(--acento);box-shadow:inset 0 3px 0 var(--acento)}
-.ch{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.capa .pill{background:transparent;border:1px solid var(--escoria);color:var(--cal);font-family:var(--f-m);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:6px 10px}
+.capa .pill::before{border-radius:0;width:8px;height:8px;background:var(--temperado)}
+.capa .pill.at::before{background:var(--faisca)}.capa .pill.cr::before{background:var(--brasa)}
+.capa .ib{background:transparent;border:1px solid var(--escoria);color:var(--cal)}
+/* títulos de bloco: barra de Ferro com a ponta de Chama */
+h2{font-family:var(--f-d);font-weight:400;text-transform:uppercase}
+#main h3{background:var(--ferro);color:var(--cal);padding:9px 12px;font-family:var(--f-d);font-weight:400;font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin:24px 0 8px;display:flex;align-items:center;gap:10px}
+#main h3::before{content:"";flex:none;width:10px;height:10px;background:var(--chama);clip-path:polygon(0 0,100% 0,0 100%)}
+#main h3 small,#main h3 .cd{margin-left:auto;font-family:var(--f-m);font-weight:400;font-size:11px;letter-spacing:.08em;color:var(--sobre);text-transform:uppercase}
+#main h3 .chip{margin-left:auto}
+#main .card h3,#main .col h3,#main .pit h3{background:none;color:var(--ferro);padding:0;margin:0;font-size:14px;display:block}
+#main .card h3::before,#main .col h3::before,#main .pit h3::before{content:none}
+#main .col h3{display:flex;justify-content:space-between;font-family:var(--f-m);font-weight:600;font-size:12px;letter-spacing:.12em}
+.nota,.lead{font-family:var(--f-b);font-size:14.5px;color:var(--escoria);line-height:1.45}
+label.f{font-family:var(--f-m);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--escoria);font-weight:600}
+.voltar{font-family:var(--f-m);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--brasa)}
+/* cartões e listas: topo de Ferro, canto inferior direito cortado */
+.card,.lista,.pit,.acao,.vazio{background:var(--card);border:1px solid var(--linha);border-top:3px solid var(--ferro);clip-path:polygon(0 0,100% 0,100% calc(100% - var(--corte)),calc(100% - var(--corte)) 100%,0 100%)}
+.vazio{border-style:solid;color:var(--escoria)}
+.card.hoje{border-left:1px solid var(--linha)}
+.ch{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
 .ch h3{margin:0}
-.card.hoje{border-left:4px solid var(--brasa)}
-/* hero */
-.bi-hero{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:6px}
-@media (min-width:640px){.bi-hero{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.hk{background:var(--ferro);color:#F2F0ED;border:0;border-top:4px solid #6E6663;border-radius:3px;padding:14px 14px 12px;text-align:left;display:grid;gap:3px;align-content:start;min-height:132px;font-family:inherit;min-width:0}
-.hk.ok{border-top-color:#6FA97F}.hk.at{border-top-color:var(--faisca)}.hk.cr{border-top-color:var(--chama)}
-.hk:active{transform:scale(.98)}
-.hl{font-size:12.5px;font-weight:600;color:#B5ABA5;line-height:1.25}
-.hv{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:44px;line-height:1.05;letter-spacing:-.03em;margin-top:4px}
-.hk.cr .hv{color:var(--chama)}.hk.at .hv{color:var(--faisca)}.hk.ok .hv{color:#8FC49F}
-.hs{font-size:12px;color:#B5ABA5;font-weight:600}
-/* funil */
+.row{border-top:1px solid var(--linha)}
+.row .nm{font-family:var(--f-b);font-weight:700;font-size:16.5px}
+.row .sb{font-family:var(--f-b);font-size:14.5px;color:var(--escoria)}
+.row.lk:active{background:var(--palha)}
+.av{background:var(--ferro);color:var(--cal);font-size:12.5px;font-weight:600}
+.av i{border:2px solid var(--card)}
+.caixa{border:2px solid var(--aco);border-radius:0}
+/* botões: canto inferior direito cortado */
+.bt{background:var(--ferro);color:var(--cal);font-family:var(--f-m);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;clip-path:polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%)}
+.bt:hover{background:var(--aco)}
+.bt.pri{background:var(--brasa);color:#fff}
+.bt.sec{background:transparent;color:var(--ferro);border:1px solid var(--aco)}
+.bt.perigo{background:transparent;color:var(--brasa);border:1px solid var(--brasa)}
+.bt.mini{font-size:11px;min-height:34px}
+.bt.cheio{font-size:13px}
+.bt:focus-visible{clip-path:none}
+/* campos */
+label.f input,label.f select,label.f textarea,.busca,select.sel{background:var(--card);border:1px solid var(--aco);font-family:var(--f-b);color:var(--ferro)}
+label.f input:focus,label.f select:focus,label.f textarea:focus,.busca:focus{outline:3px solid var(--brasa)!important}
+label.f.erro input,label.f.erro select,label.f.erro textarea{border-color:var(--brasa);border-width:2px}
+select.sel{font-family:var(--f-m);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.seg-ctl{background:var(--card);border:1px solid var(--aco);padding:0;gap:0}
+.seg-ctl button{font-family:var(--f-m);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;border-left:1px solid var(--aco);color:var(--ferro)}
+.seg-ctl button:first-child{border-left:0}
+.seg-ctl button.on{background:var(--ferro);color:var(--cal)}
+.etapas button{background:var(--card);border:1px solid var(--aco);font-family:var(--f-m);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ferro)}
+.etapas button.on{background:var(--ferro);color:var(--cal)}
+/* abas de página do cliente: aba ativa em Ferro com o fio de Brasa embaixo */
+.pags{border-bottom:2px solid var(--ferro);background:var(--bg)}
+.pags button{font-family:var(--f-m);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;border-bottom:3px solid transparent;color:var(--escoria)}
+.pags button[aria-selected="true"]{background:var(--ferro);color:var(--cal);border-bottom-color:var(--brasa)}
+/* chips de estado */
+.chip{font-family:var(--f-m);font-size:11px;font-weight:600;letter-spacing:.03em;background:var(--palha);color:var(--escoria)}
+.chip.ok{background:var(--okbg);color:var(--temperado)}.chip.at{background:var(--atbg);color:var(--faiscaesc)}.chip.cr{background:var(--crbg);color:var(--brasa)}.chip.sf{background:var(--ferro);color:var(--cal)}
+.dot.ok{background:var(--temperado)}.dot.at{background:var(--faisca)}.dot.cr{background:var(--brasa)}
+/* KPIs: barra de estado à esquerda (Temperado, Faísca, Brasa) */
+.kg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:3px solid var(--ferro);border-left:1px solid var(--linha);background:var(--card);margin:8px 0 4px;clip-path:polygon(0 0,100% 0,100% calc(100% - var(--corte)),calc(100% - var(--corte)) 100%,0 100%)}
+@media (min-width:640px){.kg{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.kg .k{position:relative;padding:12px 12px 12px 16px;border:0;border-right:1px solid var(--linha);border-bottom:1px solid var(--linha);background:transparent;text-align:left;color:var(--ferro);min-width:0;display:grid;align-content:start;gap:2px;font-family:inherit;cursor:pointer}
+.kg .k:active{background:var(--palha)}
+.kg .k::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--linha)}
+.kg .k.ok::before{background:var(--temperado)}.kg .k.at::before{background:var(--faisca)}.kg .k.cr::before{background:var(--brasa)}
+.kg .l{font-family:var(--f-m);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--escoria);font-weight:600;min-height:30px;line-height:1.3}
+.kg .v{font-family:var(--f-m);font-weight:600;font-size:30px;line-height:1.1;letter-spacing:-.02em;margin:4px 0 2px;white-space:nowrap;color:var(--ferro)}
+.kg .k.cr .v{color:var(--brasa)}.kg .k.at .v{color:var(--faiscaesc)}.kg .k.ok .v{color:var(--temperado)}
+.kg .d{font-family:var(--f-m);font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--escoria)}
+.kg .k.cr .d{color:var(--brasa)}.kg .k.at .d{color:var(--faiscaesc)}.kg .k.ok .d{color:var(--temperado)}
+.mais-l{font-family:var(--f-m);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--brasa)}
+/* funil, rosca, origem, barras: Aço, Brasa só no que decide, Temperado no fechamento */
 .funil{display:grid;gap:12px}
-.fn2{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;font-weight:700;margin-bottom:4px}
-.fn2 small{color:var(--ink3);font-weight:600;font-size:12.5px;margin-left:4px}
-.fb{height:22px;background:var(--surf)}
+.fn2{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--f-b);font-size:15.5px;font-weight:700;margin-bottom:4px}
+.fn2 b{font-family:var(--f-m);font-size:15px}
+.fn2 small{color:var(--escoria);font-weight:600;font-size:12px;margin-left:6px}
+.fb{height:18px;background:var(--palha)}
 .fb i{display:block;height:100%;background:var(--aco);min-width:3px}
 .fb i.fim{background:var(--temperado)}
-.funil .fl:nth-child(n+3):not(:last-child) .fb i{background:var(--acento)}
 .funil .fl:first-child .fb i{background:var(--ferro)}
-:root[data-theme="dark"] .funil .fl:first-child .fb i{background:#6E6663}
-/* duo */
-.bi-duo{display:grid;gap:0 12px;grid-template-columns:1fr}
+.funil .fl:nth-child(n+3):not(:last-child) .fb i{background:var(--aco)}
+.bi-duo{display:grid;grid-template-columns:1fr;gap:0 12px}
 @media (min-width:640px){.bi-duo{grid-template-columns:1fr 1fr}}
 .dn-w{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .donut{width:128px;height:128px;flex:none}
-.donut .dn{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:22px;fill:var(--ink)}
-.donut .dl{font-size:9px;fill:var(--ink3);font-weight:600}
+.donut .dn{font-family:var(--f-m);font-weight:600;font-size:22px;fill:var(--ferro)}
+.donut .dl{font-family:var(--f-m);font-size:8px;fill:var(--escoria);font-weight:600;letter-spacing:.1em}
 .leg{flex:1;min-width:130px;display:grid;gap:6px}
-.leg div{display:grid;grid-template-columns:12px 1fr auto;gap:8px;align-items:center;font-size:14px;font-weight:600}
+.leg div{display:grid;grid-template-columns:12px 1fr auto;gap:8px;align-items:center;font-size:14.5px;font-weight:600}
 .leg i{width:12px;height:12px;display:block}
-.hb{display:grid;grid-template-columns:96px 1fr 30px;gap:10px;align-items:center;margin:9px 0;font-size:14px;font-weight:600}
+.hb{display:grid;grid-template-columns:96px 1fr 30px;gap:10px;align-items:center;margin:9px 0;font-size:14.5px;font-weight:600}
 .hb span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hb div{height:14px;background:var(--surf)}.hb i{display:block;height:100%;background:var(--acento)}
-.hb b{text-align:right}
+.hb div{height:14px;background:var(--palha)}.hb i{display:block;height:100%;background:var(--aco)}
+.hb b{text-align:right;font-family:var(--f-m)}
+.graf text{font-family:var(--f-m)}
 .graf rect.b1{fill:var(--aco)}.graf rect.b2{fill:var(--brasa)}
-:root[data-theme="dark"] .graf rect.b1{fill:#6E6663}
-/* KPIs secundários */
-.bi-kpi{border-top:3px solid var(--trilho);min-height:112px}
-.bi-kpi::after{display:none}
-.bi-kpi.ok{border-top-color:var(--ok)}.bi-kpi.at{border-top-color:var(--alertabg)}.bi-kpi.cr{border-top-color:var(--brasa)}
-.bi-kv{font-family:"IBM Plex Mono",monospace;font-size:28px;font-weight:600}
-.bi-kn{font-size:13px}
-.fb,.hb div,.env .tr,.env .tr i,.fn .b,.fn .b i{border-radius:0}
-.chip{font-size:12px;padding:3px 8px}
-.nota{font-size:14px}
-.row .sb{font-size:14px}
-.fab span{font-size:15px}
-.spk{width:100%;height:34px;display:block;color:var(--acento)}
+.mini3 div{background:var(--palha)}
+.mini3 span{font-family:var(--f-m);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+.env .tr{background:var(--palha)}.env .tr i{background:var(--aco)}
+.env .tr i.ok{background:var(--temperado)}.env .tr i.at{background:var(--faisca)}.env .tr i.cr{background:var(--brasa)}
+.env .en{font-family:var(--f-b)}
+/* kanban, linha do tempo, pitch */
+.col{background:var(--palha)}
+.kc{background:var(--card);border:1px solid var(--linha)}
+.kc.at{border-left:5px solid var(--faisca)}.kc.cr{border-left:5px solid var(--brasa)}
+.acao.quente{border-left:5px solid var(--brasa)}
+.tli::before{background:var(--escoria)}.tli.pl::before{background:var(--faisca)}.tli.fe::before{background:var(--temperado)}
+.ordem{background:var(--ferro);color:var(--cal)}
+.pit .tx{background:var(--palha);border-left:4px solid var(--aco);font-family:var(--f-b)}
+.pit .tx mark{background:var(--atbg);color:var(--faiscaesc);font-weight:600}
+/* barra inferior: Ferro, aba ativa com o fio de Brasa no topo */
+.tabbar{left:0;right:0;bottom:0;background:var(--ferro);border:0;border-top:3px solid var(--brasa);padding-bottom:env(safe-area-inset-bottom,0px);-webkit-backdrop-filter:none;backdrop-filter:none;max-width:none;width:auto;transform:none}
+@media (min-width:700px){.tabbar{left:50%;right:auto;width:min(720px,100%);transform:translateX(-50%)}}
+.tabbar a{color:var(--sobre);font-family:var(--f-m);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;min-height:56px;box-shadow:none}
+.tabbar a.on{background:var(--aco);color:var(--cal);box-shadow:none}
+.tabbar a.on svg{color:var(--chama)}
+.fab{background:var(--brasa);bottom:calc(76px + env(safe-area-inset-bottom,0px));font-family:var(--f-m);font-size:12px;letter-spacing:.08em;text-transform:uppercase;clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%);height:48px}
+.fab span{font-size:12px}
+.savebar{bottom:calc(68px + env(safe-area-inset-bottom,0px))}
+.wrap{padding-bottom:150px}
+/* folha (modal) e aviso */
+#modal{background:rgba(20,16,14,.6)}
+.sheet{background:var(--bg);border-top:3px solid var(--brasa)}
+.sheet h2{font-size:20px}
+.alca i{background:var(--escoria);border-radius:0}
+.toast{background:var(--ferro);color:var(--cal);font-family:var(--f-m);font-size:13px;font-weight:600;border-left:4px solid var(--brasa);text-align:left}
+#toasts{bottom:calc(150px + env(safe-area-inset-bottom,0px));align-items:center}
+.toast{width:fit-content;max-width:100%}
+/* login */
+.login h1{font-family:var(--f-d);font-weight:400;text-transform:uppercase;font-size:26px}
+.login .ident svg rect{fill:var(--ferro)}
+.rodape{font-family:var(--f-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--escoria)}
+a{text-underline-offset:3px}
+@media print{.capa,.tabbar,.fab,.savebar{display:none!important}.card,.lista,.kg,.pit{clip-path:none}}
 </style>
 </head>
 <body>
@@ -329,15 +402,18 @@ h3::before{width:10px;height:3px}
 <script>
 'use strict';
 /* ===== FORJA · GERENCIADOR v1.0.0 — front único (HTML + JS puro) ===== */
-const NAV=[['painel','Painel'],['clientes','Clientes'],['agenda','Agenda'],['pitches','Pitches'],['conteudo','Conteúdo'],['config','Config']];
+const NAV=[['painel','Painel'],['clientes','Clientes'],['agenda','Agenda'],['pitches','Scripts'],['conteudo','Conteúdo'],['config','Config']];
 const S={tok:null,d:null,f:{q:'',estagio:'',resp:'',vista:'lista',esp:''},ag:'todas',pitEtapa:null,pitCli:'',cfgLista:'estagio',cliAba:'roteiro',n:0};
 const LISTAS={estagio:'Estágios do funil',origem:'Origens',tipo:'Tipos de casa',porte:'Portes',dor:'Dores declaradas',responsavel:'Responsáveis',plano:'Planos',status_impl:'Status da implantação',autorizada:'Autorização de case',atv_tipo:'Tipos de atividade',atv_status:'Status da atividade',pit_categoria:'Categorias de pitch',cont_tipo:'Tipos de conteúdo',cont_linha:'Linhas da rotação',cont_status:'Status do conteúdo',cont_gate:'Veredito do gate'};
 const PROPAGA={estagio:[['CLIENTES','estagio'],['PITCHES','etapa']],origem:[['CLIENTES','origem']],tipo:[['CLIENTES','tipo']],porte:[['CLIENTES','porte']],dor:[['CLIENTES','dor']],responsavel:[['CLIENTES','responsavel']],plano:[['CLIENTES','plano']],status_impl:[['CLIENTES','status_impl']],autorizada:[['CLIENTES','autorizada_case']],atv_tipo:[['ATIVIDADES','tipo']],atv_status:[['ATIVIDADES','status']],pit_categoria:[['PITCHES','categoria']],cont_tipo:[['CONTEUDO','tipo']],cont_linha:[['CONTEUDO','linha']],cont_status:[['CONTEUDO','status']],cont_gate:[['CONTEUDO','gate']]};
-const PARAMS=[['Capacidade (hipóteses a calibrar)',[['horas_semana','Horas semanais disponíveis','h'],['teto_implantacoes','Teto de implantações simultâneas','casas'],['h_raiox','Horas por Raio-X','h'],['h_implantacao','Horas por implantação ativa (semana)','h'],['h_conteudo','Horas de conteúdo (semana)','h'],['h_comercial','Horas comerciais (semana)','h'],['h_gestao','Horas de gestão (semana)','h'],['cap_faisca','Capacidade em Faísca a partir de (0 a 1)',''],['cap_brasa','Capacidade em Brasa a partir de (0 a 1)','']]],['Preços (conferir com a tabela vigente)',[['preco_raiox','Raio-X · preço fundador','R$'],['preco_raiox_cheio','Raio-X · preço cheio','R$'],['preco_start','Start','R$'],['preco_forjaos','Forja OS','R$'],['preco_mensal','Sistema Forja OS (mensal)','R$'],['fator_garantia','Fator da garantia (× valor do Raio-X)','×']]],['Prazos e alertas',[['prazo_relatorio_h','Prazo do relatório do Raio-X','h'],['alerta_relatorio_h','Alerta de relatório (horas para vencer)','h'],['lead_faisca_d','Lead parado em Faísca a partir de','dias'],['lead_brasa_d','Lead parado em Brasa a partir de','dias'],['rdo_brasa_d','Casa sem RDO em Brasa a partir de','dias'],['fila_faisca_d','Fila de posts em Faísca abaixo de','dias'],['fila_brasa_d','Fila de posts em Brasa abaixo de','dias'],['cmv_faisca_pt','CMV em Faísca até (pontos acima da base)','pontos']]],['Você',[['nome_exibicao','Seu nome nos pitches',''],['whatsapp_gabriel','Seu WhatsApp (com DDD)','']]]];
+const PARAMS=[['Capacidade (hipóteses a calibrar)',[['horas_semana','Horas semanais disponíveis','h'],['teto_implantacoes','Teto de implantações simultâneas','casas'],['h_raiox','Horas por Raio-X','h'],['h_implantacao','Horas por implantação ativa (semana)','h'],['h_conteudo','Horas de conteúdo (semana)','h'],['h_comercial','Horas comerciais (semana)','h'],['h_gestao','Horas de gestão (semana)','h'],['cap_faisca','Capacidade em Faísca a partir de (0 a 1)',''],['cap_brasa','Capacidade em Brasa a partir de (0 a 1)','']]],['Preços (conferir com a tabela vigente)',[['preco_raiox','Diagnóstico · preço fundador','R$'],['preco_raiox_cheio','Diagnóstico · preço cheio','R$'],['preco_start','Start','R$'],['preco_forjaos','Forja OS','R$'],['preco_mensal','Sistema Forja OS (mensal)','R$'],['fator_garantia','Fator da garantia (× valor do Raio-X)','×']]],['Prazos e alertas',[['prazo_relatorio_h','Prazo do relatório do Raio-X','h'],['alerta_relatorio_h','Alerta de relatório (horas para vencer)','h'],['lead_faisca_d','Lead parado em Faísca a partir de','dias'],['lead_brasa_d','Lead parado em Brasa a partir de','dias'],['rdo_brasa_d','Casa sem RDO em Brasa a partir de','dias'],['fila_faisca_d','Fila de posts em Faísca abaixo de','dias'],['fila_brasa_d','Fila de posts em Brasa abaixo de','dias'],['cmv_faisca_pt','CMV em Faísca até (pontos acima da base)','pontos']]],['Você',[['nome_exibicao','Seu nome nos pitches',''],['whatsapp_gabriel','Seu WhatsApp (com DDD)','']]]];
 const CFG_PAD={cmv_faisca_pt:'2'};
 
 /* ---------- utilitários ---------- */
-const e=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ev=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const MAPA={'Novo':'Novo lead','Conversa':'Em conversa','Raio-X agendado':'Diagnóstico agendado','Raio-X pago':'Diagnóstico pago','Proposta':'Proposta enviada','Adiado':'Em espera','Raio-X':'Diagnóstico'};
+const rt=s=>Object.prototype.hasOwnProperty.call(MAPA,s)?MAPA[s]:s;
+const e=s=>ev(rt(s));
 const $=s=>document.querySelector(s);
 const ls=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k)||'';if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(x){return ''}};
 const ss=(k,v)=>{try{if(v===undefined)return sessionStorage.getItem(k)||'';if(v===null)sessionStorage.removeItem(k);else sessionStorage.setItem(k,v)}catch(x){return ''}};
@@ -457,22 +533,22 @@ function indicadores(){
   return[
    {k:'ativos',l:'Leads ativos',v:leads.length,st:'in',go:'ativos'},
    {k:'parados',l:'Leads parados ou sem próxima ação',v:par.length,st:par.length?(parBr?'cr':'at'):'ok',go:'parados'},
-   {k:'rxag',l:'Raios-X agendados',v:rxAg,st:'in',go:'agenda'},
-   {k:'rxpg',l:'Raios-X pagos',v:rxPg,st:'in'},
+   {k:'rxag',l:'Diagnósticos agendados',v:rxAg,st:'in',go:'agenda'},
+   {k:'rxpg',l:'Diagnósticos pagos',v:rxPg,st:'in'},
    {k:'venc',l:'Relatórios a vencer em até '+cfgN('alerta_relatorio_h')+' h ou vencidos',v:venc.length,st:venc.length?(venc.some(r=>horasRestantes(r)<=0)?'cr':'at'):'ok',go:'agenda'},
    {k:'noprazo',l:'Relatórios no prazo de '+cfgN('prazo_relatorio_h')+' h',v:entreg.length?Math.round(noPr/entreg.length*100)+'%':'—',st:'in'},
    {k:'prop',l:'Propostas enviadas',v:prop,st:'in'},
    {k:'fech',l:'Fechamentos',v:fech,st:'in',go:'fechados'},
-   {k:'conv',l:'Raio-X pago → fechamento',v:rxPg?Math.round(fech/rxPg*100)+'%':'—',st:'in'},
+   {k:'conv',l:'Conversão diagnóstico → fechamento',v:rxPg?Math.round(fech/rxPg*100)+'%':'—',st:'in'},
    {k:'impl',l:'Implantações ativas (teto '+teto+')',v:impl.length,st:teto&&impl.length>teto?'cr':(teto&&impl.length===teto?'at':'ok'),go:'impl'},
    {k:'pct',l:'% médio pronto das casas ativas',v:pct==null?'—':pct+'%',st:'in',go:'impl'},
    {k:'rdo',l:'Casas ativas sem RDO em dia',v:semRdo.length,st:semRdo.length?'cr':'ok',go:'impl'},
    {k:'gar',l:'Garantia em risco (casas)',v:risco.length,st:risco.length?'cr':'ok',go:'impl'},
    {k:'eco',l:'Economia medida por mês',v:brl(eco),st:'in'},
-   {k:'carga',l:'Carga semanal estimada (h) · hipótese',v:cap.h.toLocaleString('pt-BR',{maximumFractionDigits:1})+' / '+cfgN('horas_semana'),st:cap.pct>=cfgN('cap_brasa')?'cr':(cap.pct>=cfgN('cap_faisca')?'at':'ok')}
+   {k:'carga',l:'Carga semanal estimada (h)',v:cap.h.toLocaleString('pt-BR',{maximumFractionDigits:1})+' / '+cfgN('horas_semana'),st:cap.pct>=cfgN('cap_brasa')?'cr':(cap.pct>=cfgN('cap_faisca')?'at':'ok')}
   ];
 }
-const ST={ok:'Temperado',at:'Atenção',cr:'Crítico',in:'Info'};
+const ST={ok:'No padrão',at:'Atenção',cr:'Crítico',in:'Info'};
 
 /* ---------- formulários genéricos ---------- */
 function campo(f,v){
@@ -480,8 +556,8 @@ function campo(f,v){
   let inp;
   if(f.t==='area')inp=`<textarea name="${f.k}" id="${id}"${ro}>${e(v)}</textarea>`;
   else if(f.t==='sel'){const o=(typeof f.o==='function'?f.o():f.o)||[];const ops=o.map(x=>Array.isArray(x)?x:[x,x]);const tem=ops.some(x=>x[0]===v);
-    inp=`<select name="${f.k}" id="${id}"><option value=""></option>${ops.map(x=>`<option value="${e(x[0])}"${x[0]===v?' selected':''}>${e(x[1])}</option>`).join('')}${!tem&&v?`<option value="${e(v)}" selected>${e(v)}</option>`:''}</select>`}
-  else inp=`<input name="${f.k}" id="${id}" type="${f.t==='num'?'text':f.t||'text'}"${f.t==='num'?' inputmode="decimal"':''}${f.t==='tel'?' inputmode="tel"':''} value="${e(v)}"${ro}${f.ph?` placeholder="${e(f.ph)}"`:''}>`;
+    inp=`<select name="${f.k}" id="${id}"><option value=""></option>${ops.map(x=>`<option value="${ev(x[0])}"${x[0]===v?' selected':''}>${e(x[1])}</option>`).join('')}${!tem&&v?`<option value="${ev(v)}" selected>${e(v)}</option>`:''}</select>`}
+  else inp=`<input name="${f.k}" id="${id}" type="${f.t==='num'?'text':f.t||'text'}"${f.t==='num'?' inputmode="decimal"':''}${f.t==='tel'?' inputmode="tel"':''} value="${ev(v)}"${ro}${f.ph?` placeholder="${ev(f.ph)}"`:''}>`;
   return `<label class="f" data-k="${f.k}">${e(f.l)}${f.req?' *':''}${inp}<span class="msg"></span>${f.h?`<span class="nota" style="text-transform:none;font-family:var(--serif)">${e(f.h)}</span>`:''}</label>`;
 }
 function lerForm(form,fields){
@@ -524,7 +600,7 @@ const FCLI=()=>[
   {k:'codigo',l:'Código',ph:'automático (C-001…)',h:'Deixe vazio para gerar.'},{k:'nome',l:'Casa (nome)'},{k:'contato',l:'Dono / contato (nome)'},{k:'whatsapp',l:'WhatsApp com DDD',t:'tel'},
   {k:'tipo',l:'Tipo da casa',t:'sel',o:()=>cat('tipo')},{k:'porte',l:'Porte',t:'sel',o:()=>cat('porte')},{k:'cidade',l:'Bairro / cidade'},{k:'origem',l:'Origem',t:'sel',o:()=>cat('origem')},
   {k:'dor',l:'Dor declarada',t:'sel',o:()=>cat('dor')},{k:'estagio',l:'Estágio',t:'sel',o:()=>cat('estagio'),req:1},{k:'responsavel',l:'Responsável',t:'sel',o:()=>cat('responsavel')},{k:'vazamento_mes',l:'Vazamento estimado por mês (R$)',t:'num',h:'Só com número medido ou declarado pelo dono.'},
-  {k:'valor_rx',l:'Valor do Raio-X (R$)',t:'num',h:'Vazio = preço fundador da Config.'},{k:'proxima_acao',l:'Próxima ação'},{k:'data_proxima',l:'Data da próxima ação',t:'date'},{k:'ultima_interacao',l:'Última interação',t:'date'},
+  {k:'valor_rx',l:'Valor do diagnóstico (R$)',t:'num',h:'Vazio = preço fundador da Config.'},{k:'proxima_acao',l:'Próxima ação'},{k:'data_proxima',l:'Data da próxima ação',t:'date'},{k:'ultima_interacao',l:'Última interação',t:'date'},
   {k:'motivo',l:'Motivo de perda ou adiamento'},{k:'notas',l:'Notas',t:'area'}];
 const FIMPL=()=>[
   {k:'plano',l:'Plano',t:'sel',o:()=>cat('plano')},{k:'status_impl',l:'Status da implantação',t:'sel',o:()=>cat('status_impl')},{k:'inicio',l:'Início',t:'date'},{k:'semanas',l:'Semanas previstas',t:'num'},
@@ -537,7 +613,7 @@ function preencher(txt,c){
 }
 function txPit(t){return e(t).replace(/⟦(\w+)⟧/g,'<mark>[$1]</mark>')}
 /* ---------- AGENDA ---------- */
-const FATV=()=>[{k:'cliente_id',l:'Cliente',t:'sel',o:()=>D('CLIENTES').map(c=>[c.id,nomeC(c)+' ('+c.codigo+')']),req:1},{k:'tipo',l:'Tipo',t:'sel',o:()=>cat('atv_tipo'),req:1},{k:'status',l:'Status',t:'sel',o:()=>cat('atv_status')},{k:'data',l:'Data',t:'date',req:1},{k:'hora',l:'Hora',t:'time'},{k:'valor',l:'Valor (R$)',t:'num',h:'Raio-X pago: valor recebido.'},{k:'prazo',l:'Prazo',t:'date'},{k:'resumo',l:'Resumo',t:'area'}];
+const FATV=()=>[{k:'cliente_id',l:'Cliente',t:'sel',o:()=>D('CLIENTES').map(c=>[c.id,nomeC(c)+' ('+c.codigo+')']),req:1},{k:'tipo',l:'Tipo',t:'sel',o:()=>cat('atv_tipo'),req:1},{k:'status',l:'Status',t:'sel',o:()=>cat('atv_status')},{k:'data',l:'Data',t:'date',req:1},{k:'hora',l:'Hora',t:'time'},{k:'valor',l:'Valor (R$)',t:'num',h:'Diagnóstico pago: valor recebido.'},{k:'prazo',l:'Prazo',t:'date'},{k:'resumo',l:'Resumo',t:'area'}];
 const SUGERE={'Raio-X':{Planejada:'Raio-X agendado'},'Relatório':{Feita:'Relatório entregue'},'Proposta':{Feita:'Proposta'},'Fechamento':{Feita:'Fechado'},'Conversa':{Feita:'Conversa'}};
 async function pergMover(a){
   const c=cli(a.cliente_id);if(!c||!ativoLead(c))return;
@@ -687,10 +763,10 @@ async function entrar(ev){
 function telaLogin(){
   const precisaUrl=!GS()&&!window.FORJA_API_URL;const em=ls('forja_email')||'';
   $('#app').innerHTML=`<div class="login"><div class="ident">${logo(48)}<div><h1>Forja</h1><div class="nota">Gerenciador de clientes</div></div></div>
-  <form class="card" id="fl" novalidate><label class="f">E-mail<input id="em" type="email" autocomplete="username" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" value="${e(em)}" ${em?'':'autofocus'}></label>
+  <form class="card" id="fl" novalidate><label class="f">E-mail<input id="em" type="email" autocomplete="username" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" value="${ev(em)}" ${em?'':'autofocus'}></label>
   <label class="f">Senha<span class="pw"><input id="sn" type="password" autocomplete="current-password" ${em?'autofocus':''}><button type="button" class="bt mini sec" data-act="verSenha">Mostrar</button></span></label>
-  ${precisaUrl?`<label class="f">Endereço do servidor (Apps Script, termina em /exec)<input id="url" type="url" placeholder="https://script.google.com/macros/s/.../exec" value="${e(ls('forja_api'))}"></label>`:''}
-  <button class="bt pri cheio" type="submit">Entrar</button></form><p class="rodape">Esqueceu a senha? Peça ao administrador para redefinir. Padrão que se instala. Não se discute.</p></div>`;
+  ${precisaUrl?`<label class="f">Endereço do servidor (Apps Script, termina em /exec)<input id="url" type="url" placeholder="https://script.google.com/macros/s/.../exec" value="${ev(ls('forja_api'))}"></label>`:''}
+  <button class="bt pri cheio" type="submit">Entrar</button></form><p class="rodape">Esqueceu a senha? Peça ao administrador para redefinir.</p></div>`;
   $('#fl').addEventListener('submit',entrar);
 }
 
@@ -716,7 +792,7 @@ function formModal(titulo,fields,vals,onSave,onDel){
 function casca(t){
   const ativo={painel:'painel',clientes:'clientes',cliente:'clientes',agenda:'agenda',pitches:'pitches'}[t]||'mais';
   const hj=acoesHoje(),n=hj.length,atras=hj.some(x=>x.n===2);
-  const tabs=[['painel','Painel'],['clientes','Clientes'],['agenda','Agenda'],['pitches','Pitches'],['mais','Mais']];
+  const tabs=[['painel','Painel'],['clientes','Clientes'],['agenda','Agenda'],['pitches','Scripts'],['mais','Mais']];
   $('#app').innerHTML=`<header class="capa"><div class="lin"><a class="marca" href="#/painel">${logo(38)}</a><div class="tt"><div class="kk">${e(S.kk)}</div><h1>${e(S.tit)}</h1></div>
   <div class="dir"><a class="pill ${n?(atras?'cr':'at'):''}" href="#/painel">${n?n+' hoje':'Em dia'}</a><button class="ib" data-act="atualizar" aria-label="Atualizar dados">${IC.refresh}</button></div></div></header>
   <main class="wrap" id="main"></main>
@@ -745,7 +821,7 @@ function acoesHoje(){
     if(c.proxima_acao&&c.data_proxima&&c.data_proxima<=T&&!D('ATIVIDADES').some(a=>a.cliente_id===c.id&&a.status==='Planejada'&&a.data<=T&&a.resumo===c.proxima_acao))it.push({n:c.data_proxima<T?2:1,t:'Próxima ação: '+c.proxima_acao,c,d:c.data_proxima});
     else if(!c.proxima_acao&&alerta(c).n)it.push({n:1,t:'Definir próxima ação ('+alerta(c).t+')',c,d:''});
   });
-  relatorios().filter(r=>!r.ent&&horasRestantes(r)<=cfgN('alerta_relatorio_h')).forEach(r=>it.push({n:horasRestantes(r)<=0?2:1,t:'Relatório do Raio-X: '+(horasRestantes(r)<=0?'VENCIDO':'vence em '+Math.max(0,Math.round(horasRestantes(r)))+' h'),c:r.c,d:''}));
+  relatorios().filter(r=>!r.ent&&horasRestantes(r)<=cfgN('alerta_relatorio_h')).forEach(r=>it.push({n:horasRestantes(r)<=0?2:1,t:'Relatório do diagnóstico: '+(horasRestantes(r)<=0?'VENCIDO':'vence em '+Math.max(0,Math.round(horasRestantes(r)))+' h'),c:r.c,d:''}));
   return it.sort((a,b)=>b.n-a.n);
 }
 function chBarras(vals,labs){
@@ -778,7 +854,7 @@ function vPainel(){
   const u4=sem.slice(4);const som=f=>u4.reduce((s,w)=>s+cont(w,f),0);
   const imp=C.filter(c=>c.cmv_base!==''&&c.cmv_atual!=='');
   const cmvSt=c=>{const v=num(c.cmv_atual)-num(c.cmv_base);return v<=0?'ok':(v<=cfgN('cmv_faisca_pt')?'at':'cr')};
-  const PAL=['#14100E','#3A3532','#6E6663','#B5ABA5','#F07A1E','#D4500F','#FFC24A','#2F5D3A'];
+  const PAL=['#14100E','#3A3532','#6E6663','#A79F99','#D8D3CE','#F07A1E','#2F5D3A','#B5ABA5'];
   const porEst=E.map((s,i)=>({n:s,v:C.filter(c=>c.estagio===s).length,c:PAL[i%PAL.length]}));
   const org={};C.forEach(c=>{const o=(c.origem||'Sem origem').trim()||'Sem origem';org[o]=(org[o]||0)+1});
   const orgL=Object.keys(org).map(k=>[k,org[k]]).sort((a,b)=>b[1]-a[1]).slice(0,6);
@@ -787,28 +863,28 @@ function vPainel(){
   const hero=[
     {l:'Leads ativos',v:kv('ativos'),st:'in',go:'ativos',sub:tot+' no total'},
     {l:'Parados ou sem próxima ação',v:kv('parados'),st:(K.find(x=>x.k==='parados')||{}).st,go:'parados',sub:'pedem contato'},
-    {l:'Raios-X pagos',v:rxpg,st:'in',sub:fun[1][1]+' agendados'},
+    {l:'Diagnósticos pagos',v:rxpg,st:'in',sub:fun[1][1]+' agendados'},
     {l:'Fechamentos',v:fech,st:fech?'ok':'in',go:'fechados',sub:taxa+'% dos leads'}
   ];
   const sw=conv.reduce((a,b)=>a+b,0);
   return `<section>
-  <div class="bi-hero">${hero.map(k=>`<button class="hk ${k.st}" ${k.go?`data-act="kpi" data-go="${k.go}"`:'tabindex="-1" style="cursor:default"'}><span class="hl">${e(k.l)}</span><span class="hv">${e(k.v)}</span><span class="hs">${e(k.sub)}</span></button>`).join('')}</div>
-  <div class="card hoje"><div class="ch"><h3>Hoje</h3><span class="chip ${it.length?(it.some(x=>x.n===2)?'cr':'at'):'ok'}">${it.length?it.length+' ação(ões)':'em dia'}</span></div>
+  <div class="kg">${hero.map(k=>`<button class="k ${k.st}" ${k.go?`data-act="kpi" data-go="${k.go}"`:'tabindex="-1" style="cursor:default"'}><span class="l">${e(k.l)}</span><span class="v">${e(k.v)}</span><span class="d">${e(k.sub)}</span></button>`).join('')}</div>
+  <h3>Hoje <span class="chip ${it.length?(it.some(x=>x.n===2)?'cr':'at'):'ok'}">${it.length?it.length+' ação(ões)':'em dia'}</span></h3><div class="card hoje">
   ${it.length?`<div>${it.slice(0,6).map(x=>`<div class="row">${x.atv?`<input type="checkbox" class="caixa" data-act="feita" data-id="${x.atv.id}" aria-label="Marcar como feita">`:`<span class="dot ${x.n===2?'cr':'at'}"></span>`}<div style="min-width:0"><div class="nm">${e(nomeC(x.c))}</div><div class="sb">${e(x.t)}</div></div><div class="rt">${x.d?`<span class="chip ${x.n===2?'cr':'at'}">${x.n===2?'atrasado':fd(x.d)}</span>`:''}<a class="go" href="#/cliente/${x.c?x.c.id:''}" aria-label="Abrir">›</a></div></div>`).join('')}</div>${it.length>6?`<p class="nota">+ ${it.length-6} na <a href="#/agenda">Agenda</a>.</p>`:''}`:'<p class="nota" style="font-size:14.5px;margin:0">Nada vencendo. Use o tempo para o próximo lead.</p>'}</div>
-  <div class="card"><div class="ch"><h3>Funil de vendas</h3><span class="cd">conversão total ${taxa}%</span></div>
+  <h3>Funil de vendas <span class="cd">conversão total ${taxa}%</span></h3><div class="card">
   <div class="funil">${fun.map((f,i)=>{const w=fun[0][1]?Math.max(f[1]/fun[0][1]*100,f[1]?6:2):2;const pr=i&&fun[i-1][1]?Math.round(f[1]/fun[i-1][1]*100):null;return `<div class="fl"><div class="fn2"><span>${e(f[0])}</span><b class="mono">${f[1]}${pr!=null?` <small>${pr}%</small>`:''}</b></div><div class="fb"><i class="${i===fun.length-1?'fim':''}" style="width:${w.toFixed(1)}%"></i></div></div>`}).join('')}</div>
   <p class="nota">% sobre a etapa anterior. Perdidos e adiados contam só pelas atividades registradas.</p></div>
-  <div class="bi-duo">
-  <div class="card"><div class="ch"><h3>Leads por estágio</h3></div><div class="dn-w">${donut(porEst)}<div class="leg">${porEst.filter(p=>p.v).map(p=>`<div><i style="background:${p.c}"></i><span>${e(p.n)}</span><b class="mono">${p.v}</b></div>`).join('')||'<span class="nota">Sem leads.</span>'}</div></div></div>
-  <div class="card"><div class="ch"><h3>De onde vêm</h3></div>${orgL.length?orgL.map(o=>`<div class="hb"><span>${e(o[0])}</span><div><i style="width:${Math.round(o[1]/orgL[0][1]*100)}%"></i></div><b class="mono">${o[1]}</b></div>`).join(''):'<p class="nota">Preencha a origem no cadastro.</p>'}</div></div>
-  <div class="card"><div class="ch"><h3>Conversas por semana</h3><span class="cd">${sw} em 8 sem.</span></div>${chBarras(conv,sem.map(fd))}
-  <div class="mini3"><div><span>Raios-X · 4 sem.</span><b class="mono">${som(a=>a.tipo==='Raio-X'&&a.status!=='Cancelada')}</b></div><div><span>Propostas</span><b class="mono">${som(a=>a.tipo==='Proposta'&&a.status==='Feita')}</b></div><div><span>Fechamentos</span><b class="mono">${som(a=>a.tipo==='Fechamento'&&a.status==='Feita')}</b></div></div>
+  <div class="bi-duo"><div>
+  <h3>Leads por estágio</h3><div class="card"><div class="dn-w">${donut(porEst)}<div class="leg">${porEst.filter(p=>p.v).map(p=>`<div><i style="background:${p.c}"></i><span>${e(p.n)}</span><b class="mono">${p.v}</b></div>`).join('')||'<span class="nota">Sem leads.</span>'}</div></div></div></div>
+  <div><h3>De onde vêm</h3><div class="card">${orgL.length?orgL.map(o=>`<div class="hb"><span>${e(o[0])}</span><div><i style="width:${Math.round(o[1]/orgL[0][1]*100)}%"></i></div><b class="mono">${o[1]}</b></div>`).join(''):'<p class="nota">Preencha a origem no cadastro.</p>'}</div></div></div>
+  <h3>Conversas por semana <span class="cd">${sw} em 8 sem.</span></h3><div class="card">${chBarras(conv,sem.map(fd))}
+  <div class="mini3"><div><span>Diagnósticos · 4 sem.</span><b class="mono">${som(a=>a.tipo==='Raio-X'&&a.status!=='Cancelada')}</b></div><div><span>Propostas</span><b class="mono">${som(a=>a.tipo==='Proposta'&&a.status==='Feita')}</b></div><div><span>Fechamentos</span><b class="mono">${som(a=>a.tipo==='Fechamento'&&a.status==='Feita')}</b></div></div>
   <p class="nota" style="margin:8px 0 0">Menos de 4 semanas de dado = amostra pequena.</p></div>
-  <div class="ch" style="margin-top:22px"><h3 style="margin:0">Indicadores</h3></div>
-  <div class="bi-kpis">${KS.map(k=>`<button class="bi-kpi ${k.st}" ${k.go?`data-act="kpi" data-go="${k.go}"`:'tabindex="-1" style="cursor:default"'}><span class="bi-kn">${e(k.l)}</span><span class="bi-kv">${e(k.v)}</span><span class="bi-kd">${ST[k.st]}</span></button>`).join('')}</div>
+  <h3>Indicadores</h3>
+  <div class="kg">${KS.map(k=>`<button class="k ${k.st}" ${k.go?`data-act="kpi" data-go="${k.go}"`:'tabindex="-1" style="cursor:default"'}><span class="l">${e(k.l)}</span><span class="v">${e(k.v)}</span><span class="d">${ST[k.st]}</span></button>`).join('')}</div>
   <button class="mais-l" data-act="verTodos">${S.verTodos?'Mostrar só os principais':'Ver todos os '+K.length+' indicadores'}</button>
-  ${imp.length?`<div class="card"><div class="ch"><h3>CMV por casa</h3></div>${imp.map(c=>{const v=num(c.cmv_atual)-num(c.cmv_base),mx=Math.max(num(c.cmv_atual),num(c.cmv_base),1)*1.15;return `<div class="env"><div class="en"><span>${e(nomeC(c))}</span><span class="chip ${cmvSt(c)}">${v>0?'+':''}${v.toFixed(1)} pts</span></div><span class="tr"><i class="${cmvSt(c)}" style="width:${num(c.cmv_atual)/mx*100}%"></i><u style="left:${num(c.cmv_base)/mx*100}%"></u></span><span class="sb">atual ${num(c.cmv_atual)}% · base ${num(c.cmv_base)}% (marca)</span></div>`}).join('')}</div>`:''}
-  <p class="rodape">Limites e horas são hipóteses (Mais › Config). Economia só entra quando medida.</p></section>`;
+  ${imp.length?`<h3>CMV por casa</h3><div class="card">${imp.map(c=>{const v=num(c.cmv_atual)-num(c.cmv_base),mx=Math.max(num(c.cmv_atual),num(c.cmv_base),1)*1.15;return `<div class="env"><div class="en"><span>${e(nomeC(c))}</span><span class="chip ${cmvSt(c)}">${v>0?'+':''}${v.toFixed(1)} pts</span></div><span class="tr"><i class="${cmvSt(c)}" style="width:${num(c.cmv_atual)/mx*100}%"></i><u style="left:${num(c.cmv_base)/mx*100}%"></u></span><span class="sb">atual ${num(c.cmv_atual)}% · base ${num(c.cmv_base)}% (marca)</span></div>`}).join('')}</div>`:''}
+  <p class="rodape">Limites e metas se ajustam em Mais › Config.</p></section>`;
 }
 
 /* ---------- CLIENTES ---------- */
@@ -817,8 +893,8 @@ function vClientes(){
   S.tit='Clientes';S.kk=(n=>n+(n==1?' casa':' casas'))(D('CLIENTES').length);
   const f=S.f,E=cat('estagio'),R=cat('responsavel');
   const espL={ativos:'Leads ativos',parados:'Parados ou sem próxima ação',impl:'Implantações ativas',fechados:'Fechados'};
-  return `<section><input id="fq" class="busca" type="search" placeholder="Buscar casa, dono, cidade…" value="${e(f.q)}" aria-label="Buscar">
-  <div class="filtros"><select id="fe" class="sel" aria-label="Estágio"><option value="">Todos os estágios</option>${E.map(s=>`<option${s===f.estagio?' selected':''}>${e(s)}</option>`).join('')}</select>
+  return `<section><input id="fq" class="busca" type="search" placeholder="Buscar casa, dono, cidade…" value="${ev(f.q)}" aria-label="Buscar">
+  <div class="filtros"><select id="fe" class="sel" aria-label="Estágio"><option value="">Todos os estágios</option>${E.map(s=>`<option value="${ev(s)}"${s===f.estagio?' selected':''}>${e(s)}</option>`).join('')}</select>
   <select id="fr" class="sel" aria-label="Responsável"><option value="">Todos os responsáveis</option>${R.map(s=>`<option${s===f.resp?' selected':''}>${e(s)}</option>`).join('')}</select>
   <div class="seg-ctl" style="margin-left:auto"><button data-act="vista" data-v="lista" class="${f.vista==='lista'?'on':''}">Lista</button><button data-act="vista" data-v="funil" class="${f.vista==='funil'?'on':''}">Funil</button></div></div>
   ${f.esp?`<div class="filtros"><span class="chip sf">Filtro: ${e(espL[f.esp]||f.esp)}</span><button class="bt mini sec" data-act="limpaEsp">Limpar</button></div>`:''}
@@ -839,7 +915,7 @@ function lista(){
 function vCliente(id){
   const novo=id==='novo';const c=novo?{estagio:cat('estagio')[0]||'Novo',responsavel:cat('responsavel')[0]||'Gabriel'}:cli(id);
   if(!c)return `<section><a class="voltar" href="#/clientes">‹ Clientes</a><div class="vazio">Cliente não encontrado.</div></section>`;
-  S.tit=novo?'Novo cliente':nomeC(c);S.kk=novo?'Cadastro':c.codigo+' · '+c.estagio;
+  S.tit=novo?'Novo cliente':nomeC(c);S.kk=novo?'Cadastro':c.codigo+' · '+rt(c.estagio);
   const a=novo?{n:0,t:''}:alerta(c);
   const piso=num(c.valor_rx||cfg('preco_raiox'))*cfgN('fator_garantia');
   let aba=novo?'dados':(S.cliAba||'roteiro');if(novo&&!['dados','impl'].includes(aba))aba='dados';S.cliAba=aba;
@@ -850,7 +926,7 @@ function vCliente(id){
   ${novo?'':`<div data-pan="roteiro" ${aba==='roteiro'?'':'hidden'}>${roteiroCli(c)}</div><div data-pan="hist" ${aba==='hist'?'':'hidden'}>${histCli(c)}</div>`}
   <form id="fc" data-id="${novo?'':c.id}" novalidate>
    <div data-pan="dados" ${aba==='dados'?'':'hidden'}><div class="card"><div class="grade">${FCLI().map(f=>campo(f,c[f.k])).join('')}</div></div>${novo?'':`<button type="button" class="bt perigo cheio" style="margin-top:14px" data-act="delCli" data-id="${c.id}">Excluir cliente</button>`}</div>
-   <div data-pan="impl" ${aba==='impl'?'':'hidden'}><div class="card"><p class="nota" style="margin:0 0 10px">Preencha quando a casa fechar. Piso da garantia (${cfgN('fator_garantia')}× Raio-X): <b class="mono">${brl(piso)}</b></p><div class="grade">${FIMPL().map(f=>campo(f,c[f.k])).join('')}</div></div></div>
+   <div data-pan="impl" ${aba==='impl'?'':'hidden'}><div class="card"><p class="nota" style="margin:0 0 10px">Preencha quando a casa fechar. Piso da garantia (${cfgN('fator_garantia')}× diagnóstico): <b class="mono">${brl(piso)}</b></p><div class="grade">${FIMPL().map(f=>campo(f,c[f.k])).join('')}</div></div></div>
   </form>
   <div class="savebar" id="sb" ${['dados','impl'].includes(aba)?'':'hidden'}><button class="bt pri cheio" form="fc" type="submit">Salvar</button></div></section>`;
 }
@@ -868,7 +944,7 @@ function cartaoPit(p,c,i,op){
 function roteiroCli(c){
   const P=passos(c),E=cat('estagio'),prox=E[idxE(c.estagio)+1];
   return `<h3>Etapa: ${e(c.estagio)}</h3><p class="nota" style="margin:-4px 0 0">Os passos saem na ordem. O que falta no cadastro aparece em amarelo. O app nunca envia sozinho: você revisa e manda.</p>
-  ${P.etapa.length?P.etapa.map((p,k)=>cartaoPit(p,c,k+1)).join(''):`<div class="vazio">Nenhum pitch para "${e(c.estagio)}". <a href="#/pitches">Criar em Pitches</a></div>`}
+  ${P.etapa.length?P.etapa.map((p,k)=>cartaoPit(p,c,k+1)).join(''):`<div class="vazio">Nenhum script para "${e(c.estagio)}". <a href="#/pitches">Criar em Scripts</a></div>`}
   ${prox&&ativoLead(c)?`<button class="bt sec cheio" style="margin-top:12px" data-act="mover" data-id="${c.id}" data-d="1">Avançar para ${e(prox)} →</button>`:''}
   ${P.geral.length?`<h3>Objeções e apoio</h3>${P.geral.map(p=>cartaoPit(p,c)).join('')}`:''}`;
 }
@@ -888,13 +964,13 @@ function vAgenda(){
 
 /* ---------- PITCHES ---------- */
 function vPitches(){
-  S.tit='Pitches';S.kk=D('PITCHES').length+' roteiros';
+  S.tit='Scripts';S.kk=D('PITCHES').length+' scripts';
   const E=cat('estagio'),tabs=E.concat(['']);if(S.pitEtapa==null)S.pitEtapa=E.includes('Novo')?'Novo':(E[0]||'');
   const L=D('PITCHES').filter(p=>p.etapa===S.pitEtapa).sort((a,b)=>num(a.ordem)-num(b.ordem));
   const c=cli(S.pitCli);
   return `<section><p class="nota" style="margin:4px 0 0">Roteiro de venda por etapa, em ordem. Escolha o cliente e os campos se preenchem.</p>
   <label class="f" style="margin-top:12px">Preparar para<select id="pc"><option value="">(sem cliente · campos em branco)</option>${D('CLIENTES').map(x=>`<option value="${x.id}"${x.id===S.pitCli?' selected':''}>${e(nomeC(x))} · ${e(x.estagio)}</option>`).join('')}</select></label>
-  <div class="etapas">${tabs.map(t=>`<button data-act="pitEtapa" data-v="${e(t)}" class="${t===S.pitEtapa?'on':''}">${t?e(t):'Objeções e apoio'} · ${D('PITCHES').filter(p=>p.etapa===t).length}</button>`).join('')}</div>
+  <div class="etapas">${tabs.map(t=>`<button data-act="pitEtapa" data-v="${ev(t)}" class="${t===S.pitEtapa?'on':''}">${t?e(t):'Objeções e apoio'} · ${D('PITCHES').filter(p=>p.etapa===t).length}</button>`).join('')}</div>
   ${L.length?L.map((p,i)=>cartaoPit(p,c,i+1,{mover:1,edit:1,i0:i===0,i1:i===L.length-1})).join(''):'<div class="vazio">Nenhum pitch nesta etapa. Crie o primeiro.</div>'}
   <p class="nota" style="margin-top:14px">Campos: {nome} dono · {casa} · {dor} · {tipo} · {valor_rx} · {vazamento} · {data_proxima} · {meu_nome}. Faltando no cadastro, aparece em amarelo.</p></section>`;
 }
@@ -904,7 +980,7 @@ function vConteudo(){
   S.tit='Conteúdo';
   const L=D('CONTEUDO').slice().sort((a,b)=>(a.data+(a.hora||''))<(b.data+(b.hora||''))?-1:1),T=hoje();
   const ab=L.filter(x=>x.status!=='Enviado'&&x.data>=T);const fila=ab.length?diff(ab[ab.length-1].data,T):0;S.kk=L.length+' peças';
-  const st=fila<cfgN('fila_brasa_d')?'Crítico':fila<cfgN('fila_faisca_d')?'Atenção':'Temperado';
+  const st=fila<cfgN('fila_brasa_d')?'Crítico':fila<cfgN('fila_faisca_d')?'Atenção':'No padrão';
   return `<section><a class="voltar" href="#/mais">‹ Mais</a>
   <div class="tiles"><div><span>Fila à frente · ${st}</span><b>${fila} d</b></div>${cat('cont_status').map(s=>`<div><span>${e(s)}</span><b>${L.filter(x=>x.status===s).length}</b></div>`).join('')}</div>
   <div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="bt mini pri" data-act="novoCon">+ Nova peça</button></div>
@@ -918,7 +994,7 @@ function vConfig(){
   const l=S.cfgLista,V=D('CATEGORIAS').filter(x=>x.lista===l).sort((a,b)=>num(a.ordem)-num(b.ordem));
   return `<section><a class="voltar" href="#/mais">‹ Mais</a>
   <h3>Categorias</h3><label class="f"><select id="cl" aria-label="Lista">${Object.keys(LISTAS).map(k=>`<option value="${k}"${k===l?' selected':''}>${e(LISTAS[k])}</option>`).join('')}</select></label>
-  <div class="lista">${V.map((x,i)=>`<div class="row"><div class="ordb"><button class="bt mini sec" data-act="catMove" data-id="${x.id}" data-d="-1" ${i===0?'disabled':''} aria-label="Subir">▲</button><button class="bt mini sec" data-act="catMove" data-id="${x.id}" data-d="1" ${i===V.length-1?'disabled':''} aria-label="Descer">▼</button></div><div style="min-width:0"><input class="catin" data-id="${x.id}" value="${e(x.valor)}" aria-label="Nome da opção" style="width:100%;min-height:42px;background:var(--surf);border:0;border-radius:12px;padding:8px 12px;font-size:16px;color:var(--ink);font-family:inherit;font-weight:600"><div class="sb">${usos(l,x.valor)} uso(s)</div></div><button class="bt mini perigo" data-act="catDel" data-id="${x.id}">Remover</button></div>`).join('')||'<p class="vazio" style="border:0">Lista vazia.</p>'}</div>
+  <div class="lista">${V.map((x,i)=>`<div class="row"><div class="ordb"><button class="bt mini sec" data-act="catMove" data-id="${x.id}" data-d="-1" ${i===0?'disabled':''} aria-label="Subir">▲</button><button class="bt mini sec" data-act="catMove" data-id="${x.id}" data-d="1" ${i===V.length-1?'disabled':''} aria-label="Descer">▼</button></div><div style="min-width:0"><input class="catin" data-id="${x.id}" value="${ev(x.valor)}" aria-label="Nome da opção" style="width:100%;min-height:42px;background:var(--surf);border:0;border-radius:12px;padding:8px 12px;font-size:16px;color:var(--ink);font-family:inherit;font-weight:600"><div class="sb">${usos(l,x.valor)} uso(s)</div></div><button class="bt mini perigo" data-act="catDel" data-id="${x.id}">Remover</button></div>`).join('')||'<p class="vazio" style="border:0">Lista vazia.</p>'}</div>
   <form id="fcat" class="filtros" novalidate><input name="v" class="busca" placeholder="Nova opção…" style="flex:1;min-width:160px" aria-label="Nova opção"><button class="bt pri" type="submit">Adicionar</button></form>
   <p class="nota">Renomear atualiza todos os registros que usam a opção. Remover não apaga registros: eles mantêm o valor antigo.</p>
   <form id="fpar" novalidate><h3>Parâmetros</h3><p class="nota" style="margin:-4px 0 0">Horas e limites são hipóteses até haver 4 semanas de dado por casa.</p>
@@ -928,13 +1004,12 @@ function vConfig(){
 
 /* ---------- MAIS ---------- */
 function vMais(){
-  S.tit='Mais';S.kk='Forja · Gerenciador v1.3';
+  S.tit='Mais';S.kk='Forja · Gerenciador v1.4';
   const tema=ls('forja_tema')||'auto';
   const eu=S.eu||{};const adm=souAdmin();
   return `<section><div class="card conta"><div class="av">${e(ini({nome:eu.nome||eu.email||'?'}))}</div><div style="min-width:0;flex:1"><div class="nm">${e(eu.nome||'—')}</div><div class="sb" style="overflow-wrap:anywhere">${e(eu.email||'')}</div></div><span class="chip ${adm?'sf':''}">${adm?'Administrador':'Consultor'}</span></div>
   <div class="lista" style="margin-top:12px"><div class="row"><div><div class="nm">Minha senha</div><div class="sb">Troque quando quiser</div></div><span></span><button class="bt mini sec" data-act="minhaSenha">Trocar</button></div>${adm?`<a class="row lk" href="#/usuarios" style="text-decoration:none"><div class="av">U</div><div><div class="nm">Usuários</div><div class="sb">Quem acessa o app, com e-mail e senha</div></div><span class="go">›</span></a>`:''}</div>
   <h3>Trabalho</h3><div class="lista"><a class="row lk" href="#/config" style="text-decoration:none"><div class="av">⚙</div><div><div class="nm">Config</div><div class="sb">Categorias, preços, prazos e limites</div></div><span class="go">›</span></a></div>
-  <h3>Aparência</h3><div class="seg-ctl">${[['auto','Automático'],['claro','Claro'],['escuro','Escuro']].map(x=>`<button data-act="tema" data-v="${x[0]}" class="${tema===x[0]?'on':''}">${x[1]}</button>`).join('')}</div>
   <h3>Dados</h3><div class="lista"><div class="row"><div><div class="nm">Atualizar</div><div class="sb">Recarrega da planilha</div></div><span></span><button class="bt mini sec" data-act="atualizar">Atualizar</button></div><div class="row"><div><div class="nm">Exportar clientes</div><div class="sb">Arquivo CSV</div></div><span></span><button class="bt mini sec" data-act="csv">Exportar</button></div><div class="row"><div><div class="nm">Sair</div><div class="sb">Encerra a sessão neste aparelho</div></div><span></span><button class="bt mini perigo" data-act="sair">Sair</button></div></div>
   <p class="rodape">Os dados ficam na sua planilha Google (abas CLIENTES, ATIVIDADES, PITCHES, CONTEUDO, CATEGORIAS, CONFIG). Não edite à mão.</p></section>`;
 }
@@ -947,7 +1022,7 @@ function vUsuarios(){
   return `<section><a class="nota" href="#/mais" style="color:var(--acento);font-weight:700;text-decoration:none">‹ Mais</a>
   <p class="nota" style="font-size:15px;margin:10px 0 14px">Cada pessoa entra com o próprio e-mail e senha. A senha nunca fica gravada: só o hash. Para quem esqueceu, redefina aqui.</p>
   <button class="bt pri" data-act="novoUsuario" style="margin-bottom:14px">+ Novo usuário</button>
-  <div class="lista">${S.us.map(u=>`<div class="row lk" data-act="editarUsuario" data-id="${e(u.id)}"><div class="av">${e(ini({nome:u.nome}))}<i class="${u.ativo==='Sim'?'ok':'cr'}"></i></div><div style="min-width:0"><div class="nm">${e(u.nome)}</div><div class="sb" style="overflow-wrap:anywhere">${e(u.email)}</div><div class="sb">${u.ultimo_login?'Último acesso '+e(fdl(u.ultimo_login.slice(0,10))):'Nunca entrou'}</div></div><div class="rt"><span class="chip ${u.papel==='admin'?'sf':''}">${u.papel==='admin'?'Administrador':'Consultor'}</span>${u.ativo!=='Sim'?'<span class="chip cr">Desativado</span>':''}</div></div>`).join('')}</div></section>`;
+  <div class="lista">${S.us.map(u=>`<div class="row lk" data-act="editarUsuario" data-id="${ev(u.id)}"><div class="av">${e(ini({nome:u.nome}))}<i class="${u.ativo==='Sim'?'ok':'cr'}"></i></div><div style="min-width:0"><div class="nm">${e(u.nome)}</div><div class="sb" style="overflow-wrap:anywhere">${e(u.email)}</div><div class="sb">${u.ultimo_login?'Último acesso '+e(fdl(u.ultimo_login.slice(0,10))):'Nunca entrou'}</div></div><div class="rt"><span class="chip ${u.papel==='admin'?'sf':''}">${u.papel==='admin'?'Administrador':'Consultor'}</span>${u.ativo!=='Sim'?'<span class="chip cr">Desativado</span>':''}</div></div>`).join('')}</div></section>`;
 }
 function modalUsuario(u){
   const novo=!u;u=u||{papel:'consultor',ativo:'Sim'};
@@ -988,7 +1063,7 @@ Object.assign(A,{
   verSenha:el=>{const i=el.closest('label').querySelector('input');const m=i.type==='password';i.type=m?'text':'password';el.textContent=m?'Ocultar':'Mostrar'},
   novoUsuario:()=>modalUsuario(null),editarUsuario:el=>modalUsuario((S.us||[]).find(u=>u.id===el.dataset.id)),minhaSenha:()=>modalMinhaSenha(),
   tema:el=>{ls('forja_tema',el.dataset.v==='auto'?null:el.dataset.v);aplicaTema();rota()},
-  fab:()=>abrirModal(`<h2>Registrar</h2><div class="acoes-rap"><button class="acao quente" data-act="fabNovo" data-v="cliente"><b>Novo cliente</b><span>Lead ou casa</span></button><button class="acao" data-act="fabNovo" data-v="atv"><b>Atividade</b><span>Visita, Raio-X, tarefa</span></button><button class="acao" data-act="fabNovo" data-v="pit"><b>Pitch</b><span>Roteiro de venda</span></button><button class="acao" data-act="fabNovo" data-v="con"><b>Peça de conteúdo</b><span>Post, story, reel</span></button></div>`),
+  fab:()=>abrirModal(`<h2>Registrar</h2><div class="acoes-rap"><button class="acao quente" data-act="fabNovo" data-v="cliente"><b>Novo cliente</b><span>Lead ou casa</span></button><button class="acao" data-act="fabNovo" data-v="atv"><b>Atividade</b><span>Visita, diagnóstico, tarefa</span></button><button class="acao" data-act="fabNovo" data-v="pit"><b>Script</b><span>Roteiro de abordagem</span></button><button class="acao" data-act="fabNovo" data-v="con"><b>Peça de conteúdo</b><span>Post, story, reel</span></button></div>`),
   fabNovo:el=>{fechar();const v=el.dataset.v;if(v==='cliente')location.hash='#/cliente/novo';else if(v==='atv')modalAtv(null);else if(v==='pit')modalPit();else modalCon()}
 });
 aplicaTema();
