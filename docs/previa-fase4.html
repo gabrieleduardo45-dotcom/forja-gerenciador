@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--fundo:#0f0d0c;--painel:#171412;--painel2:#1f1b18;--linha:#2b2521;--texto:#f3eee9;--suave:#a69c94;--apagado:#6f6660;--brasa:#f2541b;--sobre:#14100e;--critico:#e05252;--atencao:#e9a23b;--ok:#4cb782;--info:#6a9fd8}
+  :root{--fundo:#F7F6F3;--painel:#FFFFFF;--painel2:#F6F4F0;--linha:#E9E6E1;--texto:#14100E;--suave:#6E6663;--apagado:#8A837D;--brasa:#F2541B;--sobre:#14100E;--critico:#B42318;--atencao:#9A5B00;--ok:#1E7A2E;--info:#3987E5;--ferro:#0E0D0C}
   *{box-sizing:border-box}
   body{margin:0;background:var(--fundo);color:var(--texto);font:16px/1.5 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
   .w{max-width:1120px;margin:0 auto;padding:40px 20px 80px}
@@ -20,7 +20,7 @@
   .grid{display:grid;gap:14px}
   .g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
   .g4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-  .card{background:var(--painel);border:1px solid var(--linha);border-radius:10px;padding:16px;overflow-x:auto}
+  .card{background:var(--painel);border:1px solid var(--linha);border-radius:14px;padding:16px;overflow-x:auto;box-shadow:0 1px 2px rgba(20,16,14,.04),0 1px 1px rgba(20,16,14,.02)}
   code{word-break:break-word}
   .fluxo .passo{flex:1 1 180px}
   .db{border-top:3px solid var(--linha)}
@@ -28,7 +28,7 @@
   .db ul{margin:8px 0 0;padding-left:18px;color:var(--suave);font-size:14px}
   .vazio{opacity:.55}
   .seta{text-align:center;color:var(--brasa);font-size:28px;margin:18px 0}
-  .uno{border:1px solid rgba(242,84,27,.5);border-radius:12px;padding:18px;background:linear-gradient(0deg,var(--painel),var(--painel))}
+  .uno{border:1px solid var(--brasa);border-radius:14px;padding:18px;background:var(--painel)}
   .camadas{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:14px}
   .camada{background:var(--painel2);border-radius:8px;padding:14px}
   .camada b{color:var(--texto)}
@@ -47,27 +47,27 @@
   .barra i{width:10px;height:10px;border-radius:50%;background:var(--linha);display:block}
   .barra span{margin-left:8px;font-size:12px;color:var(--apagado)}
   .app{display:grid;grid-template-columns:170px 1fr;min-height:420px}
-  .side{background:var(--painel);border-right:1px solid var(--linha);padding:14px 10px;font-size:13px}
-  .side div{padding:6px 10px;border-radius:6px;color:var(--suave)}
-  .side .on{background:var(--painel2);color:var(--texto)}
-  .side .logo{display:flex;gap:8px;align-items:center;color:var(--texto);font-weight:600;margin-bottom:10px}
+  .side{background:var(--ferro);padding:14px 10px;font-size:13px}
+  .side div{padding:6px 10px;border-radius:8px;color:#B5B0A8}
+  .side .on{background:rgba(255,255,255,.08);color:#fff}
+  .side .logo{display:flex;gap:8px;align-items:center;color:#F4F2EE;font-weight:600;margin-bottom:10px}
   .side .logo em{font-style:normal;width:22px;height:22px;border-radius:5px;background:var(--brasa);color:var(--sobre);display:grid;place-items:center;font-size:12px}
   .main{padding:18px}
   .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
-  .kpi{background:var(--painel);border:1px solid var(--linha);border-radius:8px;padding:10px}
+  .kpi{background:var(--painel);border:1px solid var(--linha);border-radius:14px;padding:12px;box-shadow:0 1px 2px rgba(20,16,14,.04)}
   .kpi small{color:var(--suave);font-size:11px;display:block}
   .kpi strong{font-size:19px}
   .barrinha{height:5px;border-radius:3px;background:var(--painel2);margin-top:6px;overflow:hidden}
   .barrinha span{display:block;height:100%;border-radius:3px}
-  .sel{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;font-weight:500}
-  .sel.c{background:rgba(224,82,82,.15);color:var(--critico)} .sel.a{background:rgba(233,162,59,.15);color:var(--atencao)} .sel.o{background:rgba(76,183,130,.15);color:var(--ok)} .sel.b{background:rgba(242,84,27,.15);color:var(--brasa)} .sel.n{background:var(--painel2);color:var(--suave)}
+  .sel{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;font-weight:600}
+  .sel.c{background:rgba(224,82,82,.15);color:var(--critico)} .sel.a{background:rgba(233,162,59,.15);color:var(--atencao)} .sel.o{background:rgba(76,183,130,.15);color:var(--ok)} .sel.b{background:rgba(242,84,27,.15);color:var(--brasa)} .sel.n{background:rgba(20,16,14,.06);color:#3A3532}
   .dois{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
-  .mini{background:var(--painel);border:1px solid var(--linha);border-radius:8px;padding:12px;font-size:13px}
+  .mini{background:var(--painel);border:1px solid var(--linha);border-radius:14px;box-shadow:0 1px 2px rgba(20,16,14,.04);padding:12px;font-size:13px}
   .mini h4{margin:0 0 8px;font-size:13px}
   .mini .l{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid rgba(43,37,33,.6);color:var(--suave)}
   .mini .l:last-child{border:0}
   .prop{border:1px solid rgba(242,84,27,.45);border-radius:8px;padding:10px;margin-top:8px;font-size:13px}
-  .prop .bt{display:inline-block;margin-top:8px;background:var(--brasa);color:var(--sobre);font-weight:600;font-size:12px;padding:4px 10px;border-radius:5px}
+  .prop .bt{display:inline-block;margin-top:8px;background:linear-gradient(180deg,#F45F2A,#EC4E14);color:var(--sobre);font-weight:600;font-size:12px;padding:4px 10px;border-radius:5px}
   .fone{width:290px;margin:0 auto;border:1px solid var(--linha);border-radius:28px;padding:14px 12px;background:var(--fundo)}
   .fone .topo{font-size:12px;color:var(--apagado);text-align:center;margin-bottom:10px}
   .tarefa{display:flex;gap:10px;align-items:flex-start;padding:9px;border-radius:8px;background:var(--painel);border:1px solid var(--linha);margin-bottom:8px;font-size:13px}
@@ -86,7 +86,7 @@
 <div class="w">
   <span class="tag">Prévia · fase 4</span>
   <h1>Os quatro bancos virando um sistema só</h1>
-  <p>Como ficaria a Forja se a Central, o Forja OS das casas e o sistema do Caboclo morassem no mesmo Supabase. Os números das telas simuladas são ilustrativos; a estrutura e as tabelas são as que existem hoje nos seus projetos.</p>
+  <p>Visual: o mesmo do Forja OS (plano claro, cartões brancos, menu em ferro). Como ficaria a Forja se a Central, o Forja OS das casas e o sistema do Caboclo morassem no mesmo Supabase. Os números das telas simuladas são ilustrativos; a estrutura e as tabelas são as que existem hoje nos seus projetos.</p>
 
   <h2>Hoje: quatro ilhas</h2>
   <p>Cada sistema tem o próprio login, os próprios usuários e não enxerga os outros. O que acontece na cozinha não chega na Central.</p>
@@ -206,6 +206,18 @@
     </div>
   </div>
   <p class="nota">Para o passo 4 funcionar, o repositório da página de vendas precisa estar ligado ao sistema (GitHub) e o agente ganha permissão só de abrir propostas de mudança, nunca de publicar.</p>
+
+  <h2>Prospecção pelo Instagram e WhatsApp</h2>
+  <p>O que a Meta deixa fazer, e como o sistema usa isso sem risco de bloquear o número oficial da Forja.</p>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card"><h3>Pode automatizar (oficial)</h3>
+      <p style="font-size:14px">• <b style="color:var(--texto)">Instagram, comentário vira direct:</b> post com "comente CMV"; quem comentar recebe na hora, por IA, a mensagem e o link da calculadora. A conversa entra na Central como prospect.<br>
+      • <b style="color:var(--texto)">Resposta a quem chamou primeiro</b> no direct ou no WhatsApp: o agente A11 responde, qualifica e passa para você (24 h de janela).<br>
+      • <b style="color:var(--texto)">WhatsApp com modelo aprovado</b> para quem já deu ok (cliente, quem pediu material): lembrete de Raio-X, follow-up.</p></div>
+    <div class="card"><h3>Não automatizar (bloqueia a conta)</h3>
+      <p style="font-size:14px">• Direct ou WhatsApp em massa para quem nunca falou com a Forja: a API do Instagram não permite iniciar conversa, e o WhatsApp exige consentimento antes. Ferramentas "piratas" que fazem isso derrubam o número.<br>
+      • <b style="color:var(--texto)">Por isso, o primeiro toque é seu, a um clique:</b> o agente escreve a mensagem com a dor já identificada; você toca em Instagram ou WhatsApp, a conversa abre no perfil certo, você cola e envia. Uns 20 segundos por casa.</p></div>
+  </div>
 
   <h2>O que precisaria mudar</h2>
   <div class="card" style="padding:0">
