@@ -29,6 +29,22 @@ export function supabaseServico() {
   return createAdmin(URL, k, { auth: { persistSession: false } });
 }
 
+/**
+ * Cliente da rodada automática. Preferência: entrar como o usuário robô da Forja (FORJA_ROBO_EMAIL/SENHA),
+ * que é membro e passa pelo RLS como qualquer pessoa. A chave de serviço fica só como alternativa.
+ */
+export async function supabaseRobo() {
+  const email = process.env.FORJA_ROBO_EMAIL;
+  const senha = process.env.FORJA_ROBO_SENHA;
+  if (email && senha) {
+    const sb = createAdmin(URL, KEY, { auth: { persistSession: false, autoRefreshToken: false } });
+    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+    if (error) throw new Error(`Robô não entrou: ${error.message}`);
+    return sb;
+  }
+  return supabaseServico();
+}
+
 export async function usuarioAtual() {
   const sb = await supabaseServidor();
   const { data } = await sb.auth.getUser();

@@ -30,12 +30,12 @@
 
 Já configurado na Vercel (projeto `forja-gerenciador`):
 - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (produção, prévia, desenvolvimento)
-- `CRON_SECRET` (produção, prévia)
+- `CRON_SECRET`, `FORJA_ROBO_EMAIL`, `FORJA_ROBO_SENHA` (produção, prévia)
 - `vercel.json` fixa o framework Next.js, a região gru1 e o cron.
 
 Falta você:
 1. **AI Gateway:** no painel da Vercel, aba *AI Gateway*, confirme que está ativo para o time (sem isso os agentes não respondem). Na Vercel não precisa de chave: o projeto usa OIDC.
-2. **Rodada automática (opcional):** Supabase > Project Settings > API Keys > copie a `service_role` e cadastre na Vercel como `SUPABASE_SERVICE_ROLE_KEY` (tipo *Sensitive*, só produção). Sem ela a rodada só acontece pelo botão.
+2. **Rodada automática:** já configurada. Às 5h de Manaus o cron entra como o usuário robô `robo.agentes@forja.invalid` (membro do forja-proprio; senha só na Vercel, `FORJA_ROBO_SENHA`). O RLS vale para ele como para qualquer pessoa. Para desligar o robô: `update membros set ativo = false where email = 'robo.agentes@forja.invalid'`.
 3. **Publicar:** junte o branch na `main` (pull request). A produção troca o app antigo (planilha) por este. O app antigo continua em `legado/`.
 4. Entre com o seu e-mail e senha do Supabase (o mesmo login do forja-proprio). Esqueceu a senha: botão "me mande um link" na tela de login.
 
