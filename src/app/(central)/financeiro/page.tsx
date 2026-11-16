@@ -1,3 +1,4 @@
+import { LancarRecebimento } from "@/components/formularios";
 import { Botao, Cartao, Kpi, Pagina, Tabela, Vazio } from "@/components/ui";
 import { INDICADORES, brl, data, mesNome, pct, valorUnidade } from "@/lib/formato";
 import { hojeManaus } from "@/lib/motor";
@@ -29,7 +30,7 @@ export default async function Financeiro() {
   const a = ano?.[0];
 
   return (
-    <Pagina titulo="Financeiro" sub="Caixa da Forja: o que entrou, o que é recorrente e a meta." acoes={<Botao href="/agentes/A8">Falar com o Diretor Financeiro</Botao>}>
+    <Pagina titulo="Financeiro" sub="Caixa da Forja: o que entrou, o que é recorrente e a meta." acoes={<><Botao href="/agentes/A8" variante="secundario">Diretor Financeiro</Botao><LancarRecebimento produtos={(precos ?? []).map((p) => p.produto)} /></>}>
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Kpi rotulo="Recebido no mês" valor={brl(doMes)} sub={`meta ${brl(metaMes)}`} tom={metaMes && doMes >= metaMes ? "ok" : "brasa"} />
         <Kpi rotulo="Falta para a meta" valor={brl(Math.max(0, metaMes - doMes))} />

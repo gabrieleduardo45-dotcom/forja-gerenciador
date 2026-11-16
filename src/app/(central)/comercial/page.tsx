@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { clsx } from "clsx";
 import { MessageCircle } from "lucide-react";
+import { NovoProspect, RegistrarToque } from "@/components/formularios";
 import { MoverEstagio } from "@/components/mover";
 import { Botao, Cartao, Kpi, Pagina, Selo, Tabela } from "@/components/ui";
 import { ESTAGIOS, brl, data, nomeEstagio, num, pct, rotulo, tomPrio } from "@/lib/formato";
@@ -23,9 +24,10 @@ export default async function Comercial({ searchParams }: PageProps<"/comercial"
   if (busca) q = q.or(`nome_casa.ilike.%${busca.replace(/[%,()]/g, "")}%,bairro.ilike.%${busca.replace(/[%,()]/g, "")}%,codigo.ilike.%${busca.replace(/[%,()]/g, "")}%`);
   if (filtroEstagio) q = q.eq("estagio", filtroEstagio);
 
-  const [{ data: prospects }, { data: todos }, { data: canal }, { data: toques }, { data: opps }] = await Promise.all([
+  const [{ data: prospects }, { data: todos }, { data: todosNomes }, { data: canal }, { data: toques }, { data: opps }] = await Promise.all([
     q,
     sb.from("prospects").select("estagio,prioridade"),
+    sb.from("prospects").select("id,nome_casa,codigo").not("estagio", "in", "(perdido,descartado)").order("nome_casa"),
     sb.from("v_conversao_canal").select("*"),
     sb.from("v_toques_dia").select("*").gte("dia", ha14),
     sb.from("oportunidades").select("id,produto,valor_tabela,valor_fechado,status,data_proposta,condicao").eq("status", "aberta").order("data_proposta", { ascending: false }),
@@ -42,7 +44,7 @@ export default async function Comercial({ searchParams }: PageProps<"/comercial"
   const maxFunil = Math.max(1, ...funil.map((e) => contagem.get(e.k) ?? 0));
 
   return (
-    <Pagina titulo="Comercial" sub="Da prospecção ao fechamento." acoes={<Botao href="/agentes/A1">Falar com o Diretor Comercial</Botao>}>
+    <Pagina titulo="Comercial" sub="Da prospecção ao fechamento." acoes={<><Botao href="/agentes/A1" variante="secundario">Diretor Comercial</Botao><NovoProspect /><RegistrarToque prospects={((todosNomes ?? []) as { id: number; nome_casa: string; codigo: string }[])} /></>}>
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Kpi rotulo="Toques hoje" valor={num(toquesHoje)} sub="meta: 5 por dia" tom={toquesHoje >= 5 ? "ok" : "critico"} />
         <Kpi rotulo="Toques 14 dias" valor={num(toques14)} sub={`${num(respostas14)} respostas`} />
@@ -89,6 +91,7 @@ export default async function Comercial({ searchParams }: PageProps<"/comercial"
             { k: "prioridade", t: "Prioridade", r: (p) => <Selo tom={tomPrio(p.prioridade)}>{p.prioridade ?? "—"}</Selo> },
             { k: "proximo_toque_em", t: "Próximo toque", r: (p) => <span className={String(p.proximo_toque_em ?? "9") < hoje ? "text-critico" : ""}>{data(p.proximo_toque_em)}</span> },
             { k: "estagio", t: "Estágio", r: (p) => <MoverEstagio id={p.id} estagio={p.estagio} /> },
+            { k: "toque", t: "", r: (p) => <RegistrarToque prospectId={p.id} rotulo="Toque" variante="fantasma" /> },
             { k: "wa", t: "", r: (p) => p.whatsapp_decisor ? <a href={`https://wa.me/${String(p.whatsapp_decisor).replace(/\D/g, "")}`} target="_blank" rel="noreferrer" className="text-suave hover:text-ok" aria-label="WhatsApp"><MessageCircle size={16} /></a> : null },
           ]}
         />

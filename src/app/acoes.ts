@@ -65,12 +65,84 @@ export async function registrarDecisao(form: FormData) {
 
 export async function moverProspect(id: number, estagio: string) {
   const { sb } = await sessao();
-  const { data: antes } = await sb.from("prospects").select("estagio").eq("id", id).single();
-  const agora = new Date().toISOString();
-  const { error } = await sb.from("prospects").update({ estagio, estagio_desde: agora, atualizado_em: agora }).eq("id", id);
+  // O gatilho prospect_antes/depois grava estagio_desde e o histórico.
+  const { error } = await sb.from("prospects").update({ estagio }).eq("id", id);
   if (error) throw new Error(error.message);
-  await sb.from("estagio_historico").insert({ prospect_id: id, de: antes?.estagio ?? null, para: estagio, data_hora: agora, motivo: "central" });
   revalidatePath("/comercial");
+}
+
+export type Resultado = { ok: boolean; msg: string };
+
+const txt = (f: FormData, k: string) => {
+  const v = String(f.get(k) ?? "").trim();
+  return v === "" ? null : v;
+};
+
+/** Registra um toque comercial. O gatilho atividade_depois move o funil e marca o próximo toque. */
+export async function registrarToque(_: Resultado | null, f: FormData): Promise<Resultado> {
+  const { sb, email } = await sessao();
+  const prospect_id = Number(f.get("prospect_id"));
+  if (!prospect_id) return { ok: false, msg: "Escolha a casa." };
+  const { error } = await sb.from("atividades").insert({
+    prospect_id,
+    canal: txt(f, "canal") ?? "whatsapp",
+    direcao: txt(f, "direcao") ?? "saida",
+    tipo: txt(f, "tipo") ?? "primeiro_toque",
+    resultado: txt(f, "resultado") ?? "sem_resposta",
+    variante_roteiro: txt(f, "roteiro"),
+    proxima_acao: txt(f, "proxima_acao"),
+    proxima_acao_em: txt(f, "proxima_acao_em"),
+    obs: txt(f, "obs"),
+    quem: email.split("@")[0],
+  });
+  if (error) return { ok: false, msg: error.message };
+  revalidatePath("/", "layout");
+  return { ok: true, msg: "Toque registrado." };
+}
+
+export async function novoProspect(_: Resultado | null, f: FormData): Promise<Resultado> {
+  const { sb } = await sessao();
+  const nome_casa = txt(f, "nome_casa");
+  if (!nome_casa) return { ok: false, msg: "Nome da casa é obrigatório." };
+  const { data, error } = await sb
+    .from("prospects")
+    .insert({
+      nome_casa,
+      setor: txt(f, "setor") ?? "outro",
+      bairro: txt(f, "bairro"),
+      decisor_nome: txt(f, "decisor_nome"),
+      whatsapp_decisor: txt(f, "whatsapp_decisor"),
+      instagram_casa: txt(f, "instagram_casa"),
+      origem: txt(f, "origem") ?? "outro",
+      prioridade_manual: txt(f, "prioridade_manual"),
+      proximo_toque_em: txt(f, "proximo_toque_em"),
+      estagio: txt(f, "proximo_toque_em") ? "na_lista" : "identificado",
+      aprovado_gabriel: true,
+      obs: txt(f, "obs"),
+    })
+    .select("codigo")
+    .single();
+  if (error) return { ok: false, msg: error.message };
+  revalidatePath("/comercial");
+  return { ok: true, msg: `${data.codigo} cadastrado.` };
+}
+
+export async function lancarRecebimento(_: Resultado | null, f: FormData): Promise<Resultado> {
+  const { sb } = await sessao();
+  const valor = Number(String(f.get("valor") ?? "").replace(",", "."));
+  const produto = txt(f, "produto");
+  if (!produto || !(valor > 0)) return { ok: false, msg: "Produto e valor são obrigatórios." };
+  const { error } = await sb.from("recebimentos").insert({
+    produto,
+    valor,
+    data: txt(f, "data") ?? hojeManaus(),
+    linha: txt(f, "linha") ?? "outro",
+    forma: txt(f, "forma"),
+    obs: txt(f, "obs"),
+  });
+  if (error) return { ok: false, msg: error.message };
+  revalidatePath("/", "layout");
+  return { ok: true, msg: "Recebimento lançado." };
 }
 
 export async function apagarConversa(id: string) {
