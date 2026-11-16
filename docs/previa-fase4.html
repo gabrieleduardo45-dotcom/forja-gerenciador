@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forja · Prévia da fase 4: um sistema só</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--fundo:#F7F6F3;--painel:#FFFFFF;--painel2:#F6F4F0;--linha:#E9E6E1;--texto:#14100E;--suave:#6E6663;--apagado:#8A837D;--brasa:#F2541B;--sobre:#14100E;--critico:#B42318;--atencao:#9A5B00;--ok:#1E7A2E;--info:#3987E5;--ferro:#0E0D0C}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--fundo);color:var(--texto);font:16px/1.5 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .w{max-width:1120px;margin:0 auto;padding:40px 20px 80px}
+  h1{font-size:30px;letter-spacing:-.02em;margin:0 0 6px}
+  h2{font-size:20px;margin:56px 0 6px;letter-spacing:-.01em}
+  h3{font-size:15px;margin:0 0 8px}
+  p{margin:0 0 10px;color:var(--suave)}
+  .tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(242,84,27,.15);color:var(--brasa);margin-bottom:12px}
+  .nota{font-size:13px;color:var(--apagado);border-left:2px solid var(--linha);padding-left:10px;margin-top:10px}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+  .g4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .card{background:var(--painel);border:1px solid var(--linha);border-radius:14px;padding:16px;overflow-x:auto;box-shadow:0 1px 2px rgba(20,16,14,.04),0 1px 1px rgba(20,16,14,.02)}
+  code{word-break:break-word}
+  .fluxo .passo{flex:1 1 180px}
+  .db{border-top:3px solid var(--linha)}
+  .db small{display:block;color:var(--apagado);font-size:12px;margin-bottom:6px}
+  .db ul{margin:8px 0 0;padding-left:18px;color:var(--suave);font-size:14px}
+  .vazio{opacity:.55}
+  .seta{text-align:center;color:var(--brasa);font-size:28px;margin:18px 0}
+  .uno{border:1px solid var(--brasa);border-radius:14px;padding:18px;background:var(--painel)}
+  .camadas{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:14px}
+  .camada{background:var(--painel2);border-radius:8px;padding:14px}
+  .camada b{color:var(--texto)}
+  .camada p{font-size:14px;margin:6px 0 0}
+  .pill{display:inline-block;font-size:12px;padding:1px 7px;border-radius:4px;background:var(--painel);color:var(--suave);margin:4px 4px 0 0;border:1px solid var(--linha)}
+  .fluxo{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px}
+  .passo{background:var(--painel2);border:1px solid var(--linha);border-radius:8px;padding:10px 12px;font-size:14px;max-width:210px}
+  .passo b{display:block;font-size:13px;color:var(--brasa)}
+  .fluxo .s{color:var(--apagado)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{text-align:left;color:var(--suave);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding:8px;border-bottom:1px solid var(--linha)}
+  td{padding:8px;border-bottom:1px solid rgba(43,37,33,.6)}
+  /* telas simuladas */
+  .tela{background:var(--fundo);border:1px solid var(--linha);border-radius:12px;overflow:hidden}
+  .barra{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid var(--linha);background:var(--painel)}
+  .barra i{width:10px;height:10px;border-radius:50%;background:var(--linha);display:block}
+  .barra span{margin-left:8px;font-size:12px;color:var(--apagado)}
+  .app{display:grid;grid-template-columns:170px 1fr;min-height:420px}
+  .side{background:var(--ferro);padding:14px 10px;font-size:13px}
+  .side div{padding:6px 10px;border-radius:8px;color:#B5B0A8}
+  .side .on{background:rgba(255,255,255,.08);color:#fff}
+  .side .logo{display:flex;gap:8px;align-items:center;color:#F4F2EE;font-weight:600;margin-bottom:10px}
+  .side .logo em{font-style:normal;width:22px;height:22px;border-radius:5px;background:var(--brasa);color:var(--sobre);display:grid;place-items:center;font-size:12px}
+  .main{padding:18px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+  .kpi{background:var(--painel);border:1px solid var(--linha);border-radius:14px;padding:12px;box-shadow:0 1px 2px rgba(20,16,14,.04)}
+  .kpi small{color:var(--suave);font-size:11px;display:block}
+  .kpi strong{font-size:19px}
+  .barrinha{height:5px;border-radius:3px;background:var(--painel2);margin-top:6px;overflow:hidden}
+  .barrinha span{display:block;height:100%;border-radius:3px}
+  .sel{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;font-weight:600}
+  .sel.c{background:rgba(224,82,82,.15);color:var(--critico)} .sel.a{background:rgba(233,162,59,.15);color:var(--atencao)} .sel.o{background:rgba(76,183,130,.15);color:var(--ok)} .sel.b{background:rgba(242,84,27,.15);color:var(--brasa)} .sel.n{background:rgba(20,16,14,.06);color:#3A3532}
+  .dois{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
+  .mini{background:var(--painel);border:1px solid var(--linha);border-radius:14px;box-shadow:0 1px 2px rgba(20,16,14,.04);padding:12px;font-size:13px}
+  .mini h4{margin:0 0 8px;font-size:13px}
+  .mini .l{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid rgba(43,37,33,.6);color:var(--suave)}
+  .mini .l:last-child{border:0}
+  .prop{border:1px solid rgba(242,84,27,.45);border-radius:8px;padding:10px;margin-top:8px;font-size:13px}
+  .prop .bt{display:inline-block;margin-top:8px;background:linear-gradient(180deg,#F45F2A,#EC4E14);color:var(--sobre);font-weight:600;font-size:12px;padding:4px 10px;border-radius:5px}
+  .fone{width:290px;margin:0 auto;border:1px solid var(--linha);border-radius:28px;padding:14px 12px;background:var(--fundo)}
+  .fone .topo{font-size:12px;color:var(--apagado);text-align:center;margin-bottom:10px}
+  .tarefa{display:flex;gap:10px;align-items:flex-start;padding:9px;border-radius:8px;background:var(--painel);border:1px solid var(--linha);margin-bottom:8px;font-size:13px}
+  .tarefa i{width:18px;height:18px;border:2px solid var(--linha);border-radius:5px;flex:none;margin-top:1px}
+  .tarefa.ok i{background:var(--ok);border-color:var(--ok)}
+  .tarefa small{display:block;color:var(--apagado)}
+  .agente{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--suave);margin-top:6px}
+  .agente em{font-style:normal;width:26px;height:26px;border-radius:6px;background:var(--painel2);color:var(--brasa);display:grid;place-items:center;font-weight:700;font-size:11px}
+  .tl{display:grid;gap:10px}
+  .tl .card{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:start}
+  .tl .q{color:var(--brasa);font-weight:600;font-size:14px}
+  @media (max-width:760px){.app{grid-template-columns:1fr}.side{display:none}.kpis{grid-template-columns:repeat(2,1fr)}.dois{grid-template-columns:1fr}.tl .card{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="w">
+  <span class="tag">Prévia · fase 4</span>
+  <h1>Os quatro bancos virando um sistema só</h1>
+  <p>Visual: o mesmo do Forja OS (plano claro, cartões brancos, menu em ferro). Como ficaria a Forja se a Central, o Forja OS das casas e o sistema do Caboclo morassem no mesmo Supabase. Os números das telas simuladas são ilustrativos; a estrutura e as tabelas são as que existem hoje nos seus projetos.</p>
+
+  <h2>Hoje: quatro ilhas</h2>
+  <p>Cada sistema tem o próprio login, os próprios usuários e não enxerga os outros. O que acontece na cozinha não chega na Central.</p>
+  <div class="grid g4" style="margin-top:14px">
+    <div class="card db" style="border-top-color:var(--brasa)"><small>forja-proprio · sa-east-1</small><h3>Gestão da Forja</h3><p style="font-size:14px">A Central nova.</p><ul><li>13 agentes, 29 decisões</li><li>11 prospects, 308 metas</li><li>preços, equipe, recebimentos</li></ul></div>
+    <div class="card db" style="border-top-color:var(--info)"><small>forja-os · sa-east-1</small><h3>Forja OS (produto)</h3><p style="font-size:14px">Multi-restaurante, já pensado para consultoria.</p><ul><li>CMV, fichas, compras, inventário</li><li>contas a pagar, capacidade semanal</li><li>checklist, pesagens, descartes</li><li>Marmitaria da Casa (mm_*)</li></ul></div>
+    <div class="card db" style="border-top-color:var(--ok)"><small>caboclo-acesso · us-west-2</small><h3>Sistema do Caboclo</h3><p style="font-size:14px">Cliente real, com dado real.</p><ul><li>713 parcelas, 36 fornecedores</li><li>plano de contas, caixa</li><li>7 preparos de mise en place</li><li>8 perfis, 4.124 linhas de auditoria</li></ul></div>
+    <div class="card db vazio"><small>forja-os-casas · sa-east-1</small><h3>Vazio</h3><p style="font-size:14px">Nenhuma tabela. Pode ser apagado.</p></div>
+  </div>
+
+  <div class="seta">↓</div>
+
+  <h2 style="margin-top:0">Depois: um Supabase, três camadas</h2>
+  <div class="uno">
+    <p style="margin:0">Base única: <b style="color:var(--texto)">forja-os</b> (já está em São Paulo, já tem o desenho multi-casa e a tabela <code>consultoria_clientes</code> que decide quem vê o quê). Um login para todo mundo; o papel de cada pessoa define o que ela enxerga.</p>
+    <div class="camadas">
+      <div class="camada"><b>1 · Forja (empresa)</b><p>Comercial, financeiro da Forja, metas, decisões, agentes e fila de aprovação. O que hoje está no forja-proprio vira o esquema <code>gestao</code>.</p><span class="pill">só Gabriel e equipe</span></div>
+      <div class="camada"><b>2 · Casas (Forja OS)</b><p>Uma organização por restaurante: CMV, compras, contas a pagar, checklist, RDO, pesagens. Caboclo e Marmitaria entram como as duas primeiras casas.</p><span class="pill">dono vê só a casa dele</span><span class="pill">consultor vê as casas dele</span></div>
+      <div class="camada"><b>3 · Cozinha</b><p>Telas de celular com PIN para a equipe marcar checklist, pesar porção e lançar sobra. Sem nome de funcionário (regra de LGPD que já está no banco).</p><span class="pill">PIN por casa</span></div>
+    </div>
+  </div>
+
+  <h2>O fluxo que passa a existir</h2>
+  <p>Hoje cada etapa é digitada de novo em outro lugar. Juntos, uma coisa puxa a outra.</p>
+  <div class="fluxo">
+    <div class="passo"><b>Prospect</b>Comercial toca, registra, o funil anda.</div><span class="s">→</span>
+    <div class="passo"><b>Raio-X</b>Visita, relatório, vazamento medido.</div><span class="s">→</span>
+    <div class="passo"><b>Fechar implantação</b>Um clique cria a casa, o contrato e a organização no OS.</div><span class="s">→</span>
+    <div class="passo"><b>Cozinha lança</b>Checklist, pesagem, compra, nota.</div><span class="s">→</span>
+    <div class="passo"><b>Central enxerga</b>CMV e contas da casa ao vivo; os agentes leem dado real.</div><span class="s">→</span>
+    <div class="passo"><b>Case</b>Resultado vira post anonimizado e prova para a próxima venda.</div>
+  </div>
+
+  <h2>Como ficaria na tela</h2>
+  <p>Três telas simuladas. Números ilustrativos.</p>
+
+  <h3 style="margin-top:18px;color:var(--suave);font-weight:500">Central · Casa 360 (o que você vê de cada cliente)</h3>
+  <div class="tela">
+    <div class="barra"><i></i><i></i><i></i><span>central.forja · Casas › C-001</span></div>
+    <div class="app">
+      <div class="side">
+        <div class="logo"><em>F</em>Forja</div>
+        <div>Hoje</div><div>Aprovar <span class="sel b">3</span></div><div>Agentes</div><div>Comercial</div><div class="on">Casas</div><div>Financeiro</div><div>Marketing</div><div>Decisões</div>
+      </div>
+      <div class="main">
+        <div style="display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:8px">
+          <div><div style="font-size:12px;color:var(--suave)">Restaurante regional · Implantação Pro · semana 3 de 6</div><div style="font-size:20px;font-weight:600">C-001 · Caboclo</div></div>
+          <div><span class="sel o">dados ao vivo do Forja OS</span></div>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><small>CMV da semana</small><strong style="color:var(--critico)">36,8%</strong><div style="font-size:11px;color:var(--apagado)">alvo 32%</div><div class="barrinha"><span style="width:88%;background:var(--critico)"></span></div></div>
+          <div class="kpi"><small>Contas a pagar · 7 dias</small><strong>R$ 18.420</strong><div style="font-size:11px;color:var(--apagado)">capacidade R$ 21.000</div><div class="barrinha"><span style="width:77%;background:var(--atencao)"></span></div></div>
+          <div class="kpi"><small>Checklist cumprido</small><strong style="color:var(--ok)">91%</strong><div style="font-size:11px;color:var(--apagado)">últimos 7 dias</div><div class="barrinha"><span style="width:91%;background:var(--ok)"></span></div></div>
+          <div class="kpi"><small>Economia medida</small><strong style="color:var(--brasa)">R$ 2.140</strong><div style="font-size:11px;color:var(--apagado)">desde o início</div><div class="barrinha"><span style="width:60%;background:var(--brasa)"></span></div></div>
+        </div>
+        <div class="dois">
+          <div class="mini"><h4>O que puxou o CMV</h4>
+            <div class="l"><span>Picanha · rendimento 71% (ficha: 78%)</span><span class="sel c">+R$ 640</span></div>
+            <div class="l"><span>Tambaqui · compra 12% acima da média</span><span class="sel a">+R$ 310</span></div>
+            <div class="l"><span>Sobra de arroz · 3 dias acima do teto</span><span class="sel a">+R$ 95</span></div>
+            <div class="agente"><em>A4</em>Controller de Custos leu 1.240 linhas de venda e 38 notas desta semana.</div>
+          </div>
+          <div class="mini"><h4>Esperando você</h4>
+            <div class="prop">Pauta da visita de quinta: pesar a picanha na frente do churrasqueiro e refazer o cartão de praça.<br><span class="bt">Aprovar</span></div>
+            <div class="prop">Avisar o dono: parcela de R$ 4.200 do fornecedor de carnes vence sexta e passa da capacidade.<br><span class="bt">Aprovar</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g2" style="margin-top:22px">
+    <div>
+      <h3 style="color:var(--suave);font-weight:500">Central · Carteira (todas as casas num olhar)</h3>
+      <div class="card" style="padding:0">
+        <table>
+          <tr><th>Casa</th><th>CMV</th><th>Checklist</th><th>Contas 7d</th><th></th></tr>
+          <tr><td><b>C-001</b> Caboclo</td><td style="color:var(--critico)">36,8%</td><td>91%</td><td>R$ 18,4 mil</td><td><span class="sel c">visitar</span></td></tr>
+          <tr><td><b>C-002</b> Marmitaria</td><td style="color:var(--ok)">30,1%</td><td>97%</td><td>R$ 6,2 mil</td><td><span class="sel o">ok</span></td></tr>
+          <tr><td><b>C-003</b> próxima casa</td><td>—</td><td>—</td><td>—</td><td><span class="sel n">aferição</span></td></tr>
+        </table>
+      </div>
+      <p class="nota">Os agentes de Custos (A4) e Operações (A7) passam a ler esta tabela toda manhã. Hoje eles só conseguem ler o que você digita na Central.</p>
+    </div>
+    <div>
+      <h3 style="color:var(--suave);font-weight:500">App da casa · celular do dono ou da cozinha</h3>
+      <div class="fone">
+        <div class="topo">Caboclo · terça · turno almoço</div>
+        <div class="tarefa ok"><i></i><div>Receber carne e pesar na nota<small>feito 08:40 · 2 divergências</small></div></div>
+        <div class="tarefa ok"><i></i><div>Porcionar picanha 220 g<small>feito 10:15</small></div></div>
+        <div class="tarefa"><i></i><div>Registrar sobra do almoço<small>até 15:30</small></div></div>
+        <div class="tarefa"><i></i><div>Temperatura da câmara fria<small>até 16:00</small></div></div>
+        <div class="agente" style="justify-content:center"><em>OS</em>O que a equipe marca aqui aparece na Central.</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Página de vendas evoluindo dentro do sistema</h2>
+  <p>A página (forja-venda) já grava cada visita, rolagem e clique no banco. O agente A12, Gerente de Conversão, passa a cuidar dela de ponta a ponta, seguindo a regra que você já decidiu: uma mudança por dia, com hipótese escrita, e ele não publica sozinho.</p>
+  <div class="fluxo">
+    <div class="passo"><b>1 · Lê</b>Visitas, rolagem, cliques no WhatsApp e na calculadora, por origem e aparelho.</div><span class="s">→</span>
+    <div class="passo"><b>2 · Propõe</b>Uma mudança com hipótese: "trocar o título pelo número do Raio-X deve subir o clique no WhatsApp de 4% para 6%".</div><span class="s">→</span>
+    <div class="passo"><b>3 · Você aprova</b>Na fila Aprovar, com o antes e depois do texto.</div><span class="s">→</span>
+    <div class="passo"><b>4 · Prévia</b>O agente abre a mudança no GitHub e a Vercel gera um link de prévia. Você olha no celular.</div><span class="s">→</span>
+    <div class="passo"><b>5 · Publica e mede</b>Você publica; 7 dias e 100 visitas depois ele diz se a mudança ganhou ou volta atrás.</div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="mini"><h4>Central · Marketing › Página de vendas</h4>
+      <div class="l"><span>Visitas 7 dias</span><span>412</span></div>
+      <div class="l"><span>Foram ao WhatsApp</span><span style="color:var(--brasa)">4,1%</span></div>
+      <div class="l"><span>Abriram a calculadora</span><span>9,7%</span></div>
+      <div class="l"><span>Teste no ar</span><span class="sel a">título B · dia 4 de 7</span></div>
+      <div class="agente"><em>A12</em>Leu 2.380 eventos. Metade dos visitantes do Instagram não passa da primeira dobra.</div>
+    </div>
+    <div class="mini"><h4>Esperando você</h4>
+      <div class="prop"><b>Conversão</b> · Mover a prova (R$ 1.000/mês de vazamento ou devolvo) para logo abaixo do título.<br><span style="color:var(--apagado)">Hipótese: quem vem do Instagram sai antes de ver a garantia. Medir: clique no WhatsApp em celular.</span><br><span class="bt">Aprovar e gerar prévia</span></div>
+    </div>
+  </div>
+  <p class="nota">Para o passo 4 funcionar, o repositório da página de vendas precisa estar ligado ao sistema (GitHub) e o agente ganha permissão só de abrir propostas de mudança, nunca de publicar.</p>
+
+  <h2>Prospecção pelo Instagram e WhatsApp</h2>
+  <p>O que a Meta deixa fazer, e como o sistema usa isso sem risco de bloquear o número oficial da Forja.</p>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card"><h3>Pode automatizar (oficial)</h3>
+      <p style="font-size:14px">• <b style="color:var(--texto)">Instagram, comentário vira direct:</b> post com "comente CMV"; quem comentar recebe na hora, por IA, a mensagem e o link da calculadora. A conversa entra na Central como prospect.<br>
+      • <b style="color:var(--texto)">Resposta a quem chamou primeiro</b> no direct ou no WhatsApp: o agente A11 responde, qualifica e passa para você (24 h de janela).<br>
+      • <b style="color:var(--texto)">WhatsApp com modelo aprovado</b> para quem já deu ok (cliente, quem pediu material): lembrete de Raio-X, follow-up.</p></div>
+    <div class="card"><h3>Não automatizar (bloqueia a conta)</h3>
+      <p style="font-size:14px">• Direct ou WhatsApp em massa para quem nunca falou com a Forja: a API do Instagram não permite iniciar conversa, e o WhatsApp exige consentimento antes. Ferramentas "piratas" que fazem isso derrubam o número.<br>
+      • <b style="color:var(--texto)">Por isso, o primeiro toque é seu, a um clique:</b> o agente escreve a mensagem com a dor já identificada; você toca em Instagram ou WhatsApp, a conversa abre no perfil certo, você cola e envia. Uns 20 segundos por casa.</p></div>
+  </div>
+
+  <h2>O que precisaria mudar</h2>
+  <div class="card" style="padding:0">
+    <table>
+      <tr><th>De onde</th><th>Para onde</th><th>Trabalho</th></tr>
+      <tr><td>forja-proprio (gestão)</td><td>forja-os, esquema <code>gestao</code></td><td>Mover tabelas, views e regras; a Central só troca o endereço do banco.</td></tr>
+      <tr><td>caboclo-acesso</td><td>forja-os, organização C-001</td><td>713 parcelas → títulos e parcelas; 36 fornecedores; mise en place → checklist. Os 8 perfis viram membros da casa. Fica em São Paulo, mais perto e mais rápido.</td></tr>
+      <tr><td>Marmitaria (mm_* no forja-os)</td><td>organização C-002</td><td>Já está no banco certo; ligar à casa na Central.</td></tr>
+      <tr><td>forja-os-casas</td><td>apagar</td><td>Está vazio.</td></tr>
+      <tr><td>Logins</td><td>um Supabase Auth</td><td>Cada pessoa com um papel: dono da Forja, consultor, dono de restaurante, cozinha (PIN).</td></tr>
+    </table>
+  </div>
+
+  <h2>Quanto tempo</h2>
+  <div class="tl">
+    <div class="card"><div class="q">Semana 1</div><div><b>Fases 1 e 3 na Central atual.</b><p>Fechar implantação (cria casa e contrato), proposta comercial, exceção e CMV; agentes executando o que você aprova; rodada às 5h.</p></div></div>
+    <div class="card"><div class="q">Semana 2</div><div><b>Gestão para dentro do forja-os.</b><p>Mover o forja-proprio, apontar a Central para o banco novo, ligar casas da Central às organizações do OS. Marmitaria vira C-002.</p></div></div>
+    <div class="card"><div class="q">Semana 3</div><div><b>Caboclo para dentro.</b><p>Migrar financeiro e mise en place, conferir saldos linha a linha com o sistema antigo antes de desligar. Apagar o forja-os-casas.</p></div></div>
+  </div>
+  <p class="nota">Risco principal: o Caboclo usa o sistema todo dia. A migração dele acontece com os dois rodando em paralelo por uma semana e só desliga o antigo quando os saldos baterem.</p>
+</div>
+</body>
+</html>
