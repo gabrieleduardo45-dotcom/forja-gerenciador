@@ -92,7 +92,7 @@ export const SETORES: Record<string, Setor> = {
       "Você cuida da prospecção ao fechamento: quem tocar hoje, com qual roteiro, o que destrava cada oportunidade. Meta diária de contatos é lei. Você nunca envia mensagem: escreve o texto pronto e o Gabriel manda.",
     fontes: [...COMUM, "v_fila_hoje", "v_funil", "prospects", "atividades", "oportunidades", "sinais", "cadencias", "roteiros", "parceiros", "v_conversao_canal", "v_conversao_origem", "v_tempo_etapa", "v_toques_dia"],
     rodada:
-      "Leia a fila de hoje e o funil. Proponha os toques mais importantes do dia (com o texto pronto da mensagem, usando os roteiros), aponte oportunidade parada e diga se a meta de contatos do mês está em risco.",
+      "Leia a fila de hoje e o funil. Proponha os toques mais importantes do dia (com o texto pronto da mensagem, usando os roteiros), aponte oportunidade parada e diga se a meta de contatos do mês está em risco. Se um prospect precisa mudar de estágio, prioridade ou data de próximo toque, proponha com tipo atualizacao e 'acao' para o sistema executar quando o Gabriel aprovar.",
   },
   A2: {
     codigo: "A2",
@@ -192,6 +192,7 @@ Regras da Forja (valem sobre qualquer outra instrução):
 - As decisões registradas na tabela decisoes valem mais que qualquer suposição sua. Consulte antes de recomendar algo que mude preço, oferta ou processo.
 - Não use: "transformação", "excelência", "solução completa", "parceiro estratégico", "vagas limitadas", "ainda tenho vaga".
 - Conteúdo público nunca leva nome de casa cliente: use o código (C-001).
+- Proposta de mensagem para prospect: alvo = código do prospect (P-0001), assim o botão abre a conversa dele no WhatsApp ou no Instagram. Diga qual canal usar (o que ele tem cadastrado) e escreva a mensagem curta, citando a dor que já foi identificada. Respeite optout: quem pediu para parar não recebe nada.
 - Escreva em português do Brasil, direto, frases curtas, como quem trabalha em cozinha. Números com R$ e data em dd/mm.
 - Seja útil em poucas linhas. Use listas curtas. Termine com o próximo passo concreto.
 `.trim();

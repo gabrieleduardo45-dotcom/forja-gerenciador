@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { clsx } from "clsx";
 import { MessageCircle } from "lucide-react";
-import { NovoProspect, RegistrarToque } from "@/components/formularios";
+import { FecharImplantacao, NovaOportunidade, NovoProspect, PerderOportunidade, RegistrarToque, type Preco } from "@/components/formularios";
 import { MoverEstagio } from "@/components/mover";
 import { Botao, Cartao, Kpi, Pagina, Selo, Tabela } from "@/components/ui";
 import { ESTAGIOS, brl, data, nomeEstagio, num, pct, rotulo, tomPrio } from "@/lib/formato";
@@ -24,14 +24,18 @@ export default async function Comercial({ searchParams }: PageProps<"/comercial"
   if (busca) q = q.or(`nome_casa.ilike.%${busca.replace(/[%,()]/g, "")}%,bairro.ilike.%${busca.replace(/[%,()]/g, "")}%,codigo.ilike.%${busca.replace(/[%,()]/g, "")}%`);
   if (filtroEstagio) q = q.eq("estagio", filtroEstagio);
 
-  const [{ data: prospects }, { data: todos }, { data: todosNomes }, { data: canal }, { data: toques }, { data: opps }] = await Promise.all([
+  const [{ data: prospects }, { data: todos }, { data: todosNomes }, { data: canal }, { data: toques }, { data: opps }, { data: precos }] = await Promise.all([
     q,
     sb.from("prospects").select("estagio,prioridade"),
     sb.from("prospects").select("id,nome_casa,codigo").not("estagio", "in", "(perdido,descartado)").order("nome_casa"),
     sb.from("v_conversao_canal").select("*"),
     sb.from("v_toques_dia").select("*").gte("dia", ha14),
-    sb.from("oportunidades").select("id,produto,valor_tabela,valor_fechado,status,data_proposta,condicao").eq("status", "aberta").order("data_proposta", { ascending: false }),
+    sb.from("oportunidades").select("id,prospect_id,produto,valor_tabela,valor_fechado,status,data_proposta,condicao").eq("status", "aberta").order("data_proposta", { ascending: false }),
+    sb.from("precos").select("id,produto,fundadora,cheia,unidade").order("id"),
   ]);
+  const opcoesCasas = ((todosNomes ?? []) as { id: number; nome_casa: string; codigo: string }[]).map((p) => ({ id: p.id, rotulo: `${p.nome_casa} · ${p.codigo}` }));
+  const nomeProspect = new Map(opcoesCasas.map((o) => [o.id, o.rotulo]));
+  const listaPrecos = (precos ?? []) as Preco[];
 
   const contagem = new Map<string, number>();
   (todos ?? []).forEach((p) => contagem.set(p.estagio, (contagem.get(p.estagio) ?? 0) + 1));
@@ -44,7 +48,7 @@ export default async function Comercial({ searchParams }: PageProps<"/comercial"
   const maxFunil = Math.max(1, ...funil.map((e) => contagem.get(e.k) ?? 0));
 
   return (
-    <Pagina titulo="Comercial" sub="Da prospecção ao fechamento." acoes={<><Botao href="/agentes/A1" variante="secundario">Diretor Comercial</Botao><NovoProspect /><RegistrarToque prospects={((todosNomes ?? []) as { id: number; nome_casa: string; codigo: string }[])} /></>}>
+    <Pagina titulo="Comercial" sub="Da prospecção ao fechamento." acoes={<><Botao href="/agentes/A1" variante="secundario">Diretor Comercial</Botao><NovoProspect /><NovaOportunidade prospects={opcoesCasas} precos={listaPrecos} /><FecharImplantacao prospects={opcoesCasas} precos={listaPrecos} variante="secundario" /><RegistrarToque prospects={((todosNomes ?? []) as { id: number; nome_casa: string; codigo: string }[])} /></>}>
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Kpi rotulo="Toques hoje" valor={num(toquesHoje)} sub="meta: 5 por dia" tom={toquesHoje >= 5 ? "ok" : "critico"} />
         <Kpi rotulo="Toques 14 dias" valor={num(toques14)} sub={`${num(respostas14)} respostas`} />
@@ -116,10 +120,15 @@ export default async function Comercial({ searchParams }: PageProps<"/comercial"
             linhas={opps ?? []}
             vazio="Nenhuma proposta comercial aberta."
             colunas={[
-              { k: "produto", t: "Produto" },
+              { k: "prospect_id", t: "Casa", r: (o) => (<div><div>{nomeProspect.get(o.prospect_id) ?? "—"}</div><div className="text-xs text-suave">{o.produto}</div></div>) },
               { k: "valor_tabela", t: "Valor", cls: "num", r: (o) => brl(o.valor_tabela) },
-              { k: "condicao", t: "Condição" },
-              { k: "data_proposta", t: "Proposta", r: (o) => data(o.data_proposta) },
+              { k: "data_proposta", t: "Desde", r: (o) => data(o.data_proposta) },
+              { k: "acoes", t: "", r: (o) => (
+                <div className="flex items-center gap-1">
+                  <FecharImplantacao prospects={opcoesCasas} precos={listaPrecos} prospectId={o.prospect_id ?? undefined} produto={o.produto} valor={Number(o.valor_tabela) || undefined} variante="fantasma" />
+                  <PerderOportunidade id={o.id} />
+                </div>
+              ) },
             ]}
           />
         </Cartao>

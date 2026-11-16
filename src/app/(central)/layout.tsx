@@ -22,7 +22,7 @@ export default async function CentralLayout({ children }: LayoutProps<"/">) {
   const { count } = await sb.from("propostas").select("id", { count: "exact", head: true }).eq("status", "pendente");
   return (
     <div className="flex min-h-dvh">
-      <Nav pendentes={count ?? 0} email={user.email!} />
+      <Nav pendentes={count ?? 0} email={user.email!} nome={membro.nome ?? undefined} />
       <main className="min-w-0 flex-1">
         <MaisMobile />
         {children}

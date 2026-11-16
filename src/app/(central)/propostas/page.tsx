@@ -4,6 +4,7 @@ import { CartaoProposta, type Proposta } from "@/components/proposta";
 import { BotaoRodar } from "@/components/rodar";
 import { Pagina, Vazio } from "@/components/ui";
 import { SETORES } from "@/lib/agentes";
+import { contatoDe, contatosDasPropostas } from "@/lib/contatos";
 import { usuarioAtual } from "@/lib/supabase/server";
 
 export const metadata = { title: "Aprovar" };
@@ -28,6 +29,7 @@ export default async function Propostas({ searchParams }: PageProps<"/propostas"
   const porStatus = (s: string) => (contagem ?? []).filter((c) => c.status === s && (!agente || c.agente === agente)).length;
   const ordem = { alta: 0, media: 1, baixa: 2 } as Record<string, number>;
   const lista = ((data ?? []) as Proposta[]).sort((a, b) => (status === "pendente" ? ordem[a.prioridade] - ordem[b.prioridade] : 0));
+  const contatos = await contatosDasPropostas(sb, lista);
   const agentesComProposta = [...new Set((contagem ?? []).map((c) => c.agente))].sort();
   const link = (o: Record<string, string | undefined>) => {
     const u = new URLSearchParams();
@@ -59,7 +61,7 @@ export default async function Propostas({ searchParams }: PageProps<"/propostas"
       )}
       {lista.length ? (
         <div className="space-y-3">
-          {lista.map((p) => <CartaoProposta key={p.id} p={p} aberta={status === "pendente" && p.prioridade === "alta"} />)}
+          {lista.map((p) => <CartaoProposta key={p.id} p={p} contato={contatoDe(contatos, p.alvo)} aberta={status === "pendente" && p.prioridade === "alta"} />)}
         </div>
       ) : (
         <Vazio>{status === "pendente" ? "Fila limpa. Converse com um agente ou rode a rodada do dia." : "Nada nesta aba."}</Vazio>

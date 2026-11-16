@@ -1,10 +1,13 @@
 "use client";
-import { useActionState, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { Plus, X } from "lucide-react";
-import { lancarRecebimento, novoProspect, registrarToque, type Resultado } from "@/app/acoes";
+import { useActionState, useCallback, useEffect, useRef, useState, useTransition, type ReactNode } from "react";
+import { Check, Plus, X } from "lucide-react";
+import {
+  fecharImplantacao, lancarCmv, lancarRecebimento, novaOportunidade, novoProspect, perderOportunidade,
+  registrarExcecao, registrarToque, resolverExcecao, type Resultado,
+} from "@/app/acoes";
 import { classeBotao } from "./ui";
 
-const campo = "w-full rounded-md border border-linha bg-painel-2 px-3 py-2 text-base outline-none focus:border-brasa md:text-sm";
+const campo = "campo text-base md:text-sm";
 
 function Modal({ rotulo, titulo, children, variante = "primario", icone = true }: { rotulo: ReactNode; titulo: string; children: (fechar: () => void) => ReactNode; variante?: "primario" | "secundario" | "fantasma"; icone?: boolean }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -21,12 +24,12 @@ function Modal({ rotulo, titulo, children, variante = "primario", icone = true }
       <button type="button" onClick={() => setAberto(true)} className={classeBotao(variante)}>
         {icone && <Plus size={16} />} {rotulo}
       </button>
-      <dialog ref={ref} onClose={() => setAberto(false)} className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-lg border border-linha bg-painel p-0 text-texto backdrop:bg-black/60">
-        <div className="flex items-center justify-between border-b border-linha px-4 py-3">
-          <h2 className="font-semibold">{titulo}</h2>
+      <dialog ref={ref} onClose={() => setAberto(false)} className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-cartao border border-linha bg-painel p-0 text-texto shadow-[0_24px_64px_-16px_rgba(20,16,14,0.35)] backdrop:bg-[rgba(14,13,12,0.45)] backdrop:backdrop-blur-[2px]">
+        <div className="flex items-center justify-between px-5 pb-2 pt-4">
+          <h2 className="text-[17px] font-[650] tracking-[-0.01em]">{titulo}</h2>
           <button type="button" onClick={fechar} className="text-suave hover:text-texto" aria-label="Fechar"><X size={18} /></button>
         </div>
-        <div className="max-h-[75dvh] overflow-y-auto p-4">{aberto && children(fechar)}</div>
+        <div className="max-h-[75dvh] overflow-y-auto px-5 pb-5 pt-2">{aberto && children(fechar)}</div>
       </dialog>
     </>
   );
@@ -132,6 +135,153 @@ export function LancarRecebimento({ produtos }: { produtos: string[] }) {
           <Campo rotulo="Data"><input name="data" type="date" className={campo} /></Campo>
           <Campo rotulo="Linha"><select name="linha" className={campo}><option value="consultoria">Consultoria</option><option value="recorrente">Recorrente</option><option value="digital">Digital</option><option value="landing">Landing page</option><option value="outro">Outro</option></select></Campo>
           <Campo rotulo="Forma"><select name="forma" className={campo}><option value="pix">Pix</option><option value="cartao">Cartão</option><option value="boleto">Boleto</option><option value="hotmart">Hotmart</option><option value="dinheiro">Dinheiro</option></select></Campo>
+          <Campo rotulo="Observação" largo><input name="obs" className={campo} /></Campo>
+          <Rodape estado={estado} pend={pend} texto="Lançar" fechar={fechar} />
+        </form>
+      )}
+    </Modal>
+  );
+}
+
+type Opcao = { id: number; rotulo: string };
+export type Preco = { id: number; produto: string; fundadora: number | null; cheia: number | null; unidade: string | null };
+
+const FRENTES: [string, string][] = [["produto", "Produto"], ["custo", "Custo"], ["gente", "Gente"], ["conduta", "Conduta"], ["rotina", "Rotina"], ["financas", "Finanças"]];
+
+export function FecharImplantacao({ prospects, precos, prospectId, produto, valor, variante = "primario" }: { prospects: Opcao[]; precos: Preco[]; prospectId?: number; produto?: string; valor?: number; variante?: "primario" | "secundario" | "fantasma" }) {
+  const [estado, acao, pend] = useActionState(fecharImplantacao, null);
+  return (
+    <Modal rotulo={prospectId ? "Fechar" : "Fechar implantação"} titulo="Fechar implantação" variante={variante} icone={variante !== "fantasma"}>
+      {(fechar) => (
+        <form action={acao} className="grid grid-cols-2 gap-3">
+          <p className="col-span-2 text-sm text-suave">Cria a casa (código C-…), o contrato e marca a venda como ganha. Tudo de uma vez.</p>
+          <Campo rotulo="Casa" largo>
+            <select name="prospect_id" required defaultValue={prospectId ?? ""} className={campo}>
+              <option value="" disabled>Escolha…</option>
+              {prospects.map((p) => <option key={p.id} value={p.id}>{p.rotulo}</option>)}
+            </select>
+          </Campo>
+          <Campo rotulo="Produto" largo>
+            <input name="produto" list="lista-precos" required defaultValue={produto} className={campo} />
+            <datalist id="lista-precos">{precos.map((p) => <option key={p.id} value={p.produto} />)}</datalist>
+          </Campo>
+          <Campo rotulo="Valor fechado (R$)"><input name="valor" type="number" step="0.01" min="0" required defaultValue={valor} className={campo} /></Campo>
+          <Campo rotulo="Condição"><select name="condicao" className={campo}><option value="fundadora">Fundadora</option><option value="cheia">Cheia</option></select></Campo>
+          <Campo rotulo="Cobrança"><select name="unidade" className={campo}><option value="avulso">Valor único</option><option value="mes">Por mês</option><option value="parcela">Parcelado</option></select></Campo>
+          <Campo rotulo="Meses (se recorrente/parcelado)"><input name="meses" type="number" min="1" className={campo} /></Campo>
+          <Campo rotulo="Início"><input name="inicio" type="date" className={campo} /></Campo>
+          <Campo rotulo="Forma de pagamento"><select name="forma_pagamento" className={campo}><option value="pix">Pix</option><option value="cartao">Cartão</option><option value="boleto">Boleto</option></select></Campo>
+          <fieldset className="col-span-2">
+            <legend className="mb-1 text-xs text-suave">Frentes da implantação</legend>
+            <div className="flex flex-wrap gap-3">
+              {FRENTES.map(([v, t]) => (
+                <label key={v} className="flex items-center gap-1.5 text-sm"><input type="checkbox" name="frentes" value={v} className="accent-brasa" /> {t}</label>
+              ))}
+            </div>
+          </fieldset>
+          <Rodape estado={estado} pend={pend} texto="Fechar implantação" fechar={fechar} />
+        </form>
+      )}
+    </Modal>
+  );
+}
+
+export function NovaOportunidade({ prospects, precos }: { prospects: Opcao[]; precos: Preco[] }) {
+  const [estado, acao, pend] = useActionState(novaOportunidade, null);
+  return (
+    <Modal rotulo="Proposta comercial" titulo="Registrar proposta comercial" variante="secundario">
+      {(fechar) => (
+        <form action={acao} className="grid grid-cols-2 gap-3">
+          <Campo rotulo="Casa" largo>
+            <select name="prospect_id" required defaultValue="" className={campo}>
+              <option value="" disabled>Escolha…</option>
+              {prospects.map((p) => <option key={p.id} value={p.id}>{p.rotulo}</option>)}
+            </select>
+          </Campo>
+          <Campo rotulo="Produto" largo>
+            <select name="preco_id" required defaultValue="" className={campo}>
+              <option value="" disabled>Escolha…</option>
+              {precos.map((p) => <option key={p.id} value={p.id}>{p.produto}{p.fundadora ? ` · R$ ${p.fundadora}` : ""}</option>)}
+            </select>
+          </Campo>
+          <Campo rotulo="Condição"><select name="condicao" className={campo}><option value="fundadora">Fundadora</option><option value="cheia">Cheia</option></select></Campo>
+          <Campo rotulo="Valor (vazio = tabela)"><input name="valor" type="number" step="0.01" min="0" className={campo} /></Campo>
+          <Campo rotulo="Data da proposta"><input name="data_proposta" type="date" className={campo} /></Campo>
+          <label className="col-span-2 flex items-center gap-2 text-sm sm:col-span-1 sm:pt-6"><input type="checkbox" name="desconto_avista" className="accent-brasa" /> Desconto à vista</label>
+          <Rodape estado={estado} pend={pend} texto="Registrar" fechar={fechar} />
+        </form>
+      )}
+    </Modal>
+  );
+}
+
+const MOTIVOS: [string, string][] = [["preco", "Preço"], ["momento", "Momento"], ["nao_ve_problema", "Não vê o problema"], ["sem_decisor", "Sem decisor"], ["ja_tem_consultor", "Já tem consultor"], ["sumiu", "Sumiu"], ["nao_cabe_icp", "Não é o perfil"], ["outro", "Outro"]];
+
+export function PerderOportunidade({ id }: { id: number }) {
+  const [pend, iniciar] = useTransition();
+  return (
+    <select
+      aria-label="Marcar perdida"
+      disabled={pend}
+      defaultValue=""
+      onChange={(e) => e.target.value && iniciar(() => perderOportunidade(id, e.target.value))}
+      className="campo w-auto !py-1 !pl-2 text-xs disabled:opacity-50"
+    >
+      <option value="">Perdida…</option>
+      {opcoes(MOTIVOS)}
+    </select>
+  );
+}
+
+export function RegistrarExcecao({ casas }: { casas: Opcao[] }) {
+  const [estado, acao, pend] = useActionState(registrarExcecao, null);
+  return (
+    <Modal rotulo="Exceção" titulo="Registrar exceção na cozinha" variante="secundario">
+      {(fechar) => (
+        <form action={acao} className="grid grid-cols-2 gap-3">
+          <Campo rotulo="Casa" largo>
+            <select name="casa_id" required defaultValue="" className={campo}>
+              <option value="" disabled>Escolha…</option>
+              {casas.map((c) => <option key={c.id} value={c.id}>{c.rotulo}</option>)}
+            </select>
+          </Campo>
+          <Campo rotulo="O que aconteceu" largo><input name="o_que" required placeholder="Picanha saiu com 260 g no almoço" className={campo} /></Campo>
+          <Campo rotulo="Causa"><input name="causa" className={campo} /></Campo>
+          <Campo rotulo="Gravidade"><select name="estado" className={campo}><option value="faisca">Faísca (atenção)</option><option value="brasa">Brasa (crítico)</option></select></Campo>
+          <Campo rotulo="Ação" largo><input name="acao" placeholder="Refazer cartão de praça e pesar na frente do cozinheiro" className={campo} /></Campo>
+          <Campo rotulo="Responsável (cargo)"><input name="responsavel" placeholder="Chef de praça" className={campo} /></Campo>
+          <Campo rotulo="Prazo"><input name="prazo" type="date" className={campo} /></Campo>
+          <Rodape estado={estado} pend={pend} texto="Registrar" fechar={fechar} />
+        </form>
+      )}
+    </Modal>
+  );
+}
+
+export function ResolverExcecao({ id }: { id: number }) {
+  const [pend, iniciar] = useTransition();
+  return (
+    <button disabled={pend} onClick={() => iniciar(() => resolverExcecao(id))} className={classeBotao("fantasma")} title="Marcar resolvida">
+      <Check size={14} /> Resolvida
+    </button>
+  );
+}
+
+export function LancarCmv({ casas }: { casas: Opcao[] }) {
+  const [estado, acao, pend] = useActionState(lancarCmv, null);
+  return (
+    <Modal rotulo="CMV da semana" titulo="Lançar CMV da semana">
+      {(fechar) => (
+        <form action={acao} className="grid grid-cols-2 gap-3">
+          <Campo rotulo="Casa" largo>
+            <select name="casa_id" required defaultValue="" className={campo}>
+              <option value="" disabled>Escolha…</option>
+              {casas.map((c) => <option key={c.id} value={c.id}>{c.rotulo}</option>)}
+            </select>
+          </Campo>
+          <Campo rotulo="Semana (segunda-feira)"><input name="semana_inicio" type="date" required className={campo} /></Campo>
+          <Campo rotulo="CMV real (%)"><input name="cmv_pct" type="number" step="0.1" min="0" max="100" required className={campo} /></Campo>
+          <Campo rotulo="Alvo (%)"><input name="alvo_pct" type="number" step="0.1" min="0" max="100" required defaultValue={32} className={campo} /></Campo>
           <Campo rotulo="Observação" largo><input name="obs" className={campo} /></Campo>
           <Rodape estado={estado} pend={pend} texto="Lançar" fechar={fechar} />
         </form>

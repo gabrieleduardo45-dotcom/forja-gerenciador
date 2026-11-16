@@ -11,7 +11,7 @@ export function MoverEstagio({ id, estagio }: { id: number; estagio: string }) {
       disabled={pend}
       defaultValue={estagio}
       onChange={(e) => iniciar(() => moverProspect(id, e.target.value))}
-      className="max-w-[11rem] rounded border border-linha bg-painel-2 px-1.5 py-1 text-xs text-texto disabled:opacity-50"
+      className="campo max-w-[11rem] !py-1 !pl-2 text-xs disabled:opacity-50"
     >
       {ESTAGIOS.map((s) => <option key={s.k} value={s.k}>{s.t}</option>)}
     </select>

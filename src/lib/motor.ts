@@ -2,6 +2,7 @@ import { generateText, isStepCount, tool, type ToolSet } from "ai";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { FONTES, REGRAS_FORJA, SETORES, type NomeFonte } from "./agentes";
+import { PERMITIDO, TABELAS_ACAO, validarAcao, type Acao } from "./execucao";
 
 export const MODELO = process.env.FORJA_MODELO || "anthropic/claude-sonnet-5.5";
 export const PASSOS_MAX = 12;
@@ -70,7 +71,12 @@ export function ferramentas({ sb, codigo, conversaId, profundidade = 0 }: Ctx): 
     }),
     propor: tool({
       description:
-        "Coloca uma proposta na fila de aprovação do Gabriel. Use para toda ação concreta: tarefa, mensagem pronta para enviar, decisão a tomar, alerta ou dado a atualizar.",
+        "Coloca uma proposta na fila de aprovação do Gabriel. Use para toda ação concreta: tarefa, mensagem pronta para enviar, decisão a tomar, alerta ou dado a atualizar. " +
+        "Se a proposta for mudar o banco (tipo atualizacao), preencha 'acao': ao aprovar, o sistema executa sozinho. Permitido: " +
+        Object.entries(PERMITIDO)
+          .map(([op, t]) => `${op} → ` + Object.entries(t).map(([tab, cols]) => `${tab}(${cols.join(",")})`).join("; "))
+          .join(" | ") +
+        ". Use o id numérico da linha (consulte antes).",
       inputSchema: z.object({
         tipo: z.enum(["tarefa", "mensagem", "decisao", "alerta", "atualizacao"]),
         prioridade: z.enum(["alta", "media", "baixa"]),
@@ -78,15 +84,28 @@ export function ferramentas({ sb, codigo, conversaId, profundidade = 0 }: Ctx): 
         detalhe: z.string().max(4000).describe("Por quê, com os números. Se for mensagem, coloque o texto pronto para enviar em linhas citadas com > (markdown)."),
         alvo: z.string().max(120).optional().describe("Casa, prospect ou contrato envolvido (código)"),
         prazo: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+        acao: z
+          .object({
+            operacao: z.enum(["atualizar", "inserir"]),
+            tabela: z.enum(TABELAS_ACAO),
+            id: z.number().int().optional().describe("Obrigatório para atualizar"),
+            campos: z.record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null()])),
+          })
+          .optional()
+          .describe("Só para tipo atualizacao: o que o sistema faz no banco quando o Gabriel aprovar."),
       }),
-      execute: async (p) => {
+      execute: async ({ acao, ...p }) => {
+        if (acao) {
+          const erro = validarAcao(acao as Acao);
+          if (erro) return { erro: `Ação recusada: ${erro}` };
+        }
         const { data, error } = await sb
           .from("propostas")
-          .insert({ ...p, agente: codigo, conversa_id: conversaId ?? null })
+          .insert({ ...p, payload: acao ? { acao } : {}, agente: codigo, conversa_id: conversaId ?? null })
           .select("id")
           .single();
         if (error) return { erro: error.message };
-        return { ok: true, id: data.id, aviso: "Na fila de aprovação." };
+        return { ok: true, id: data.id, aviso: acao ? "Na fila. Ao aprovar, o sistema executa." : "Na fila de aprovação." };
       },
     }),
   };

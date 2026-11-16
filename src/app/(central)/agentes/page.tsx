@@ -30,7 +30,7 @@ export default async function Agentes() {
           const s = SETORES[a.codigo];
           const x = r.get(a.codigo);
           return (
-            <Link key={a.codigo} href={`/agentes/${a.codigo}`} className="group flex flex-col rounded-lg border border-linha bg-painel p-4 transition-colors hover:border-brasa/50">
+            <Link key={a.codigo} href={`/agentes/${a.codigo}`} className="group flex flex-col rounded-cartao border border-linha bg-painel shadow-cartao p-4 transition-colors hover:border-brasa/50">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="grid h-10 w-10 place-items-center rounded-md bg-painel-2 text-brasa">

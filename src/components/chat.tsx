@@ -55,13 +55,13 @@ export function Chat({ codigo, id, iniciais, sugestoes }: Props) {
           )}
           {messages.map((m) => (
             <div key={m.id} className={clsx("flex", m.role === "user" && "justify-end")}>
-              <div className={clsx("max-w-[92%] space-y-2", m.role === "user" && "rounded-lg bg-painel-2 px-3.5 py-2.5")}>
+              <div className={clsx("max-w-[92%] space-y-2", m.role === "user" && "rounded-cartao rounded-br-md bg-ferro px-3.5 py-2.5 text-[#f4f2ee]")}>
                 {m.parts.map((p, i) => {
                   if (p.type === "text")
                     return m.role === "user" ? (
                       <p key={i} className="whitespace-pre-wrap">{p.text}</p>
                     ) : (
-                      <div key={i} className="md leading-relaxed text-[#ddd5ce]"><ReactMarkdown remarkPlugins={[remarkGfm]}>{p.text}</ReactMarkdown></div>
+                      <div key={i} className="md leading-relaxed"><ReactMarkdown remarkPlugins={[remarkGfm]}>{p.text}</ReactMarkdown></div>
                     );
                   if (isToolUIPart(p)) return <Ferramenta key={i} nome={getToolName(p)} estado={p.state} entrada={p.input} saida={"output" in p ? p.output : undefined} />;
                   return null;
@@ -84,7 +84,7 @@ export function Chat({ codigo, id, iniciais, sugestoes }: Props) {
         }}
         className="border-t border-linha bg-fundo px-4 py-3 md:px-6"
       >
-        <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-lg border border-linha bg-painel px-3 py-2 focus-within:border-brasa/60">
+        <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-cartao border border-linha bg-painel shadow-cartao px-3 py-2 focus-within:border-brasa/60">
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}

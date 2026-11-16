@@ -10,6 +10,7 @@ import { BotaoRodar } from "@/components/rodar";
 import { Cartao, Vazio } from "@/components/ui";
 import { FONTES, SETORES } from "@/lib/agentes";
 import { dataHora } from "@/lib/formato";
+import { contatoDe, contatosDasPropostas } from "@/lib/contatos";
 import { usuarioAtual } from "@/lib/supabase/server";
 
 export async function generateMetadata({ params }: PageProps<"/agentes/[codigo]">) {
@@ -32,6 +33,7 @@ export default async function Agente({ params, searchParams }: PageProps<"/agent
     conversaId ? sb.from("agente_conversas").select("id,mensagens").eq("id", conversaId).maybeSingle() : Promise.resolve({ data: null }),
   ]);
 
+  const contatos = await contatosDasPropostas(sb, (propostas ?? []) as Proposta[]);
   const id = atual.data?.id ?? conversaId ?? crypto.randomUUID();
   const iniciais = (atual.data?.mensagens ?? []) as UIMessage[];
 
@@ -57,7 +59,7 @@ export default async function Agente({ params, searchParams }: PageProps<"/agent
         </div>
         <Cartao titulo="Propostas abertas">
           {propostas?.length ? (
-            <div className="space-y-2">{(propostas as Proposta[]).map((p) => <CartaoProposta key={p.id} p={p} />)}</div>
+            <div className="space-y-2">{(propostas as Proposta[]).map((p) => <CartaoProposta key={p.id} p={p} contato={contatoDe(contatos, p.alvo)} />)}</div>
           ) : (
             <Vazio>Nenhuma proposta aberta deste setor.</Vazio>
           )}

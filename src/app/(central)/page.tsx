@@ -7,6 +7,7 @@ import { CartaoProposta, type Proposta } from "@/components/proposta";
 import { Barra, Cartao, Kpi, Pagina, Selo, Vazio } from "@/components/ui";
 import { INDICADORES, brl, data, dataHora, nomeEstagio, tomPrio, valorUnidade } from "@/lib/formato";
 import { hojeManaus } from "@/lib/motor";
+import { contatoDe, contatosDasPropostas } from "@/lib/contatos";
 import { usuarioAtual } from "@/lib/supabase/server";
 
 export const metadata = { title: "Hoje" };
@@ -34,6 +35,7 @@ export default async function Hoje() {
   const m = new Map((metas.data as MetaReal[] | null)?.map((x) => [x.indicador, x]) ?? []);
   const ordemPrio = { alta: 0, media: 1, baixa: 2 } as Record<string, number>;
   const pend = ((propostas.data ?? []) as Proposta[]).sort((a, b) => ordemPrio[a.prioridade] - ordemPrio[b.prioridade]);
+  const contatos = await contatosDasPropostas(sb, pend);
   const textoPagina = (pagina.data?.mensagens as { role: string; parts: Texto[] }[] | undefined)
     ?.filter((x) => x.role === "assistant")
     .flatMap((x) => x.parts)
@@ -55,7 +57,7 @@ export default async function Hoje() {
           const real = Number(x?.real ?? 0);
           const tom = !x || alvo === 0 ? undefined : real >= alvo ? "ok" : real >= alvo * 0.5 ? "atencao" : "critico";
           return (
-            <div key={k} className="rounded-lg border border-linha bg-painel p-3.5">
+            <div key={k} className="rounded-cartao border border-linha bg-painel shadow-cartao p-3.5">
               <div className="text-xs text-suave">{INDICADORES[k] ?? k}</div>
               <div className={`num mt-1 text-xl font-semibold ${tom === "ok" ? "text-ok" : tom === "critico" ? "text-critico" : tom === "atencao" ? "text-atencao" : ""}`}>
                 {valorUnidade(x?.real ?? 0, x?.unidade)}
@@ -75,7 +77,7 @@ export default async function Hoje() {
           >
             {pend.length ? (
               <div className="space-y-3">
-                {pend.slice(0, 5).map((p) => <CartaoProposta key={p.id} p={p} />)}
+                {pend.slice(0, 5).map((p) => <CartaoProposta key={p.id} p={p} contato={contatoDe(contatos, p.alvo)} />)}
               </div>
             ) : (
               <Vazio>Nenhuma proposta pendente. Rode os agentes para eles lerem os setores e trazerem o que fazer hoje.</Vazio>

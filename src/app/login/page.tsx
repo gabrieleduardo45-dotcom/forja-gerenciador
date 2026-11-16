@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseNavegador } from "@/lib/supabase/client";
+import { LogoForja } from "@/components/logo";
 import { classeBotao } from "@/components/ui";
 
 export default function Login() {
@@ -33,16 +34,14 @@ export default function Login() {
     setMsg(error ? error.message : "Mandei um link de acesso para o seu e-mail.");
   }
 
-  const campo = "w-full rounded-md border border-linha bg-painel-2 px-3 py-2.5 text-base outline-none focus:border-brasa";
+  const campo = "campo py-2.5 text-base";
   return (
     <main className="grid min-h-dvh place-items-center p-6">
-      <form onSubmit={entrar} className="w-full max-w-sm space-y-4">
-        <div className="mb-8 flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-md bg-brasa text-lg font-bold text-sobre-brasa">F</div>
-          <div>
-            <h1 className="text-xl font-semibold">Forja</h1>
-            <p className="text-sm text-suave">Central de comando</p>
-          </div>
+      <form onSubmit={entrar} className="entra w-full max-w-sm space-y-4 rounded-cartao border border-linha bg-painel p-7 shadow-alto">
+        <div className="mb-6">
+          <LogoForja claro={false} sub="Central de comando" />
+          <h1 className="mt-6 text-[26px] font-bold tracking-[-0.03em]">Entrar</h1>
+          <p className="mt-1 text-[15px] text-suave">Use o mesmo e-mail e senha do Forja OS.</p>
         </div>
         <label className="block space-y-1.5">
           <span className="text-sm text-suave">E-mail</span>
@@ -52,7 +51,7 @@ export default function Login() {
           <span className="text-sm text-suave">Senha</span>
           <input className={campo} type="password" autoComplete="current-password" required value={senha} onChange={(e) => setSenha(e.target.value)} />
         </label>
-        {msg && <p className="text-sm text-atencao">{msg}</p>}
+        {msg && <p className="text-sm font-medium text-critico">{msg}</p>}
         <button disabled={carregando} className={`${classeBotao()} w-full py-2.5`}>{carregando ? "Entrando…" : "Entrar"}</button>
         <button type="button" onClick={link} className={`${classeBotao("fantasma")} w-full`}>Esqueci a senha: me mande um link</button>
       </form>

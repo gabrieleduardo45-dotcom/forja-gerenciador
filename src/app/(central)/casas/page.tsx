@@ -1,3 +1,4 @@
+import { LancarCmv, RegistrarExcecao, ResolverExcecao } from "@/components/formularios";
 import { Botao, Cartao, Kpi, Pagina, Selo, Tabela } from "@/components/ui";
 import { brl, data, num, pct } from "@/lib/formato";
 import { usuarioAtual } from "@/lib/supabase/server";
@@ -9,7 +10,7 @@ export default async function Casas() {
   const [{ data: casas }, { data: cmv }, { data: exc }, { data: parados }, { data: vh }, { data: entregas }] = await Promise.all([
     sb.from("casas").select("*").order("codigo"),
     sb.from("cmv").select("casa_id,semana_inicio,cmv_pct,alvo_pct,estado").order("semana_inicio", { ascending: false }).limit(200),
-    sb.from("v_excecoes_abertas").select("*"),
+    sb.from("excecoes").select("id,casa_id,data,o_que,causa,acao,estado,repeticoes,prazo,responsavel").eq("resolvida", false).order("data", { ascending: false }),
     sb.from("v_campos_parados").select("*").order("dias", { ascending: false }),
     sb.from("v_valor_hora_casa").select("*"),
     sb.from("entregas").select("casa_id,titulo,tipo,status,data,retrabalho").neq("status", "entregue").order("data").limit(20),
@@ -18,11 +19,12 @@ export default async function Casas() {
   const ultimoCmv = new Map<number, { cmv_pct: number; alvo_pct: number; estado: string; semana_inicio: string }>();
   (cmv ?? []).forEach((c) => { if (!ultimoCmv.has(c.casa_id)) ultimoCmv.set(c.casa_id, c); });
   const codigoCasa = new Map((casas ?? []).map((c) => [c.id, c.codigo]));
-  const ativas = (casas ?? []).filter((c) => c.status !== "encerrada" && c.status !== "pausada").length;
+  const ativas = (casas ?? []).filter((c) => c.status === "ativa").length;
+  const opcoesCasas = (casas ?? []).filter((c) => c.status === "ativa").map((c) => ({ id: c.id as number, rotulo: `${c.codigo} · ${c.nome ?? ""}` }));
   const foraAlvo = [...ultimoCmv.values()].filter((c) => Number(c.cmv_pct) > Number(c.alvo_pct)).length;
 
   return (
-    <Pagina titulo="Casas" sub="Restaurantes clientes: CMV, rotina e entregas." acoes={<><Botao href="/agentes/A7" variante="secundario">Operações</Botao><Botao href="/agentes/A4">Custos</Botao></>}>
+    <Pagina titulo="Casas" sub="Restaurantes clientes: CMV, rotina e entregas." acoes={<><Botao href="/agentes/A7" variante="secundario">Operações</Botao><Botao href="/agentes/A4" variante="secundario">Custos</Botao><RegistrarExcecao casas={opcoesCasas} /><LancarCmv casas={opcoesCasas} /></>}>
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Kpi rotulo="Casas ativas" valor={num(ativas)} />
         <Kpi rotulo="Fora do CMV alvo" valor={num(foraAlvo)} tom={foraAlvo ? "critico" : "ok"} />
@@ -51,10 +53,10 @@ export default async function Casas() {
             linhas={exc ?? []}
             vazio="Nenhuma exceção aberta."
             colunas={[
-              { k: "codigo", t: "Casa" },
-              { k: "o_que", t: "O que", r: (e) => (<div><div>{e.o_que}</div>{e.causa && <div className="text-xs text-suave">causa: {e.causa}</div>}</div>) },
-              { k: "repeticoes", t: "Rep.", cls: "num" },
+              { k: "casa_id", t: "Casa", r: (e) => <Selo tom={e.estado === "brasa" ? "critico" : "atencao"}>{codigoCasa.get(e.casa_id) ?? "—"}</Selo> },
+              { k: "o_que", t: "O que", r: (e) => (<div><div>{e.o_que}</div>{(e.causa || e.acao) && <div className="text-xs text-suave">{e.causa && `causa: ${e.causa}`}{e.causa && e.acao && " · "}{e.acao && `ação: ${e.acao}`}</div>}</div>) },
               { k: "prazo", t: "Prazo", r: (e) => data(e.prazo) },
+              { k: "id", t: "", r: (e) => <ResolverExcecao id={e.id} /> },
             ]}
           />
         </Cartao>

@@ -13,7 +13,7 @@ export default async function Decisoes({ searchParams }: PageProps<"/decisoes">)
   let q = sb.from("decisoes").select("*").order("data", { ascending: false }).order("id", { ascending: false }).limit(200);
   if (busca) q = q.or(`assunto.ilike.%${busca}%,decisao.ilike.%${busca}%`);
   const { data: lista } = await q;
-  const campo = "w-full rounded-md border border-linha bg-painel-2 px-3 py-2 text-sm outline-none focus:border-brasa";
+  const campo = "campo text-base md:text-sm";
 
   return (
     <Pagina titulo="Decisões" sub="A memória da Forja. Todo agente lê isto antes de recomendar.">
@@ -37,7 +37,7 @@ export default async function Decisoes({ searchParams }: PageProps<"/decisoes">)
 
       <ol className="space-y-3">
         {(lista ?? []).map((d) => (
-          <li key={d.id} className="rounded-lg border border-linha bg-painel p-4">
+          <li key={d.id} className="rounded-cartao border border-linha bg-painel shadow-cartao p-4">
             <div className="flex flex-wrap items-center gap-2 text-xs text-suave">
               <span className="num">{data(d.data)}</span>
               {d.agente && <Selo>{SETORES[d.agente]?.setor ?? d.agente}</Selo>}
