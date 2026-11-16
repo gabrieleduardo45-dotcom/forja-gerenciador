@@ -41,12 +41,13 @@ export default async function Hoje() {
     .map((p) => p.text)
     .join("\n");
 
-  const dia = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long", timeZone: "America/Manaus" }).format(new Date());
+  const diaBruto = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long", timeZone: "America/Manaus" }).format(new Date());
+  const dia = diaBruto.charAt(0).toUpperCase() + diaBruto.slice(1);
   const hora = Number(new Intl.DateTimeFormat("pt-BR", { hour: "numeric", hour12: false, timeZone: "America/Manaus" }).format(new Date()));
   const saudacao = hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
 
   return (
-    <Pagina titulo={`${saudacao}, ${membro.data?.nome ?? "Gabriel"}`} sub={<span className="capitalize">{dia}</span>} acoes={<BotaoRodar />}>
+    <Pagina titulo={`${saudacao}, ${membro.data?.nome ?? "Gabriel"}`} sub={dia} acoes={<BotaoRodar />}>
       <section className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
         {PRINCIPAIS.map((k) => {
           const x = m.get(k);
