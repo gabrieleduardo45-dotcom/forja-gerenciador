@@ -134,3 +134,8 @@ export async function executarAgente({
     .filter((tr) => tr.toolName === "propor" && (tr.output as { ok?: boolean })?.ok).length;
   return { texto: r.text, propostas };
 }
+
+/** Data (AAAA-MM-DD) de n dias atrás. */
+export function diasAtras(n: number) {
+  return new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
+}

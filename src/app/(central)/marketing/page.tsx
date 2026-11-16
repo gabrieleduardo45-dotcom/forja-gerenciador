@@ -1,12 +1,13 @@
 import { Botao, Cartao, Kpi, Pagina, Tabela } from "@/components/ui";
 import { data, num, pct, rotulo } from "@/lib/formato";
+import { diasAtras } from "@/lib/motor";
 import { usuarioAtual } from "@/lib/supabase/server";
 
 export const metadata = { title: "Marketing" };
 
 export default async function Marketing() {
   const { sb } = await usuarioAtual();
-  const ha30 = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
+  const ha30 = diasAtras(30);
   const [{ data: conv }, { data: origem }, { data: cliques }, { data: origemLead }] = await Promise.all([
     sb.from("v_lp_conversao").select("*").gte("dia", ha30).order("dia", { ascending: false }),
     sb.from("v_lp_origem").select("*").order("visitas", { ascending: false }).limit(15),

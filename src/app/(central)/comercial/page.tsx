@@ -4,7 +4,7 @@ import { MessageCircle } from "lucide-react";
 import { MoverEstagio } from "@/components/mover";
 import { Botao, Cartao, Kpi, Pagina, Selo, Tabela } from "@/components/ui";
 import { ESTAGIOS, brl, data, nomeEstagio, num, pct, rotulo, tomPrio } from "@/lib/formato";
-import { hojeManaus } from "@/lib/motor";
+import { diasAtras, hojeManaus } from "@/lib/motor";
 import { usuarioAtual } from "@/lib/supabase/server";
 
 export const metadata = { title: "Comercial" };
@@ -17,7 +17,7 @@ export default async function Comercial({ searchParams }: PageProps<"/comercial"
   const filtroEstagio = typeof sp.estagio === "string" ? sp.estagio : "";
   const { sb } = await usuarioAtual();
   const hoje = hojeManaus();
-  const ha14 = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10);
+  const ha14 = diasAtras(14);
 
   let q = sb.from("prospects").select("id,codigo,nome_casa,setor,bairro,estagio,prioridade,score_total,proximo_toque_em,whatsapp_decisor,decisor_nome,origem").order("score_total", { ascending: false, nullsFirst: false }).limit(300);
   if (busca) q = q.or(`nome_casa.ilike.%${busca.replace(/[%,()]/g, "")}%,bairro.ilike.%${busca.replace(/[%,()]/g, "")}%,codigo.ilike.%${busca.replace(/[%,()]/g, "")}%`);
