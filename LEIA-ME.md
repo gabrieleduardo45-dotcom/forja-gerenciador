@@ -53,4 +53,4 @@ Migração desta versão: `supabase/migrations/20261116_central_agentes_proposta
 
 ## Custos de IA
 
-Modelo padrão `anthropic/claude-sonnet-5.5` (troque com a variável `FORJA_MODELO`). Uma conversa curta custa centavos; uma rodada com todos os 13 agentes ligados, alguns reais. Comece com 2 ou 3 agentes ligados (Comercial, Financeiro, Conversão).
+O modelo vem da variável `FORJA_MODELO` na Vercel. Hoje: `anthropic/claude-haiku-5.5`, o que o plano grátis do AI Gateway libera (centavos por rodada). Para respostas mais fortes, coloque crédito no AI Gateway e troque para `anthropic/claude-sonnet-5.5`; depois faça um novo deploy. Comece com 2 ou 3 agentes ligados (Comercial, Financeiro, Conversão).
