@@ -41,7 +41,7 @@ export default function Login() {
         <div className="mb-6">
           <LogoForja claro={false} sub="Central de comando" />
           <h1 className="mt-6 text-[26px] font-bold tracking-[-0.03em]">Entrar</h1>
-          <p className="mt-1 text-[15px] text-suave">Use o mesmo e-mail e senha do Forja OS.</p>
+          <p className="mt-1 text-[15px] text-suave">Gestão da Forja. A senha é desta Central, não a do FORJA OS. Esqueceu? Use o link abaixo.</p>
         </div>
         <label className="block space-y-1.5">
           <span className="text-sm text-suave">E-mail</span>
