@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { redirect } from "next/navigation";
+import { AcoesRapidas } from "@/components/acoes-rapidas";
 import { MaisMobile, Nav } from "@/components/nav";
 import { usuarioAtual } from "@/lib/supabase/server";
 
@@ -19,7 +20,11 @@ export default async function CentralLayout({ children }: LayoutProps<"/">) {
       </main>
     );
   }
-  const { count } = await sb.from("propostas").select("id", { count: "exact", head: true }).eq("status", "pendente");
+  const [{ count }, { data: rapidos }, { data: precos }] = await Promise.all([
+    sb.from("propostas").select("id", { count: "exact", head: true }).eq("status", "pendente"),
+    sb.from("prospects").select("id,nome_casa,codigo").not("estagio", "in", "(perdido,descartado)").order("nome_casa"),
+    sb.from("precos").select("produto").order("id"),
+  ]);
   return (
     <div className="flex min-h-dvh">
       <Nav pendentes={count ?? 0} email={user.email!} nome={membro.nome ?? undefined} />
@@ -27,6 +32,7 @@ export default async function CentralLayout({ children }: LayoutProps<"/">) {
         <MaisMobile />
         {children}
       </main>
+      <AcoesRapidas prospects={(rapidos ?? []) as { id: number; nome_casa: string; codigo: string }[]} produtos={(precos ?? []).map((p) => p.produto as string)} />
     </div>
   );
 }
