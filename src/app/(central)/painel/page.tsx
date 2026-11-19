@@ -4,6 +4,7 @@ import { Botao, Cartao, Pagina, Selo, Tabela, Vazio } from "@/components/ui";
 import { brl, num, pct, rotulo } from "@/lib/formato";
 import { diasAtras, hojeManaus } from "@/lib/motor";
 import { usuarioAtual } from "@/lib/supabase/server";
+import { AbasNumeros } from "@/components/abas-numeros";
 import { CasasForjaOS } from "@/components/casas-os";
 import { casasDoForjaOS } from "@/lib/forja-os";
 
@@ -140,8 +141,8 @@ export default async function Painel({ searchParams }: PageProps<"/painel">) {
 
   return (
     <Pagina
-      titulo="Visão geral da Forja"
-      sub="Do primeiro clique ao cliente recorrente."
+      titulo="Números"
+      sub="Vendas e funil: do primeiro clique ao cliente recorrente."
       acoes={
         <div role="group" aria-label="Período" className="inline-flex gap-0.5 rounded-[11px] bg-[rgba(20,16,14,0.05)] p-1">
           {PERIODOS.map((x) => (
@@ -157,6 +158,8 @@ export default async function Painel({ searchParams }: PageProps<"/painel">) {
         </div>
       }
     >
+      <AbasNumeros ativa="vendas" />
+
       <section aria-label="Régua do funil" className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
         {regua.map((r) => (
           <div key={r.t} className="rounded-cartao border border-linha bg-painel p-4 shadow-cartao">

@@ -12,7 +12,7 @@ const LINKS = [
   { href: "/marketing", t: "Marketing", d: "página de vendas e links marcados", I: Megaphone },
   { href: "/agentes", t: "Agentes", d: "conversar com cada setor", I: Bot },
   { href: "/decisoes", t: "Decisões", d: "o que já foi decidido", I: Gavel },
-  { href: "/painel", t: "Números", d: "funil e vendas do período", I: BarChart3 },
+  { href: "/numeros", t: "Números", d: "DRE, caixa, margem e funil", I: BarChart3 },
 ];
 
 export default function Mais() {

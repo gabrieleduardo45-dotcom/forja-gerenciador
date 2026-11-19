@@ -369,3 +369,101 @@ export async function faleiHoje(id: number, canal: "whatsapp" | "instagram" | "v
   if (error) throw new Error(error.message);
   revalidatePath("/", "layout");
 }
+
+/* ---------- Financeiro: extrato, categorias, parâmetros ---------- */
+
+export type LinhaImportada = { ref: string; data: string; descricao: string; valor: number; categoria: string; confianca: number };
+
+/** Lê o extrato (OFX ou CSV), tira o que já foi importado e pede para a IA classificar. Não grava ainda. */
+export async function importarExtrato(f: FormData): Promise<{ ok: boolean; msg: string; linhas: LinhaImportada[]; saldo?: number; saldoData?: string }> {
+  const { sb } = await sessao();
+  const { lerExtrato } = await import("@/lib/financeiro");
+  const { classificarComIA } = await import("@/lib/financeiro-ia");
+  const arq = f.get("arquivo");
+  if (!(arq instanceof File) || !arq.size) return { ok: false, msg: "Escolha o arquivo do extrato.", linhas: [] };
+  const bytes = new Uint8Array(await arq.arrayBuffer());
+  let texto = new TextDecoder("utf-8").decode(bytes);
+  if (texto.includes("�")) texto = new TextDecoder("windows-1252").decode(bytes);
+  const ex = lerExtrato(arq.name, texto);
+  if (!ex.linhas.length) return { ok: false, msg: ex.erro ?? "Não achei lançamentos no arquivo.", linhas: [] };
+  const { data: ja } = await sb.from("lancamentos").select("ref").in("ref", ex.linhas.map((l) => l.ref));
+  const jaTem = new Set((ja ?? []).map((x) => x.ref));
+  const novas = ex.linhas.filter((l) => !jaTem.has(l.ref));
+  const lotes: (typeof novas)[] = [];
+  for (let i = 0; i < novas.length; i += 60) lotes.push(novas.slice(i, i + 60));
+  const classes = new Map<number, { categoria: string; confianca: number }>();
+  await Promise.all(
+    lotes.map(async (lote, n) => {
+      try {
+        const r = await classificarComIA(lote.map((l, j) => ({ i: n * 60 + j, descricao: l.descricao, valor: l.valor })));
+        r.forEach((x) => classes.set(x.i, x));
+      } catch { /* fica a classificar */ }
+    }),
+  );
+  const linhas = novas.map((l, i) => ({ ...l, categoria: classes.get(i)?.categoria ?? "a_classificar", confianca: classes.get(i)?.confianca ?? 0 }));
+  const repetidas = ex.linhas.length - novas.length;
+  return {
+    ok: true,
+    msg: `${novas.length} lançamentos novos${repetidas ? ` (${repetidas} já estavam no sistema)` : ""}. Confira os marcados e salve.`,
+    linhas, saldo: ex.saldo, saldoData: ex.saldoData,
+  };
+}
+
+export async function salvarExtrato(linhas: LinhaImportada[], saldo?: number, saldoData?: string): Promise<Resultado> {
+  const { sb } = await sessao();
+  if (!linhas.length && saldo == null) return { ok: false, msg: "Nada para salvar." };
+  if (linhas.length) {
+    const { error } = await sb.from("lancamentos").upsert(
+      linhas.map((l) => ({ ref: l.ref, data: l.data, descricao: l.descricao, valor: l.valor, categoria: l.categoria, confianca: l.confianca, conferido: true, origem: "extrato" })),
+      { onConflict: "ref", ignoreDuplicates: true },
+    );
+    if (error) return { ok: false, msg: error.message };
+  }
+  if (saldo != null && saldoData) {
+    await sb.from("parametros").upsert([{ chave: "saldo_banco", valor: String(saldo) }, { chave: "saldo_banco_data", valor: saldoData }]);
+  }
+  revalidatePath("/numeros");
+  return { ok: true, msg: `${linhas.length} lançamentos salvos.` };
+}
+
+export async function mudarCategoria(id: number, categoria: string) {
+  const { sb } = await sessao();
+  const { error } = await sb.from("lancamentos").update({ categoria, conferido: true }).eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/numeros");
+}
+
+/** Saída ou entrada lançada à mão (dinheiro, cartão pessoal usado pela empresa etc.). */
+export async function lancarManual(_: Resultado | null, f: FormData): Promise<Resultado> {
+  const { sb } = await sessao();
+  const valor = Number(String(f.get("valor") ?? "").replace(/\./g, "").replace(",", "."));
+  const descricao = txt(f, "descricao");
+  if (!descricao || !valor) return { ok: false, msg: "Preencha descrição e valor." };
+  const tipo = txt(f, "tipo") ?? "saida";
+  const { error } = await sb.from("lancamentos").insert({
+    data: txt(f, "data") ?? hojeManaus(),
+    descricao,
+    valor: tipo === "saida" ? -Math.abs(valor) : Math.abs(valor),
+    categoria: txt(f, "categoria") ?? "a_classificar",
+    origem: "manual",
+    conferido: true,
+    ref: "manual:" + crypto.randomUUID(),
+  });
+  if (error) return { ok: false, msg: error.message };
+  revalidatePath("/numeros");
+  return { ok: true, msg: "Lançado." };
+}
+
+export async function salvarParametros(_: Resultado | null, f: FormData): Promise<Resultado> {
+  const { sb } = await sessao();
+  const linhas: { chave: string; valor: string }[] = [];
+  const aliq = txt(f, "aliquota_simples");
+  if (aliq) linhas.push({ chave: "aliquota_simples", valor: String(Number(aliq.replace(",", ".")) / 100) });
+  const saldo = txt(f, "saldo_banco");
+  if (saldo) linhas.push({ chave: "saldo_banco", valor: String(Number(saldo.replace(/\./g, "").replace(",", "."))) }, { chave: "saldo_banco_data", valor: txt(f, "saldo_banco_data") ?? hojeManaus() });
+  if (!linhas.length) return { ok: false, msg: "Nada para salvar." };
+  const { error } = await sb.from("parametros").upsert(linhas.map((l) => ({ ...l, atualizado_em: new Date().toISOString() })));
+  if (error) return { ok: false, msg: error.message };
+  revalidatePath("/numeros");
+  return { ok: true, msg: "Salvo." };
+}

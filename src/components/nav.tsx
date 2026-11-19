@@ -9,7 +9,7 @@ import { BarChart3, Bot, Building2, Gavel, Inbox, LayoutDashboard, LogOut, Megap
 const PRINCIPAIS = [
   { href: "/", t: "Hoje", I: LayoutDashboard },
   { href: "/clientes", t: "Clientes", I: Users },
-  { href: "/painel", t: "Números", I: BarChart3 },
+  { href: "/numeros", t: "Números", I: BarChart3 },
   { href: "/mais", t: "Mais", I: MoreHorizontal },
 ];
 const EXTRAS = [
@@ -25,6 +25,7 @@ type Item = { href: string; t: string; I: typeof Inbox; contador?: boolean };
 
 function ativo(p: string, href: string) {
   if (href === "/") return p === "/";
+  if (href === "/numeros") return p.startsWith("/numeros") || p.startsWith("/painel");
   if (href === "/mais") return p.startsWith("/mais") || EXTRAS.some((e) => p.startsWith(e.href));
   return p.startsWith(href);
 }
@@ -52,7 +53,7 @@ export function Nav({ pendentes, email, nome }: { pendentes: number; email: stri
             <div key={g}>
               <div className="px-[18px] pb-1.5 pt-[18px] text-[11px] font-semibold uppercase tracking-[0.04em] text-[#6f6a64]">{g || "\u00a0"}</div>
               {itens.map(({ href, t, I, contador }) => {
-                const on = href === "/" ? p === "/" : p.startsWith(href);
+                const on = href === "/" ? p === "/" : href === "/numeros" ? ativo(p, href) : p.startsWith(href);
                 return (
                   <Link
                     key={href}
