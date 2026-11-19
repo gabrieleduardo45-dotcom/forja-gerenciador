@@ -3,23 +3,30 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import { LogoForja } from "./logo";
-import { BarChart3, Bot, Building2, Gavel, Inbox, LayoutDashboard, LogOut, Megaphone, Target, Wallet } from "lucide-react";
+import { BarChart3, Bot, Building2, Gavel, Inbox, LayoutDashboard, LogOut, Megaphone, MoreHorizontal, Target, Users, Wallet } from "lucide-react";
 
-const ITENS = [
+/** Modo simples: 4 lugares. O resto fica em "Mais". */
+const PRINCIPAIS = [
   { href: "/", t: "Hoje", I: LayoutDashboard },
-  { href: "/painel", t: "Visão geral", I: BarChart3 },
-  { href: "/propostas", t: "Aprovar", I: Inbox, contador: true },
-  { href: "/agentes", t: "Agentes", I: Bot },
-  { href: "/comercial", t: "Comercial", I: Target },
+  { href: "/clientes", t: "Clientes", I: Users },
+  { href: "/painel", t: "Números", I: BarChart3 },
+  { href: "/mais", t: "Mais", I: MoreHorizontal },
+];
+const EXTRAS = [
+  { href: "/propostas", t: "Sugestões dos agentes", I: Inbox, contador: true },
   { href: "/casas", t: "Casas", I: Building2 },
   { href: "/financeiro", t: "Financeiro", I: Wallet },
+  { href: "/comercial", t: "Comercial", I: Target },
   { href: "/marketing", t: "Marketing", I: Megaphone },
+  { href: "/agentes", t: "Agentes", I: Bot },
   { href: "/decisoes", t: "Decisões", I: Gavel },
 ];
-const MOBILE = ["/", "/painel", "/propostas", "/comercial", "/agentes"];
+type Item = { href: string; t: string; I: typeof Inbox; contador?: boolean };
 
 function ativo(p: string, href: string) {
-  return href === "/" ? p === "/" : p.startsWith(href);
+  if (href === "/") return p === "/";
+  if (href === "/mais") return p.startsWith("/mais") || EXTRAS.some((e) => p.startsWith(e.href));
+  return p.startsWith(href);
 }
 
 function iniciais(email: string) {
@@ -29,23 +36,23 @@ function iniciais(email: string) {
 
 export function Nav({ pendentes, email, nome }: { pendentes: number; email: string; nome?: string }) {
   const p = usePathname();
-  const grupos: [string, typeof ITENS][] = [
-    ["Comando", ITENS.slice(0, 4)],
-    ["Setores", ITENS.slice(4)],
+  const grupos: [string, Item[]][] = [
+    ["", PRINCIPAIS.filter((i) => i.href !== "/mais")],
+    ["Mais", EXTRAS],
   ];
   return (
     <>
       {/* Menu lateral em ferro, igual ao do Forja OS */}
       <aside className="sticky top-0 hidden h-dvh w-62 shrink-0 flex-col border-r border-white/5 bg-ferro text-[#edebe7] md:flex">
         <div className="px-4 pb-3 pt-4">
-          <LogoForja sub="Central de comando" />
+          <LogoForja sub="Gestão" />
         </div>
         <nav className="flex-1 overflow-y-auto pb-3">
           {grupos.map(([g, itens]) => (
             <div key={g}>
-              <div className="px-[18px] pb-1.5 pt-[18px] text-[11px] font-semibold uppercase tracking-[0.04em] text-[#6f6a64]">{g}</div>
+              <div className="px-[18px] pb-1.5 pt-[18px] text-[11px] font-semibold uppercase tracking-[0.04em] text-[#6f6a64]">{g || "\u00a0"}</div>
               {itens.map(({ href, t, I, contador }) => {
-                const on = ativo(p, href);
+                const on = href === "/" ? p === "/" : p.startsWith(href);
                 return (
                   <Link
                     key={href}
@@ -82,14 +89,11 @@ export function Nav({ pendentes, email, nome }: { pendentes: number; email: stri
         </div>
       </aside>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-linha bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_-16px_rgba(20,16,14,0.2)] backdrop-blur md:hidden">
-        {ITENS.filter((i) => MOBILE.includes(i.href)).map(({ href, t, I, contador }) => (
-          <Link key={href} href={href} className={clsx("relative flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium", ativo(p, href) ? "text-brasa-escuro" : "text-suave")}>
-            <I size={20} strokeWidth={1.8} className={ativo(p, href) ? "text-brasa" : undefined} />
+      <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-linha bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_-16px_rgba(20,16,14,0.2)] backdrop-blur md:hidden">
+        {PRINCIPAIS.map(({ href, t, I }) => (
+          <Link key={href} href={href} className={clsx("relative flex flex-col items-center gap-1 py-2.5 text-[11.5px] font-medium", ativo(p, href) ? "text-brasa-escuro" : "text-suave")}>
+            <I size={21} strokeWidth={1.8} className={ativo(p, href) ? "text-brasa" : undefined} />
             {t}
-            {contador && pendentes > 0 && (
-              <span className="num absolute right-[22%] top-1.5 rounded-full bg-brasa px-1.5 text-[10px] font-bold text-sobre-brasa">{pendentes}</span>
-            )}
           </Link>
         ))}
       </nav>
@@ -97,31 +101,11 @@ export function Nav({ pendentes, email, nome }: { pendentes: number; email: stri
   );
 }
 
-/** Celular: barra de ferro no topo com o logo e o trilho dos outros setores. */
+/** Celular: barra de ferro no topo só com o logo. */
 export function MaisMobile() {
-  const p = usePathname();
-  const extras = ITENS.filter((i) => !MOBILE.includes(i.href));
   return (
-    <div className="md:hidden">
-      <div className="flex items-center justify-between bg-ferro px-4 py-2.5">
-        <LogoForja />
-      </div>
-      <div className="flex gap-0.5 overflow-x-auto border-b border-linha bg-fundo px-3 py-2">
-        <div className="flex gap-0.5 rounded-[11px] bg-[rgba(20,16,14,0.05)] p-1">
-          {extras.map(({ href, t, I }) => (
-            <Link
-              key={href}
-              href={href}
-              className={clsx(
-                "flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] font-[550]",
-                ativo(p, href) ? "bg-white text-texto shadow-[0_1px_2px_rgba(20,16,14,0.12),0_0_0_1px_rgba(20,16,14,0.04)]" : "text-suave",
-              )}
-            >
-              <I size={14} /> {t}
-            </Link>
-          ))}
-        </div>
-      </div>
+    <div className="flex items-center justify-between bg-ferro px-4 py-2.5 md:hidden">
+      <LogoForja />
     </div>
   );
 }

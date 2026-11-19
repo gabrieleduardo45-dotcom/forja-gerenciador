@@ -2,7 +2,7 @@
 import { useActionState, useCallback, useEffect, useRef, useState, useTransition, type ReactNode } from "react";
 import { Check, Plus, X } from "lucide-react";
 import {
-  fecharImplantacao, lancarCmv, lancarRecebimento, novaOportunidade, novoProspect, perderOportunidade,
+  fecharImplantacao, lancarCmv, lancarRecebimento, novaOportunidade, novoProspect, novoRestaurante, perderOportunidade,
   registrarExcecao, registrarToque, resolverExcecao, type Resultado,
 } from "@/app/acoes";
 import { classeBotao } from "./ui";
@@ -98,6 +98,42 @@ export function RegistrarToque({ prospects, prospectId, rotulo = "Registrar toqu
   );
 }
 
+/** Cadastro simples: nome, contato e coluna. Detalhes ficam escondidos. */
+export function NovoRestaurante({ classe, variante = "primario", coluna = "prospect" }: { classe?: string; variante?: "primario" | "secundario" | "fantasma"; coluna?: string } = {}) {
+  const [estado, acao, pend] = useActionState(novoRestaurante, null);
+  return (
+    <Modal rotulo="Novo restaurante" titulo="Novo restaurante" variante={variante} classe={classe}>
+      {(fechar) => (
+        <form action={acao} className="grid grid-cols-2 gap-3">
+          <Campo rotulo="Nome do restaurante" largo><input name="nome_casa" required autoFocus className={campo} /></Campo>
+          <Campo rotulo="WhatsApp ou @ do Instagram" largo><input name="contato" placeholder="92 99999-0000 ou @restaurante" className={campo} /></Campo>
+          <fieldset className="col-span-2">
+            <legend className="mb-1 text-xs text-suave">Em que pé está</legend>
+            <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+              {[["prospect", "Prospect"], ["conversa", "Conversando"], ["proposta", "Proposta"], ["cliente", "Cliente"]].map(([k, t]) => (
+                <label key={k} className="cursor-pointer">
+                  <input type="radio" name="coluna" value={k} defaultChecked={k === coluna} className="peer sr-only" />
+                  <span className="block rounded-[10px] border border-linha px-2 py-2.5 text-center text-sm font-semibold text-suave peer-checked:border-brasa peer-checked:bg-[#fbf3ee] peer-checked:text-brasa-escuro">{t}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <details className="col-span-2 text-sm">
+            <summary className="cursor-pointer text-suave">Mais detalhes (opcional)</summary>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <Campo rotulo="Bairro"><input name="bairro" className={campo} /></Campo>
+              <Campo rotulo="Tipo"><select name="setor" className={campo}>{opcoes(SETORES)}</select></Campo>
+              <Campo rotulo="Como chegou"><select name="origem" className={campo}>{opcoes(ORIGENS)}</select></Campo>
+              <Campo rotulo="Observação"><input name="obs" className={campo} /></Campo>
+            </div>
+          </details>
+          <Rodape estado={estado} pend={pend} texto="Salvar" fechar={fechar} />
+        </form>
+      )}
+    </Modal>
+  );
+}
+
 export function NovoProspect({ classe, variante = "secundario" }: { classe?: string; variante?: "primario" | "secundario" | "fantasma" } = {}) {
   const [estado, acao, pend] = useActionState(novoProspect, null);
   return (
@@ -121,10 +157,10 @@ export function NovoProspect({ classe, variante = "secundario" }: { classe?: str
   );
 }
 
-export function LancarRecebimento({ produtos, classe, variante = "primario" }: { produtos: string[]; classe?: string; variante?: "primario" | "secundario" | "fantasma" }) {
+export function LancarRecebimento({ produtos, classe, variante = "primario", rotulo = "Lançar recebimento" }: { produtos: string[]; classe?: string; variante?: "primario" | "secundario" | "fantasma"; rotulo?: string }) {
   const [estado, acao, pend] = useActionState(lancarRecebimento, null);
   return (
-    <Modal rotulo="Lançar recebimento" titulo="Lançar recebimento" variante={variante} classe={classe}>
+    <Modal rotulo={rotulo} titulo="Lançar recebimento" variante={variante} classe={classe}>
       {(fechar) => (
         <form action={acao} className="grid grid-cols-2 gap-3">
           <Campo rotulo="Produto" largo>

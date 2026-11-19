@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Plus, X } from "lucide-react";
-import { LancarRecebimento, NovoProspect, RegistrarToque } from "./formularios";
+import { LancarRecebimento, NovoRestaurante } from "./formularios";
 import { SobraDescarte } from "./sobra-descarte";
 
 /** Botão + do celular: cadastrar cliente, registrar toque ou lançar venda em poucos toques, na rua. */
-export function AcoesRapidas({ prospects, produtos }: { prospects: { id: number; nome_casa: string; codigo: string }[]; produtos: string[] }) {
+export function AcoesRapidas({ produtos }: { prospects?: unknown; produtos: string[] }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [aberto, setAberto] = useState(false);
   useEffect(() => {
@@ -35,10 +35,9 @@ export function AcoesRapidas({ prospects, produtos }: { prospects: { id: number;
           <button type="button" onClick={() => setAberto(false)} className="grid h-11 w-11 place-items-center text-suave" aria-label="Fechar"><X size={20} /></button>
         </div>
         <div className="flex flex-col gap-2.5 px-5 pb-[calc(20px+env(safe-area-inset-bottom))] pt-2">
-          <NovoProspect variante="secundario" classe={grande} />
-          <RegistrarToque prospects={prospects} variante="secundario" classe={grande} />
+          <NovoRestaurante variante="secundario" classe={grande} />
           <SobraDescarte variante="secundario" classe={grande} />
-          <LancarRecebimento produtos={produtos} variante="secundario" classe={grande} />
+          <LancarRecebimento produtos={produtos} variante="secundario" classe={grande} rotulo="Recebi um pagamento" />
         </div>
       </dialog>
     </div>

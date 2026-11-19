@@ -108,7 +108,7 @@ function Fluxo({ fechar }: { fechar: () => void }) {
             {previas.map((u) => <img key={u} src={u} alt="" className="aspect-square w-full rounded-md object-cover" />)}
           </div>
         )}
-        <p className="text-xs text-suave">Pode ser a foto salva ou um print do grupo da cozinha: a IA lê cada foto com a legenda dela ("Reaproveitar" = sobra) e o peso no visor da balança.</p>
+        <p className="text-xs text-suave">Pode ser a foto salva ou um print do grupo da cozinha: a IA lê cada foto com a legenda dela (&quot;Reaproveitar&quot; = sobra) e o peso no visor da balança.</p>
         <div className="flex items-center justify-between gap-3">
           <span className={`text-sm ${msg?.ok ? "text-ok" : "text-critico"}`}>{msg?.t}</span>
           <button type="button" onClick={ler} disabled={pend} className={classeBotao()}>
