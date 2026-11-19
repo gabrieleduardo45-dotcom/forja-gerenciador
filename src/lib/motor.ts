@@ -7,6 +7,7 @@ import { casasDoForjaOS, resumoParaAgente } from "./forja-os";
 
 export const MODELO = process.env.FORJA_MODELO || "anthropic/claude-sonnet-5.5";
 export const PASSOS_MAX = 12;
+export const MODELO_BUSCA = process.env.FORJA_MODELO_BUSCA || "perplexity/sonar";
 
 export function hojeManaus() {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Manaus" }).format(new Date());
@@ -110,6 +111,26 @@ export function ferramentas({ sb, codigo, conversaId, profundidade = 0 }: Ctx): 
       },
     }),
   };
+
+  // Pesquisa na internet (Perplexity Sonar pelo AI Gateway): só o Comercial e o Diretor.
+  if (codigo === "A1" || codigo === "A0") {
+    t.pesquisar_web = tool({
+      description:
+        "Pesquisa na internet e devolve um resumo com as fontes (links). Use para achar restaurantes em Manaus, o Instagram e o dono de uma casa, notícias (abriu unidade, reforma, contratando cozinheiro) e reclamações públicas. Seja específico na pergunta.",
+      inputSchema: z.object({ pergunta: z.string().min(8).max(600) }),
+      execute: async ({ pergunta }) => {
+        try {
+          const r = await generateText({
+            model: MODELO_BUSCA,
+            prompt: `${pergunta}\n\nResponda em português, em lista curta. Para cada casa: nome, bairro, tipo de cozinha, Instagram (@), nome do dono se público, e o link de onde tirou. Só fatos com fonte; se não achar, diga.`,
+          });
+          return { resposta: r.text, fontes: r.sources?.map((f) => ("url" in f ? f.url : undefined)).filter(Boolean).slice(0, 10) };
+        } catch (e) {
+          return { erro: e instanceof Error ? e.message : "Falha na pesquisa." };
+        }
+      },
+    });
+  }
 
   // Casas reais, lidas do FORJA OS (só leitura). Quem cuida de cozinha, custo e conteúdo enxerga.
   if (["A0", "A2", "A3", "A4", "A5", "A7"].includes(codigo)) {

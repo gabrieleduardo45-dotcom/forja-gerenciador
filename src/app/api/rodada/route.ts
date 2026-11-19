@@ -1,4 +1,4 @@
-import { rodarAgentes } from "@/lib/rodada";
+import { prospectar, rodarAgentes } from "@/lib/rodada";
 import { usuarioAtual } from "@/lib/supabase/server";
 
 export const maxDuration = 300;
@@ -9,6 +9,10 @@ export async function POST(req: Request) {
   if (!user) return Response.json({ erro: "Entre de novo" }, { status: 401 });
   const body = await req.json().catch(() => ({}));
   try {
+    if (body.modo === "prospectar") {
+      const p = await prospectar(sb);
+      return Response.json({ setores: [{ codigo: "A1", ok: true, propostas: p.propostas }], resumo: p.texto });
+    }
     const r = await rodarAgentes(sb, body.apenas);
     return Response.json(r);
   } catch (e) {
