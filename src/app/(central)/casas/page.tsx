@@ -2,11 +2,14 @@ import { LancarCmv, RegistrarExcecao, ResolverExcecao } from "@/components/formu
 import { Botao, Cartao, Kpi, Pagina, Selo, Tabela } from "@/components/ui";
 import { brl, data, num, pct } from "@/lib/formato";
 import { usuarioAtual } from "@/lib/supabase/server";
+import { CasasForjaOS } from "@/components/casas-os";
+import { casasDoForjaOS } from "@/lib/forja-os";
 
 export const metadata = { title: "Casas" };
 
 export default async function Casas() {
   const { sb } = await usuarioAtual();
+  const osP = casasDoForjaOS();
   const [{ data: casas }, { data: cmv }, { data: exc }, { data: parados }, { data: vh }, { data: entregas }] = await Promise.all([
     sb.from("casas").select("*").order("codigo"),
     sb.from("cmv").select("casa_id,semana_inicio,cmv_pct,alvo_pct,estado").order("semana_inicio", { ascending: false }).limit(200),
@@ -31,6 +34,8 @@ export default async function Casas() {
         <Kpi rotulo="Exceções abertas" valor={num(exc?.length ?? 0)} tom={exc?.length ? "atencao" : undefined} />
         <Kpi rotulo="Dados parados" valor={num(parados?.length ?? 0)} sub="campos que o cliente não entregou" />
       </section>
+
+      <CasasForjaOS r={await osP} />
 
       <Cartao titulo="Carteira">
         <Tabela
