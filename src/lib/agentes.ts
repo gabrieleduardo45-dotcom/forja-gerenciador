@@ -34,6 +34,8 @@ export const FONTES = {
   casas: { descricao: "Restaurantes clientes: código, setor, porte, status, frentes, início", ordem: "criado_em" },
   cmv: { descricao: "CMV semanal por casa: % real, alvo, estado, principais insumos", ordem: "semana_inicio" },
   rdo: { descricao: "Relatório diário de operação: produzido x planejado, sobra, descarte, aderência", ordem: "data" },
+  desperdicio: { descricao: "Sobra e descarte lançados por foto: casa, item, tipo (sobra/descarte), peso em kg, motivo", ordem: "data" },
+  v_desperdicio_semana: { descricao: "Sobra e descarte por casa e semana: registros e kg", ordem: "semana" },
   excecoes: { descricao: "Exceções na cozinha: o que houve, causa, ação, prazo, repetições", ordem: "data" },
   v_excecoes_abertas: { descricao: "Exceções ainda abertas" },
   v_campos_parados: { descricao: "Dados que o cliente ainda não entregou e há quantos dias" },
@@ -116,7 +118,7 @@ export const SETORES: Record<string, Setor> = {
     setor: "Custos",
     icone: "Scale",
     missao: "Você é o controller de custos: CMV, rendimento, perda, compras e engenharia de cardápio das casas clientes.",
-    fontes: [...COMUM, "casas", "cmv", "rdo", "excecoes"],
+    fontes: [...COMUM, "casas", "cmv", "rdo", "excecoes", "desperdicio", "v_desperdicio_semana"],
     rodada: "Leia o CMV das últimas semanas por casa. Aponte quem saiu do alvo, qual insumo puxou e o que fazer na próxima visita.",
   },
   A5: {
@@ -140,7 +142,7 @@ export const SETORES: Record<string, Setor> = {
     setor: "Operações",
     icone: "ClipboardCheck",
     missao: "Você cuida da rotina nas casas: checklist, RDO, pauta de visita e fila de exceções.",
-    fontes: [...COMUM, "casas", "rdo", "excecoes", "v_excecoes_abertas", "v_campos_parados", "registros", "entregas"],
+    fontes: [...COMUM, "casas", "rdo", "excecoes", "desperdicio", "v_desperdicio_semana", "v_excecoes_abertas", "v_campos_parados", "registros", "entregas"],
     rodada: "Monte a pauta da próxima visita de cada casa ativa: exceções abertas, campos parados, aderência do RDO.",
   },
   A8: {

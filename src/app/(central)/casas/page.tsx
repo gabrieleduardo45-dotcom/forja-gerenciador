@@ -2,7 +2,9 @@ import { LancarCmv, RegistrarExcecao, ResolverExcecao } from "@/components/formu
 import { Botao, Cartao, Kpi, Pagina, Selo, Tabela } from "@/components/ui";
 import { brl, data, num, pct } from "@/lib/formato";
 import { usuarioAtual } from "@/lib/supabase/server";
+import { diasAtras } from "@/lib/motor";
 import { CasasForjaOS } from "@/components/casas-os";
+import { SobraDescarte } from "@/components/sobra-descarte";
 import { casasDoForjaOS } from "@/lib/forja-os";
 
 export const metadata = { title: "Casas" };
@@ -10,6 +12,7 @@ export const metadata = { title: "Casas" };
 export default async function Casas() {
   const { sb } = await usuarioAtual();
   const osP = casasDoForjaOS();
+  const despP = sb.from("desperdicio").select("id,data,casa_nome,item,tipo,peso_kg,peso_fonte,motivo").gte("data", diasAtras(7)).order("data", { ascending: false }).limit(300);
   const [{ data: casas }, { data: cmv }, { data: exc }, { data: parados }, { data: vh }, { data: entregas }] = await Promise.all([
     sb.from("casas").select("*").order("codigo"),
     sb.from("cmv").select("casa_id,semana_inicio,cmv_pct,alvo_pct,estado").order("semana_inicio", { ascending: false }).limit(200),
@@ -27,7 +30,7 @@ export default async function Casas() {
   const foraAlvo = [...ultimoCmv.values()].filter((c) => Number(c.cmv_pct) > Number(c.alvo_pct)).length;
 
   return (
-    <Pagina titulo="Casas" sub="Restaurantes clientes: CMV, rotina e entregas." acoes={<><Botao href="/agentes/A7" variante="secundario">Operações</Botao><Botao href="/agentes/A4" variante="secundario">Custos</Botao><RegistrarExcecao casas={opcoesCasas} /><LancarCmv casas={opcoesCasas} /></>}>
+    <Pagina titulo="Casas" sub="Restaurantes clientes: CMV, rotina e entregas." acoes={<><Botao href="/agentes/A7" variante="secundario">Operações</Botao><Botao href="/agentes/A4" variante="secundario">Custos</Botao><RegistrarExcecao casas={opcoesCasas} /><LancarCmv casas={opcoesCasas} /><SobraDescarte /></>}>
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Kpi rotulo="Casas ativas" valor={num(ativas)} />
         <Kpi rotulo="Fora do CMV alvo" valor={num(foraAlvo)} tom={foraAlvo ? "critico" : "ok"} />
@@ -36,6 +39,8 @@ export default async function Casas() {
       </section>
 
       <CasasForjaOS r={await osP} />
+
+      <Desperdicio linhas={((await despP).data ?? []) as LinhaDesp[]} />
 
       <Cartao titulo="Carteira">
         <Tabela
@@ -92,5 +97,45 @@ export default async function Casas() {
         />
       </Cartao>
     </Pagina>
+  );
+}
+
+type LinhaDesp = { id: number; data: string; casa_nome: string; item: string; tipo: "sobra" | "descarte"; peso_kg: number | null; peso_fonte: string | null; motivo: string | null };
+
+function Desperdicio({ linhas }: { linhas: LinhaDesp[] }) {
+  const porCasa = new Map<string, { sobra: number; descarte: number; n: number }>();
+  linhas.forEach((l) => {
+    const c = porCasa.get(l.casa_nome) ?? { sobra: 0, descarte: 0, n: 0 };
+    c[l.tipo] += Number(l.peso_kg ?? 0);
+    c.n += 1;
+    porCasa.set(l.casa_nome, c);
+  });
+  const resumo = [...porCasa.entries()].map(([casa, v]) => ({ casa, ...v })).sort((a, b) => b.descarte - a.descarte);
+  return (
+    <Cartao titulo="Sobra e descarte · 7 dias" acao={<span className="text-xs text-suave">lançado por foto</span>}>
+      <Tabela
+        linhas={resumo}
+        vazio="Nada lançado ainda. Use o botão Sobra e descarte com as fotos que a cozinha manda."
+        colunas={[
+          { k: "casa", t: "Casa", r: (r) => <span className="font-medium">{r.casa}</span> },
+          { k: "sobra", t: "Sobra", cls: "num", r: (r) => <span className="text-atencao">{num(r.sobra)} kg</span> },
+          { k: "descarte", t: "Descarte", cls: "num", r: (r) => <span className="text-critico">{num(r.descarte)} kg</span> },
+          { k: "n", t: "Fotos/itens", cls: "num" },
+        ]}
+      />
+      {linhas.length > 0 && (
+        <details className="mt-3 text-sm">
+          <summary className="cursor-pointer text-suave">Ver itens</summary>
+          <ul className="mt-2 divide-y divide-[rgba(20,16,14,0.06)]">
+            {linhas.slice(0, 60).map((l) => (
+              <li key={l.id} className="flex items-center justify-between gap-3 py-1.5">
+                <span className="min-w-0 truncate">{data(l.data)} · {l.casa_nome} · {l.item}{l.motivo ? <span className="text-apagado"> · {l.motivo}</span> : null}</span>
+                <span className="shrink-0"><Selo tom={l.tipo === "sobra" ? "atencao" : "critico"}>{l.tipo}</Selo> <span className="num">{l.peso_kg != null ? `${num(l.peso_kg)} kg` : "—"}</span></span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+    </Cartao>
   );
 }

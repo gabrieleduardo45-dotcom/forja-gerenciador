@@ -14,7 +14,14 @@ export async function GET(req: Request) {
   try {
     const sb = await supabaseRobo();
     if (!sb) return new Response("Configure FORJA_ROBO_EMAIL/FORJA_ROBO_SENHA ou SUPABASE_SERVICE_ROLE_KEY", { status: 503 });
-    if (new URL(req.url).searchParams.get("modo") === "prospectar") return Response.json(await prospectar(sb));
+    const sp = new URL(req.url).searchParams;
+    // Só na prévia: testa a leitura de foto de sobra/descarte com uma imagem pública.
+    if (chaveTeste && sp.get("modo") === "foto" && sp.get("url")) {
+      const { lerFoto } = await import("@/lib/desperdicio");
+      const img = await fetch(sp.get("url")!, { headers: { "user-agent": "forja-teste" } });
+      return Response.json(await lerFoto(new Uint8Array(await img.arrayBuffer()), img.headers.get("content-type") ?? "image/jpeg", sp.get("legenda") ?? undefined));
+    }
+    if (sp.get("modo") === "prospectar") return Response.json(await prospectar(sb));
     const r = await rodarAgentes(sb);
     return Response.json(r);
   } catch (e) {
