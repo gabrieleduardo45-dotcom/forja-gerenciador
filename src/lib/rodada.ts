@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { SETORES } from "./agentes";
+import { PROSPECCAO, SETORES } from "./agentes";
 import { executarAgente, hojeManaus } from "./motor";
 
 /**
@@ -13,6 +13,11 @@ export async function rodarAgentes(sb: SupabaseClient, apenas?: string[]) {
     .filter((a) => (apenas?.length ? apenas.includes(a.codigo) : a.ativo));
   const hoje = hojeManaus();
 
+  // Prospecção diária do Comercial: roda em paralelo com os setores, se o A1 estiver ativo.
+  const prospeccao = lista.some((a) => a.codigo === "A1")
+    ? Promise.allSettled([prospectar(sb)]).then((r) => r[0])
+    : Promise.resolve(null);
+
   const resultados = await Promise.allSettled(
     lista.map(async (a) => {
       const prompt = `Rodada de ${hoje}. ${SETORES[a.codigo].rodada}\nRegistre no máximo 3 propostas, só as que valem o tempo do Gabriel. Termine com um resumo de até 5 linhas.`;
@@ -21,6 +26,12 @@ export async function rodarAgentes(sb: SupabaseClient, apenas?: string[]) {
       return { codigo: a.codigo, ...r };
     }),
   );
+
+  const prospectou = await prospeccao;
+  if (prospectou) {
+    resultados.push(prospectou);
+    lista.push({ codigo: "A1", nome: "Prospecção", ativo: true });
+  }
 
   const resumos = resultados.map((r, i) =>
     r.status === "fulfilled"
@@ -40,6 +51,15 @@ export async function rodarAgentes(sb: SupabaseClient, apenas?: string[]) {
     })),
     pagina: a0.texto,
   };
+}
+
+/** Prospecção do Comercial (A1): pesquisa na web e deixa casas novas na fila para o Gabriel aprovar. */
+export async function prospectar(sb: SupabaseClient) {
+  const hoje = hojeManaus();
+  const pedido = `${hoje}. ${PROSPECCAO}\nTermine com um resumo de até 4 linhas: quantas casas achou e quais.`;
+  const p = await executarAgente({ sb, codigo: "A1", prompt: pedido });
+  await salvarRelatorio(sb, "A1", `Prospecção ${hoje}`, pedido, p.texto);
+  return { codigo: "A1", ...p };
 }
 
 async function salvarRelatorio(sb: SupabaseClient, agente: string, titulo: string, pedido: string, texto: string) {

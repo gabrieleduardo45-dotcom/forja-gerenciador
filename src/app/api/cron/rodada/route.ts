@@ -1,4 +1,4 @@
-import { rodarAgentes } from "@/lib/rodada";
+import { prospectar, rodarAgentes } from "@/lib/rodada";
 import { supabaseRobo } from "@/lib/supabase/server";
 
 export const maxDuration = 300;
@@ -14,6 +14,7 @@ export async function GET(req: Request) {
   try {
     const sb = await supabaseRobo();
     if (!sb) return new Response("Configure FORJA_ROBO_EMAIL/FORJA_ROBO_SENHA ou SUPABASE_SERVICE_ROLE_KEY", { status: 503 });
+    if (new URL(req.url).searchParams.get("modo") === "prospectar") return Response.json(await prospectar(sb));
     const r = await rodarAgentes(sb);
     return Response.json(r);
   } catch (e) {

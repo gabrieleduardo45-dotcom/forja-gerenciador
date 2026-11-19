@@ -245,7 +245,7 @@ export default async function Painel({ searchParams }: PageProps<"/painel">) {
           )}
           {utm.has("sem marcação") && (
             <p className="mt-3 rounded-[10px] bg-[#fbf3ee] px-3 py-2 text-[13px] text-brasa-escuro">
-              Visitas sem marcação não dizem de onde vieram. Use os links marcados (Instagram, anúncio, indicação) da tela Marketing.
+              Visitas sem marcação não dizem de onde vieram. Use os <Link href="/marketing#links" className="font-semibold underline">links marcados</Link> da tela Marketing.
             </p>
           )}
         </Cartao>

@@ -3,6 +3,7 @@ import { clsx } from "clsx";
 import { MessageCircle } from "lucide-react";
 import { FecharImplantacao, NovaOportunidade, NovoProspect, PerderOportunidade, RegistrarToque, type Preco } from "@/components/formularios";
 import { MoverEstagio } from "@/components/mover";
+import { BotaoRodar } from "@/components/rodar";
 import { Botao, Cartao, Kpi, Pagina, Selo, Tabela } from "@/components/ui";
 import { ESTAGIOS, brl, data, nomeEstagio, num, pct, rotulo, tomPrio } from "@/lib/formato";
 import { diasAtras, hojeManaus } from "@/lib/motor";
@@ -48,7 +49,7 @@ export default async function Comercial({ searchParams }: PageProps<"/comercial"
   const maxFunil = Math.max(1, ...funil.map((e) => contagem.get(e.k) ?? 0));
 
   return (
-    <Pagina titulo="Comercial" sub="Da prospecção ao fechamento." acoes={<><Botao href="/agentes/A1" variante="secundario">Diretor Comercial</Botao><NovoProspect /><NovaOportunidade prospects={opcoesCasas} precos={listaPrecos} /><FecharImplantacao prospects={opcoesCasas} precos={listaPrecos} variante="secundario" /><RegistrarToque prospects={((todosNomes ?? []) as { id: number; nome_casa: string; codigo: string }[])} /></>}>
+    <Pagina titulo="Comercial" sub="Da prospecção ao fechamento." acoes={<><BotaoRodar modo="prospectar" rotulo="Prospectar agora" variante="secundario" /><Botao href="/agentes/A1" variante="secundario">Diretor Comercial</Botao><NovoProspect /><NovaOportunidade prospects={opcoesCasas} precos={listaPrecos} /><FecharImplantacao prospects={opcoesCasas} precos={listaPrecos} variante="secundario" /><RegistrarToque prospects={((todosNomes ?? []) as { id: number; nome_casa: string; codigo: string }[])} /></>}>
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Kpi rotulo="Toques hoje" valor={num(toquesHoje)} sub="meta: 5 por dia" tom={toquesHoje >= 5 ? "ok" : "critico"} />
         <Kpi rotulo="Toques 14 dias" valor={num(toques14)} sub={`${num(respostas14)} respostas`} />

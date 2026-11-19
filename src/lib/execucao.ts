@@ -18,6 +18,15 @@ export const PERMITIDO = {
   },
 } as const;
 
+/** Valores aceitos pelo banco (checks da tabela). Recusar aqui evita aprovação que falha. */
+export const VALORES: Record<string, readonly string[]> = {
+  prioridade_manual: ["brasa", "faisca", "temperado", "descarte"],
+  setor: ["self_service", "marmitaria", "cozinha_producao", "a_la_carte", "pizzaria", "hamburgueria", "lanchonete", "bar", "cafe", "food_service", "outro"],
+  origem: ["pesquisa_a1", "indicacao_cliente", "parceiro", "inbound_calculadora", "inbound_fichas", "inbound_whatsapp", "inbound_instagram", "evento", "trafego_pago", "visita_fria", "ligacao_fria", "outro"],
+  estagio: ["identificado", "na_lista", "em_cadencia", "conversa", "qualificado", "conversa_presencial", "raiox_proposto", "raiox_agendado", "raiox_pago", "raiox_entregue", "proposta_enviada", "implantacao_fechada", "care_ativo", "nutricao", "perdido", "descartado"],
+  motivo_perda: ["preco", "momento", "nao_ve_problema", "sem_decisor", "ja_tem_consultor", "sumiu", "nao_cabe_icp", "outro"],
+};
+
 export type Operacao = keyof typeof PERMITIDO;
 export type Acao = { operacao: Operacao; tabela: string; id?: number; campos: Record<string, unknown> };
 
@@ -33,6 +42,11 @@ export function validarAcao(a: Acao): string | null {
   if (!chaves.length) return "Nenhum campo informado.";
   const fora = chaves.filter((c) => !colunas.includes(c));
   if (fora.length) return `Campos não permitidos em ${a.tabela}: ${fora.join(", ")}.`;
+  if (a.tabela === "prospects") {
+    for (const [c, v] of Object.entries(a.campos)) {
+      if (VALORES[c] && v != null && !VALORES[c].includes(String(v))) return `${c} inválido (${v}). Use um de: ${VALORES[c].join(", ")}.`;
+    }
+  }
   if (a.operacao === "inserir" && a.tabela === "prospects" && !a.campos.nome_casa) return "Prospect novo precisa de nome_casa.";
   if (a.operacao === "inserir" && a.tabela === "excecoes" && (!a.campos.casa_id || !a.campos.o_que)) return "Exceção precisa de casa_id e o_que.";
   if (a.operacao === "inserir" && a.tabela === "sinais" && !a.campos.prospect_id) return "Sinal precisa de prospect_id.";

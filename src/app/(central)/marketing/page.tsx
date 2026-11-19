@@ -1,3 +1,4 @@
+import { LinksMarcados } from "@/components/links-marcados";
 import { Botao, Cartao, Kpi, Pagina, Tabela } from "@/components/ui";
 import { data, num, pct, rotulo } from "@/lib/formato";
 import { diasAtras } from "@/lib/motor";
@@ -26,6 +27,12 @@ export default async function Marketing() {
         <Kpi rotulo="Abriram calculadora" valor={num(calc)} />
         <Kpi rotulo="Dias com dado" valor={num(new Set((conv ?? []).map((c) => c.dia)).size)} />
       </section>
+      <div id="links" className="scroll-mt-6">
+        <Cartao titulo="Links marcados" acao={<span className="text-xs text-suave">um link para cada lugar</span>}>
+          <LinksMarcados base={process.env.FORJA_LP_URL} />
+        </Cartao>
+      </div>
+
       <Cartao titulo="Conversão diária da página">
         <Tabela
           linhas={conv ?? []}
