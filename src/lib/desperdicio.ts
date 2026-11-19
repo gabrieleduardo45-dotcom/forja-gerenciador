@@ -18,7 +18,8 @@ const INSTRUCAO = `Você olha fotos que a cozinha de um restaurante manda para o
 Para cada foto, liste os itens que aparecem (normalmente 1). Regras:
 - Sobra: comida pronta ou insumo ainda bom, em cuba, pote ou gastronorm, que pode ser reaproveitado ou congelado.
 - Descarte: lixo, resto de prato, comida estragada ou queimada, aparas e cascas, tudo que vai para a lixeira ou o saco.
-- A legenda do Gabriel vale mais que a foto: se ele escreveu "sobra" ou "lixo/descarte", siga.
+- A legenda vale mais que a foto. "Reaproveitar", "reaproveitamento", "sobra", "volta", "congelar" = sobra. "Descarte", "descartar", "lixo", "jogar fora", "perda", "estragou" = descarte.
+- Print da conversa do WhatsApp: pode ter várias fotos, cada uma com a própria legenda embaixo. Leia cada foto com a legenda dela, um item por foto. Ignore nomes, telefones e horários.
 - Balança no visor: leia o número com cuidado. Em gramas, converta para kg.
 - Lixeira, saco ou balde com coisas misturadas: registre UM item só ("descarte misturado: aparas de peixe, cascas, resto de prato") com o peso total.
 - Itens separados (cubas diferentes): um item por cuba.
@@ -30,7 +31,7 @@ export async function lerFoto(imagem: Uint8Array, mediaType: string, legenda?: s
   const r = await generateText({
     model: MODELO_VISAO,
     instructions: INSTRUCAO,
-    output: Output.object({ schema: z.object({ itens: z.array(itemLido).max(6) }) }),
+    output: Output.object({ schema: z.object({ itens: z.array(itemLido).max(12) }) }),
     messages: [
       {
         role: "user",
