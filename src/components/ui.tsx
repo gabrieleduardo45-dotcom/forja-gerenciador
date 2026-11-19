@@ -22,7 +22,7 @@ export function Pagina({ titulo, sub, acoes, children }: { titulo: string; sub?:
 
 export function Cartao({ titulo, acao, children, className }: { titulo?: ReactNode; acao?: ReactNode; children: ReactNode; className?: string }) {
   return (
-    <section className={clsx("rounded-cartao border border-linha bg-painel shadow-cartao", className)}>
+    <section className={clsx("min-w-0 rounded-cartao border border-linha bg-painel shadow-cartao", className)}>
       {titulo && (
         <div className="flex items-center justify-between gap-2 px-5 pb-1 pt-4">
           <h2 className="text-base font-[650] tracking-[-0.01em]">{titulo}</h2>

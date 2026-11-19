@@ -9,7 +9,7 @@ import { classeBotao } from "./ui";
 
 const campo = "campo text-base md:text-sm";
 
-function Modal({ rotulo, titulo, children, variante = "primario", icone = true }: { rotulo: ReactNode; titulo: string; children: (fechar: () => void) => ReactNode; variante?: "primario" | "secundario" | "fantasma"; icone?: boolean }) {
+function Modal({ rotulo, titulo, children, variante = "primario", icone = true, classe }: { rotulo: ReactNode; titulo: string; children: (fechar: () => void) => ReactNode; variante?: "primario" | "secundario" | "fantasma"; icone?: boolean; classe?: string }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [aberto, setAberto] = useState(false);
   const fechar = useCallback(() => setAberto(false), []);
@@ -21,7 +21,7 @@ function Modal({ rotulo, titulo, children, variante = "primario", icone = true }
   }, [aberto]);
   return (
     <>
-      <button type="button" onClick={() => setAberto(true)} className={classeBotao(variante)}>
+      <button type="button" onClick={() => setAberto(true)} className={classe ? `${classeBotao(variante)} ${classe}` : classeBotao(variante)}>
         {icone && <Plus size={16} />} {rotulo}
       </button>
       <dialog ref={ref} onClose={() => setAberto(false)} className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-cartao border border-linha bg-painel p-0 text-texto shadow-[0_24px_64px_-16px_rgba(20,16,14,0.35)] backdrop:bg-[rgba(14,13,12,0.45)] backdrop:backdrop-blur-[2px]">
@@ -67,10 +67,10 @@ const RESULTADOS: [string, string][] = [["sem_resposta", "Sem resposta"], ["lido
 const SETORES: [string, string][] = [["a_la_carte", "À la carte"], ["self_service", "Self-service"], ["marmitaria", "Marmitaria"], ["lanchonete", "Lanchonete"], ["hamburgueria", "Hamburgueria"], ["pizzaria", "Pizzaria"], ["bar", "Bar"], ["cafe", "Café"], ["cozinha_producao", "Cozinha de produção"], ["food_service", "Food service"], ["outro", "Outro"]];
 const ORIGENS: [string, string][] = [["pesquisa_a1", "Pesquisa do Comercial"], ["indicacao_cliente", "Indicação de cliente"], ["parceiro", "Parceiro"], ["inbound_whatsapp", "Chegou pelo WhatsApp"], ["inbound_instagram", "Chegou pelo Instagram"], ["inbound_calculadora", "Calculadora"], ["inbound_fichas", "Produto de fichas"], ["visita_fria", "Visita fria"], ["ligacao_fria", "Ligação fria"], ["evento", "Evento"], ["trafego_pago", "Tráfego pago"], ["outro", "Outro"]];
 
-export function RegistrarToque({ prospects, prospectId, rotulo = "Registrar toque", variante = "primario" }: { prospects?: { id: number; nome_casa: string; codigo: string }[]; prospectId?: number; rotulo?: string; variante?: "primario" | "secundario" | "fantasma" }) {
+export function RegistrarToque({ prospects, prospectId, rotulo = "Registrar toque", variante = "primario", classe }: { prospects?: { id: number; nome_casa: string; codigo: string }[]; prospectId?: number; rotulo?: string; variante?: "primario" | "secundario" | "fantasma"; classe?: string }) {
   const [estado, acao, pend] = useActionState(registrarToque, null);
   return (
-    <Modal rotulo={rotulo} titulo="Registrar toque" variante={variante} icone={variante !== "fantasma"}>
+    <Modal rotulo={rotulo} titulo="Registrar toque" variante={variante} icone={variante !== "fantasma"} classe={classe}>
       {(fechar) => (
         <form action={acao} className="grid grid-cols-2 gap-3">
           {prospectId ? (
@@ -98,10 +98,10 @@ export function RegistrarToque({ prospects, prospectId, rotulo = "Registrar toqu
   );
 }
 
-export function NovoProspect() {
+export function NovoProspect({ classe, variante = "secundario" }: { classe?: string; variante?: "primario" | "secundario" | "fantasma" } = {}) {
   const [estado, acao, pend] = useActionState(novoProspect, null);
   return (
-    <Modal rotulo="Novo prospect" titulo="Novo prospect" variante="secundario">
+    <Modal rotulo="Novo prospect" titulo="Novo prospect" variante={variante} classe={classe}>
       {(fechar) => (
         <form action={acao} className="grid grid-cols-2 gap-3">
           <Campo rotulo="Nome da casa" largo><input name="nome_casa" required className={campo} /></Campo>
@@ -121,10 +121,10 @@ export function NovoProspect() {
   );
 }
 
-export function LancarRecebimento({ produtos }: { produtos: string[] }) {
+export function LancarRecebimento({ produtos, classe, variante = "primario" }: { produtos: string[]; classe?: string; variante?: "primario" | "secundario" | "fantasma" }) {
   const [estado, acao, pend] = useActionState(lancarRecebimento, null);
   return (
-    <Modal rotulo="Lançar recebimento" titulo="Lançar recebimento">
+    <Modal rotulo="Lançar recebimento" titulo="Lançar recebimento" variante={variante} classe={classe}>
       {(fechar) => (
         <form action={acao} className="grid grid-cols-2 gap-3">
           <Campo rotulo="Produto" largo>

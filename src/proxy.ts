@@ -20,7 +20,7 @@ export async function proxy(request: NextRequest) {
   );
   const { data } = await sb.auth.getUser();
   const p = request.nextUrl.pathname;
-  const publico = p.startsWith("/login") || p.startsWith("/auth") || p.startsWith("/api/cron");
+  const publico = p.startsWith("/login") || p.startsWith("/auth") || p.startsWith("/api/cron") || p.startsWith("/api/hotmart");
   if (!data.user && !publico) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";

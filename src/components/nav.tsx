@@ -3,10 +3,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import { LogoForja } from "./logo";
-import { Bot, Building2, Gavel, Inbox, LayoutDashboard, LogOut, Megaphone, Target, Wallet } from "lucide-react";
+import { BarChart3, Bot, Building2, Gavel, Inbox, LayoutDashboard, LogOut, Megaphone, Target, Wallet } from "lucide-react";
 
 const ITENS = [
   { href: "/", t: "Hoje", I: LayoutDashboard },
+  { href: "/painel", t: "Visão geral", I: BarChart3 },
   { href: "/propostas", t: "Aprovar", I: Inbox, contador: true },
   { href: "/agentes", t: "Agentes", I: Bot },
   { href: "/comercial", t: "Comercial", I: Target },
@@ -15,7 +16,7 @@ const ITENS = [
   { href: "/marketing", t: "Marketing", I: Megaphone },
   { href: "/decisoes", t: "Decisões", I: Gavel },
 ];
-const MOBILE = ["/", "/propostas", "/agentes", "/comercial", "/financeiro"];
+const MOBILE = ["/", "/painel", "/propostas", "/comercial", "/agentes"];
 
 function ativo(p: string, href: string) {
   return href === "/" ? p === "/" : p.startsWith(href);
@@ -29,8 +30,8 @@ function iniciais(email: string) {
 export function Nav({ pendentes, email, nome }: { pendentes: number; email: string; nome?: string }) {
   const p = usePathname();
   const grupos: [string, typeof ITENS][] = [
-    ["Comando", ITENS.slice(0, 3)],
-    ["Setores", ITENS.slice(3)],
+    ["Comando", ITENS.slice(0, 4)],
+    ["Setores", ITENS.slice(4)],
   ];
   return (
     <>
