@@ -21,6 +21,12 @@ export async function GET(req: Request) {
       const img = await fetch(sp.get("url")!, { headers: { "user-agent": "forja-teste" } });
       return Response.json(await lerFoto(new Uint8Array(await img.arrayBuffer()), img.headers.get("content-type") ?? "image/jpeg", sp.get("legenda") ?? undefined));
     }
+    // Só na prévia: confere a leitura do FORJA OS (versão e campos), sem dados sensíveis.
+    if (chaveTeste && sp.get("modo") === "os") {
+      const { casasDoForjaOS, resumoParaAgente } = await import("@/lib/forja-os");
+      const r = await casasDoForjaOS();
+      return Response.json({ ok: r.ok, erro: "erro" in r ? r.erro : undefined, casas: r.casas.length, campos: r.casas[0] ? Object.keys(r.casas[0]) : [], exemplo: r.casas[0] ? resumoParaAgente(r.casas[0]) : null, metasChave: !!process.env.FORJA_OS_METAS_CHAVE });
+    }
     if (sp.get("modo") === "prospectar") return Response.json(await prospectar(sb));
     const r = await rodarAgentes(sb);
     return Response.json(r);

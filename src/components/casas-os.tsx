@@ -3,6 +3,7 @@ import { data, pct } from "@/lib/formato";
 import { emPct, type ResultadoOS } from "@/lib/forja-os";
 import type { Ligada, PrecoPlano } from "@/lib/tipos-contrato";
 import { ContratoCasa } from "./contrato-casa";
+import { MetaCasa } from "./meta-casa";
 const BRL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
 
 const TOM = { ok: "ok", at: "atencao", cr: "critico" } as const;
@@ -42,7 +43,7 @@ export function CasasForjaOS({ r, compacto = false, precos = [], ligadas = new M
             <li key={c.id} className="flex items-center justify-between gap-2 py-2">
               <span className="min-w-0">
                 <span className="block truncate font-medium">{c.nome}</span>
-                <span className="num text-xs text-suave">CMV {pct(emPct(c.atual?.cmv))} / alvo {pct(emPct(c.metaCmv))}</span>
+                <span className="num text-xs text-suave">CMV {pct(emPct(c.atual?.cmv))} / alvo {pct(emPct(c.metas_vigentes?.meta_cmv ?? c.metaCmv))}{c.alertas_vigia?.length ? ` · ${c.alertas_vigia.length} alerta(s)` : ""}</span>
               </span>
               <span className="shrink-0">{situacao(c.id, c.nome)}</span>
             </li>
@@ -60,10 +61,11 @@ export function CasasForjaOS({ r, compacto = false, precos = [], ligadas = new M
         colunas={[
           { k: "nome", t: "Casa", r: (c) => (<div><div className="font-medium">{c.nome}</div>{(c.sub || c.cidade) && <div className="text-xs text-suave">{[c.sub, c.cidade].filter(Boolean).join(" · ")}</div>}</div>) },
           { k: "estado", t: "Estado", r: (c) => estado(c.estado) },
-          { k: "cmv", t: "CMV / alvo", cls: "num", r: (c) => { const a = emPct(c.atual?.cmv), m = emPct(c.metaCmv); return a == null ? "—" : <span className={m != null && a > m ? "text-critico" : "text-ok"}>{pct(a)} <span className="text-apagado">/ {pct(m)}</span></span>; } },
+          { k: "cmv", t: "CMV / alvo", cls: "num", r: (c) => { const a = emPct(c.atual?.cmv), m = emPct(c.metas_vigentes?.meta_cmv ?? c.metaCmv); return (<span className="inline-flex items-center gap-1">{a == null ? "—" : <span className={m != null && a > m ? "text-critico" : "text-ok"}>{pct(a)} <span className="text-apagado">/ {pct(m)}</span></span>}<MetaCasa casa={{ id: c.id, nome: c.nome }} cmvAtual={c.metas_vigentes?.meta_cmv ?? c.metaCmv} limiteAtual={c.metas_vigentes?.limite_semanal_pagamentos ?? c.limite_semanal} /></span>); } },
           { k: "chk", t: "Checklist", cls: "num", r: (c) => pct(emPct(c.atual?.chk)) },
           { k: "uso", t: "Uso equipe", cls: "num", r: (c) => pct(emPct(c.atual?.uso)) },
-          { k: "vencido", t: "Vencido", cls: "num", r: (c) => (c.atual?.vencido ? <span className="text-critico">{c.atual.vencido}</span> : "—") },
+          { k: "vencido", t: "Contas", cls: "num", r: (c) => { const v = c.vencido ?? c.atual?.vencido; const p7 = c.pagar_7d ?? c.atual?.pagar_7d; return (<div className="text-xs">{v ? <div className="text-critico">vencido {BRL.format(Number(v))}</div> : null}{p7 ? <div className="text-suave">7 dias {BRL.format(Number(p7))}</div> : null}{!v && !p7 ? "—" : null}</div>); } },
+          { k: "fat", t: "Venda semana", cls: "num", r: (c) => (c.faturamento_semana != null ? BRL.format(c.faturamento_semana) : "—") },
           { k: "ultimaVisita", t: "Última visita", r: (c) => data(c.ultimaVisita) },
           { k: "contrato", t: "Contrato", r: (c) => situacao(c.id, c.nome) },
         ]}

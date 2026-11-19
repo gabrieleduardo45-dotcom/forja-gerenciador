@@ -533,3 +533,22 @@ export async function fecharContratoCasa(_: Resultado | null, f: FormData): Prom
   revalidatePath("/", "layout");
   return { ok: true, msg: `${nome}: ${produto} ${mensal ? "mensal" : ""} salvo${f.get("recebido") ? " e recebimento lançado" : ""}.` };
 }
+
+/** O Gabriel define a meta de uma casa; vai direto para o FORJA OS (ele é quem aprova). */
+export async function definirMetaCasa(_: Resultado | null, f: FormData): Promise<Resultado> {
+  await sessao();
+  const { gravarMetaOS } = await import("@/lib/forja-os");
+  const casa_id = txt(f, "casa_id");
+  if (!casa_id) return { ok: false, msg: "Falta a casa." };
+  const num = (k: string) => { const v = txt(f, k); return v == null ? null : Number(v.replace(/\./g, "").replace(",", ".")); };
+  const cmv = num("meta_cmv");
+  const limite = num("limite");
+  if (cmv == null && limite == null) return { ok: false, msg: "Preencha a meta de CMV ou o limite semanal." };
+  if (cmv != null && !(cmv > 0 && cmv < 100)) return { ok: false, msg: "CMV em %, entre 1 e 99." };
+  const hoje = hojeManaus();
+  const vigente = txt(f, "vigente_desde") ?? hoje;
+  const r = await gravarMetaOS({ casa_id, meta_cmv: cmv == null ? null : cmv / 100, limite_semanal_pagamentos: limite, vigente_desde: vigente > hoje ? hoje : vigente });
+  if (!r.ok) return { ok: false, msg: r.erro };
+  revalidatePath("/", "layout");
+  return { ok: true, msg: r.repetido ? "Essa meta já estava gravada." : "Meta gravada no FORJA OS." };
+}
