@@ -319,3 +319,53 @@ export async function casasParaLancar(): Promise<{ id: string; nome: string }[]>
   const r = await casasDoForjaOS();
   return r.casas.map((c) => ({ id: c.id, nome: c.nome }));
 }
+
+/* ---------- Modo simples: Clientes em 4 colunas ---------- */
+
+/** Cadastro de 3 campos: nome, contato (WhatsApp ou @) e coluna. O resto é opcional. */
+export async function novoRestaurante(_: Resultado | null, f: FormData): Promise<Resultado> {
+  const { sb } = await sessao();
+  const { COLUNAS, lerContato } = await import("@/lib/funil");
+  const nome_casa = txt(f, "nome_casa");
+  if (!nome_casa) return { ok: false, msg: "Escreva o nome do restaurante." };
+  const coluna = COLUNAS.find((c) => c.k === txt(f, "coluna")) ?? COLUNAS[0];
+  const ehCliente = coluna.k === "cliente";
+  const { data, error } = await sb
+    .from("prospects")
+    .insert({
+      nome_casa,
+      ...lerContato(txt(f, "contato")),
+      setor: txt(f, "setor") ?? "outro",
+      bairro: txt(f, "bairro"),
+      origem: txt(f, "origem") ?? "outro",
+      estagio: coluna.destino,
+      proximo_toque_em: ehCliente ? null : hojeManaus(),
+      aprovado_gabriel: true,
+      obs: txt(f, "obs"),
+    })
+    .select("codigo")
+    .single();
+  if (error) return { ok: false, msg: error.message };
+  revalidatePath("/", "layout");
+  return { ok: true, msg: ehCliente ? `${nome_casa} entrou como cliente.` : `${nome_casa} cadastrado (${data.codigo}).` };
+}
+
+/** Move o restaurante de coluna. Cliente ganha a casa sozinho (gatilho prospect_vira_casa). */
+export async function moverColuna(id: number, coluna: string) {
+  const { sb } = await sessao();
+  const { COLUNAS } = await import("@/lib/funil");
+  const estagio = coluna === "perdido" ? "perdido" : COLUNAS.find((c) => c.k === coluna)?.destino;
+  if (!estagio) throw new Error("Coluna inválida");
+  const { error } = await sb.from("prospects").update({ estagio, ...(coluna === "perdido" ? { motivo_perda: "outro" } : {}) }).eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/", "layout");
+}
+
+/** "Falei": registra o toque de hoje e tira da lista do dia. */
+export async function faleiHoje(id: number, canal: "whatsapp" | "instagram" | "visita" | "ligacao") {
+  const { sb, email } = await sessao();
+  const nomeCanal = { whatsapp: "whatsapp", instagram: "instagram_dm", visita: "visita_fria", ligacao: "ligacao_fria" }[canal];
+  const { error } = await sb.from("atividades").insert({ prospect_id: id, canal: nomeCanal, direcao: "saida", tipo: "primeiro_toque", resultado: "sem_resposta", quem: email.split("@")[0] });
+  if (error) throw new Error(error.message);
+  revalidatePath("/", "layout");
+}

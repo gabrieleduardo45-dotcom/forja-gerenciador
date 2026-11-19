@@ -12,6 +12,9 @@ export async function rodarAgentes(sb: SupabaseClient, apenas?: string[]) {
     .filter((a) => SETORES[a.codigo] && a.codigo !== "A0")
     .filter((a) => (apenas?.length ? apenas.includes(a.codigo) : a.ativo));
   const hoje = hojeManaus();
+  // Sugestão que ninguém decidiu em 5 dias expira (dá para reabrir em Sugestões). Mantém o Hoje limpo.
+  await sb.from("propostas").update({ status: "descartada", nota_decisao: "expirou sem decisão", decidido_em: new Date().toISOString() })
+    .eq("status", "pendente").lt("criado_em", new Date(Date.now() - 5 * 864e5).toISOString());
 
   // Prospecção diária do Comercial: roda em paralelo com os setores, se o A1 estiver ativo.
   const prospeccao = lista.some((a) => a.codigo === "A1")
@@ -20,7 +23,7 @@ export async function rodarAgentes(sb: SupabaseClient, apenas?: string[]) {
 
   const resultados = await Promise.allSettled(
     lista.map(async (a) => {
-      const prompt = `Rodada de ${hoje}. ${SETORES[a.codigo].rodada}\nRegistre no máximo 3 propostas, só as que valem o tempo do Gabriel. Termine com um resumo de até 5 linhas.`;
+      const prompt = `Rodada de ${hoje}. ${SETORES[a.codigo].rodada}\nRegistre no máximo 1 proposta, e só se for algo que o Gabriel precisa fazer ou decidir hoje. Antes, consulte propostas pendentes: se já existe uma parecida, não crie outra. Termine com um resumo de até 5 linhas.`;
       const r = await executarAgente({ sb, codigo: a.codigo, prompt });
       await salvarRelatorio(sb, a.codigo, `Rodada ${hoje}`, prompt, r.texto);
       return { codigo: a.codigo, ...r };
