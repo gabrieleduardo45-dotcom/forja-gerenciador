@@ -57,7 +57,7 @@ export default async function Numeros({ searchParams }: PageProps<"/numeros">) {
   const mesesCaixa = saidasMedia > 0 && saldoBanco != null ? saldoAgora / saidasMedia : null;
   const recDoMes = receb.filter((r) => mesDe(r.data) === mes && r.linha !== "digital");
   const ticket = recDoMes.length ? d.receitaClientes / recDoMes.length : null;
-  const recorrente = (con ?? []).filter((c) => /mens/i.test(c.unidade ?? "")).reduce((s, c) => s + Number(c.valor), 0);
+  const recorrente = (con ?? []).filter((c) => ["mes", "mensal"].includes(c.unidade ?? "")).reduce((s, c) => s + Number(c.valor), 0);
   const marketing = Math.abs(d.porCategoria.get("marketing") ?? 0);
   const novos = casasNovas?.filter((c) => mesDe(c.criado_em) === mes).length ?? 0;
   const cac = novos ? marketing / novos : null;
@@ -123,7 +123,7 @@ export default async function Numeros({ searchParams }: PageProps<"/numeros">) {
       <div className="grid gap-6 lg:grid-cols-5">
         <Cartao className="lg:col-span-3" titulo={<span>DRE · {nomeMes(mes)}</span>}>
           <table className="w-full text-sm">
-            <thead><tr className="border-b border-linha text-left text-xs text-apagado"><th className="py-2 font-medium"></th><th className="py-2 text-right font-medium">Mês</th><th className="py-2 text-right font-medium">% receita</th><th className="hidden py-2 text-right font-medium sm:table-cell">Mês anterior</th></tr></thead>
+            <thead><tr className="border-b border-linha text-left text-xs text-apagado"><th className="py-2 font-medium"></th><th className="py-2 text-right font-medium">Mês</th><th className="py-2 pl-3 text-right font-medium">% receita</th><th className="hidden py-2 text-right font-medium sm:table-cell">Mês anterior</th></tr></thead>
             <tbody>
               <Linha t="Receita bruta" v={d.receita} a={dAnt.receita} r={d.receita} forte />
               <Linha t="  Clientes (consultoria, Care)" v={d.receitaClientes} a={dAnt.receitaClientes} r={d.receita} sub />

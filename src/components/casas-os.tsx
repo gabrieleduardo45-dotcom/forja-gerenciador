@@ -1,6 +1,9 @@
 import { Cartao, Selo, Tabela, Vazio } from "@/components/ui";
 import { data, pct } from "@/lib/formato";
 import { emPct, type ResultadoOS } from "@/lib/forja-os";
+import type { Ligada, PrecoPlano } from "@/lib/tipos-contrato";
+import { ContratoCasa } from "./contrato-casa";
+const BRL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
 
 const TOM = { ok: "ok", at: "atencao", cr: "critico" } as const;
 const PALAVRA = { ok: "no alvo", at: "atenção", cr: "crítico" } as const;
@@ -11,7 +14,15 @@ function estado(e: string) {
 }
 
 /** Casas lidas ao vivo do FORJA OS (só leitura). */
-export function CasasForjaOS({ r, compacto = false }: { r: ResultadoOS; compacto?: boolean }) {
+export function CasasForjaOS({ r, compacto = false, precos = [], ligadas = new Map() }: { r: ResultadoOS; compacto?: boolean; precos?: PrecoPlano[]; ligadas?: Map<string, Ligada> }) {
+  const situacao = (id: string, nome: string) => {
+    const l = ligadas.get(id);
+    return l?.contrato ? (
+      <span className="text-xs text-suave">{l.contrato}{l.valor ? ` · ${BRL.format(l.valor)}${l.mensal ? "/mês" : ""}` : ""}</span>
+    ) : (
+      <ContratoCasa casa={{ nome, osId: id }} precos={precos} />
+    );
+  };
   const titulo = "Casas no FORJA OS";
   const acao = <span className="text-xs text-suave">{r.ok && r.gerado ? `ao vivo · ${data(r.gerado)}` : "ao vivo"}</span>;
   if (!r.ok) return <Cartao titulo={titulo} acao={acao}><Vazio>Não consegui ler o FORJA OS agora: {r.erro}</Vazio></Cartao>;
@@ -19,7 +30,6 @@ export function CasasForjaOS({ r, compacto = false }: { r: ResultadoOS; compacto
   if (compacto) {
     const n = { ok: 0, at: 0, cr: 0 } as Record<string, number>;
     r.casas.forEach((c) => (n[c.estado] = (n[c.estado] ?? 0) + 1));
-    const piores = r.casas.filter((c) => c.estado === "cr" || c.estado === "at").slice(0, 4);
     return (
       <Cartao titulo={titulo} acao={acao}>
         <div className="flex flex-wrap gap-2">
@@ -27,16 +37,17 @@ export function CasasForjaOS({ r, compacto = false }: { r: ResultadoOS; compacto
           <Selo tom="atencao">{n.at} atenção</Selo>
           <Selo tom="critico">{n.cr} crítico</Selo>
         </div>
-        {piores.length > 0 && (
-          <ul className="mt-3 space-y-1.5 text-sm">
-            {piores.map((c) => (
-              <li key={c.id} className="flex items-center justify-between gap-2">
-                <span className="truncate">{c.nome}</span>
-                <span className="num text-suave">CMV {pct(emPct(c.atual?.cmv))} / {pct(emPct(c.metaCmv))}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul className="mt-3 divide-y divide-[rgba(20,16,14,0.06)] text-sm">
+          {r.casas.map((c) => (
+            <li key={c.id} className="flex items-center justify-between gap-2 py-2">
+              <span className="min-w-0">
+                <span className="block truncate font-medium">{c.nome}</span>
+                <span className="num text-xs text-suave">CMV {pct(emPct(c.atual?.cmv))} / alvo {pct(emPct(c.metaCmv))}</span>
+              </span>
+              <span className="shrink-0">{situacao(c.id, c.nome)}</span>
+            </li>
+          ))}
+        </ul>
       </Cartao>
     );
   }
@@ -54,6 +65,7 @@ export function CasasForjaOS({ r, compacto = false }: { r: ResultadoOS; compacto
           { k: "uso", t: "Uso equipe", cls: "num", r: (c) => pct(emPct(c.atual?.uso)) },
           { k: "vencido", t: "Vencido", cls: "num", r: (c) => (c.atual?.vencido ? <span className="text-critico">{c.atual.vencido}</span> : "—") },
           { k: "ultimaVisita", t: "Última visita", r: (c) => data(c.ultimaVisita) },
+          { k: "contrato", t: "Contrato", r: (c) => situacao(c.id, c.nome) },
         ]}
       />
     </Cartao>

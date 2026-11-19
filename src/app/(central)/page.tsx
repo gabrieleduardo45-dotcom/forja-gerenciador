@@ -10,6 +10,7 @@ import { SobraDescarte } from "@/components/sobra-descarte";
 import { Cartao, Vazio } from "@/components/ui";
 import { contatoDe, contatosDasPropostas } from "@/lib/contatos";
 import { brl } from "@/lib/formato";
+import { contratosDasCasas } from "@/lib/contratos";
 import { casasDoForjaOS } from "@/lib/forja-os";
 import { COLUNAS, colunaDe, linkIg, linkWa } from "@/lib/funil";
 import { hojeManaus } from "@/lib/motor";
@@ -48,6 +49,8 @@ export default async function Hoje() {
   const hora = Number(new Intl.DateTimeFormat("pt-BR", { hour: "numeric", hour12: false, timeZone: "America/Manaus" }).format(new Date()));
   const saudacao = hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
 
+  const os = await osP;
+  const cc = await contratosDasCasas(sb, os.casas);
   return (
     <div className="entra mx-auto w-full max-w-3xl space-y-5 px-4 pb-32 pt-6 md:px-8 md:pb-12 md:pt-8">
       <header>
@@ -102,7 +105,7 @@ export default async function Hoje() {
         )}
       </Cartao>
 
-      <CasasForjaOS r={await osP} compacto />
+      <CasasForjaOS r={os} compacto precos={cc.precos} ligadas={cc.ligadas} />
 
       {resumo && (
         <details className="rounded-cartao border border-linha bg-painel p-4 shadow-cartao">

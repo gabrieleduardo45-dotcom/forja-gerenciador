@@ -467,3 +467,69 @@ export async function salvarParametros(_: Resultado | null, f: FormData): Promis
   revalidatePath("/numeros");
   return { ok: true, msg: "Salvo." };
 }
+
+/* ---------- Contrato de uma casa (FORJA OS ou cliente do quadro) ---------- */
+
+/**
+ * Fecha um contrato: garante a casa (ligada ao FORJA OS quando vier de lá), marca como cliente no quadro,
+ * cria o contrato com o plano da tabela ou personalizado e, se já recebeu, lança o recebimento.
+ */
+export async function fecharContratoCasa(_: Resultado | null, f: FormData): Promise<Resultado> {
+  const { sb } = await sessao();
+  const { normalizar } = await import("@/lib/funil");
+  const nome = txt(f, "casa_nome");
+  const osId = txt(f, "casa_os_id");
+  let casaId = Number(f.get("casa_id")) || null;
+  const plano = txt(f, "plano");
+  const produto = plano === "personalizado" ? txt(f, "plano_nome") : plano;
+  const valor = Number(String(f.get("valor") ?? "").replace(/\./g, "").replace(",", "."));
+  const mensal = txt(f, "tipo") === "mensal";
+  const inicio = txt(f, "inicio") ?? hojeManaus();
+  if (!nome) return { ok: false, msg: "Falta a casa." };
+  if (!produto) return { ok: false, msg: "Escolha o plano ou dê um nome ao plano personalizado." };
+  if (!(valor > 0)) return { ok: false, msg: "Informe o valor." };
+
+  // 1. Casa
+  if (!casaId) {
+    const { data: casas } = await sb.from("casas").select("id,codigo,nome,forja_os_id");
+    const achada = (casas ?? []).find((c) => (osId && c.forja_os_id === osId) || normalizar(c.nome ?? "") === normalizar(nome));
+    if (achada) {
+      casaId = achada.id;
+      await sb.from("casas").update({ status: "ativa", ...(osId ? { forja_os_id: osId } : {}) }).eq("id", achada.id);
+    } else {
+      const maior = Math.max(0, ...(casas ?? []).map((c) => Number(/^C-(\d+)$/.exec(c.codigo)?.[1] ?? 0)));
+      const { data: nova, error } = await sb.from("casas")
+        .insert({ codigo: `C-${String(maior + 1).padStart(3, "0")}`, nome, cidade: "Manaus", status: "ativa", inicio, forja_os_id: osId })
+        .select("id").single();
+      if (error) return { ok: false, msg: error.message };
+      casaId = nova.id;
+    }
+  }
+
+  // 2. Quadro de clientes: a casa aparece como Cliente
+  const { data: prosps } = await sb.from("prospects").select("id,nome_casa,casa_id,estagio");
+  const p = (prosps ?? []).find((x) => x.casa_id === casaId) ?? (prosps ?? []).find((x) => normalizar(x.nome_casa) === normalizar(nome));
+  if (p) {
+    if (!["implantacao_fechada", "care_ativo"].includes(p.estagio) || p.casa_id !== casaId)
+      await sb.from("prospects").update({ casa_id: casaId, estagio: mensal ? "care_ativo" : "implantacao_fechada" }).eq("id", p.id);
+  } else {
+    await sb.from("prospects").insert({ nome_casa: nome, casa_id: casaId, estagio: mensal ? "care_ativo" : "implantacao_fechada", origem: "outro", aprovado_gabriel: true });
+  }
+
+  // 3. Contrato
+  const { data: contrato, error: e3 } = await sb.from("contratos")
+    .insert({ casa_id: casaId, produto, valor, unidade: mensal ? "mes" : "avulso", inicio, meses: mensal ? Number(f.get("meses")) || null : null, forma_pagamento: txt(f, "forma"), status: "ativo" })
+    .select("id").single();
+  if (e3) return { ok: false, msg: e3.message };
+
+  // 4. Recebimento (se já pagou)
+  if (f.get("recebido")) {
+    const { error: e4 } = await sb.from("recebimentos").insert({
+      casa_id: casaId, contrato_id: contrato.id, produto, valor, data: txt(f, "data_recebido") ?? hojeManaus(),
+      linha: mensal ? "recorrente" : "consultoria", forma: txt(f, "forma") ?? "pix",
+    });
+    if (e4) return { ok: false, msg: `Contrato salvo, mas o recebimento falhou: ${e4.message}` };
+  }
+  revalidatePath("/", "layout");
+  return { ok: true, msg: `${nome}: ${produto} ${mensal ? "mensal" : ""} salvo${f.get("recebido") ? " e recebimento lançado" : ""}.` };
+}
