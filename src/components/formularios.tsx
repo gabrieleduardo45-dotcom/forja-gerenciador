@@ -9,7 +9,7 @@ import { classeBotao } from "./ui";
 
 const campo = "campo text-base md:text-sm";
 
-function Modal({ rotulo, titulo, children, variante = "primario", icone = true, classe }: { rotulo: ReactNode; titulo: string; children: (fechar: () => void) => ReactNode; variante?: "primario" | "secundario" | "fantasma"; icone?: boolean; classe?: string }) {
+export function Modal({ rotulo, titulo, children, variante = "primario", icone = true, classe }: { rotulo: ReactNode; titulo: string; children: (fechar: () => void) => ReactNode; variante?: "primario" | "secundario" | "fantasma"; icone?: boolean; classe?: string }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [aberto, setAberto] = useState(false);
   const fechar = useCallback(() => setAberto(false), []);

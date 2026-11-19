@@ -263,3 +263,59 @@ export async function apagarConversa(id: string) {
   await sb.from("agente_conversas").delete().eq("id", id);
   revalidatePath("/agentes");
 }
+
+/* ---------- Sobra e descarte por foto ---------- */
+
+export type LeituraFoto = { foto: string; itens: import("@/lib/desperdicio").ItemLido[]; erro?: string };
+
+/** Sobe as fotos (já reduzidas no celular) e pede para a IA ler cada uma. Não grava nada ainda: o Gabriel confere antes. */
+export async function analisarFotos(f: FormData): Promise<{ ok: boolean; msg: string; leituras: LeituraFoto[] }> {
+  const { sb } = await sessao();
+  const { lerFoto } = await import("@/lib/desperdicio");
+  const casa = txt(f, "casa_nome") ?? "sem-casa";
+  const legenda = txt(f, "legenda") ?? undefined;
+  const fotos = f.getAll("fotos").filter((x): x is File => x instanceof File && x.size > 0).slice(0, 12);
+  if (!fotos.length) return { ok: false, msg: "Escolha ao menos uma foto.", leituras: [] };
+  const pasta = `${hojeManaus()}/${casa.toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-")}`;
+  const leituras = await Promise.all(
+    fotos.map(async (arq): Promise<LeituraFoto> => {
+      const bytes = new Uint8Array(await arq.arrayBuffer());
+      const tipo = arq.type || "image/jpeg";
+      const caminho = `${pasta}/${crypto.randomUUID()}.jpg`;
+      const up = await sb.storage.from("desperdicio").upload(caminho, bytes, { contentType: tipo });
+      try {
+        const itens = await lerFoto(bytes, tipo, legenda);
+        return { foto: up.error ? "" : caminho, itens };
+      } catch (e) {
+        return { foto: up.error ? "" : caminho, itens: [], erro: e instanceof Error ? e.message : "Não consegui ler" };
+      }
+    }),
+  );
+  const n = leituras.reduce((a, l) => a + l.itens.length, 0);
+  return { ok: true, msg: `${n} itens lidos em ${fotos.length} fotos. Confira e salve.`, leituras };
+}
+
+export type RegistroDesperdicio = {
+  casa_os_id?: string | null; casa_nome: string; data?: string; item: string; tipo: "sobra" | "descarte";
+  peso_kg: number | null; peso_fonte: "balanca" | "estimado" | "informado" | null; motivo: string | null; foto: string | null; confianca: number | null;
+};
+
+export async function salvarDesperdicio(registros: RegistroDesperdicio[]): Promise<Resultado> {
+  const { sb } = await sessao();
+  const linhas = registros.filter((r) => r.item?.trim() && r.casa_nome?.trim()).map((r) => ({ ...r, data: r.data || hojeManaus(), origem: "app" }));
+  if (!linhas.length) return { ok: false, msg: "Nada para salvar." };
+  const { error } = await sb.from("desperdicio").insert(linhas);
+  if (error) return { ok: false, msg: error.message };
+  revalidatePath("/casas");
+  revalidatePath("/painel");
+  const kg = (t: string) => linhas.filter((l) => l.tipo === t).reduce((a, l) => a + Number(l.peso_kg ?? 0), 0);
+  return { ok: true, msg: `Salvo: ${kg("sobra").toFixed(1)} kg de sobra e ${kg("descarte").toFixed(1)} kg de descarte.` };
+}
+
+/** Casas do FORJA OS para escolher no lançamento (lido só quando o formulário abre). */
+export async function casasParaLancar(): Promise<{ id: string; nome: string }[]> {
+  await sessao();
+  const { casasDoForjaOS } = await import("@/lib/forja-os");
+  const r = await casasDoForjaOS();
+  return r.casas.map((c) => ({ id: c.id, nome: c.nome }));
+}

@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { LancarRecebimento, NovoProspect, RegistrarToque } from "./formularios";
+import { SobraDescarte } from "./sobra-descarte";
 
 /** Botão + do celular: cadastrar cliente, registrar toque ou lançar venda em poucos toques, na rua. */
 export function AcoesRapidas({ prospects, produtos }: { prospects: { id: number; nome_casa: string; codigo: string }[]; produtos: string[] }) {
@@ -36,6 +37,7 @@ export function AcoesRapidas({ prospects, produtos }: { prospects: { id: number;
         <div className="flex flex-col gap-2.5 px-5 pb-[calc(20px+env(safe-area-inset-bottom))] pt-2">
           <NovoProspect variante="secundario" classe={grande} />
           <RegistrarToque prospects={prospects} variante="secundario" classe={grande} />
+          <SobraDescarte variante="secundario" classe={grande} />
           <LancarRecebimento produtos={produtos} variante="secundario" classe={grande} />
         </div>
       </dialog>
