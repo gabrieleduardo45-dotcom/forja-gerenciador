@@ -20,6 +20,9 @@ Para cada foto, liste os itens que aparecem (normalmente 1). Regras:
 - Descarte: lixo, resto de prato, comida estragada ou queimada, aparas e cascas, tudo que vai para a lixeira ou o saco.
 - A legenda do Gabriel vale mais que a foto: se ele escreveu "sobra" ou "lixo/descarte", siga.
 - Balança no visor: leia o número com cuidado. Em gramas, converta para kg.
+- Lixeira, saco ou balde com coisas misturadas: registre UM item só ("descarte misturado: aparas de peixe, cascas, resto de prato") com o peso total.
+- Itens separados (cubas diferentes): um item por cuba.
+- Sem balança: estime o peso pelo tamanho do recipiente (cuba GN 1/1 cheia ≈ 4 a 6 kg; balde 20 L cheio ≈ 8 a 12 kg; saco de lixo 100 L ≈ 10 a 20 kg) e marque peso_fonte "estimado".
 - Não invente: se não dá para saber, confiança baixa.`;
 
 /** Lê uma foto e devolve os itens. */
