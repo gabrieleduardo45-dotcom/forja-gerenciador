@@ -4,6 +4,8 @@ import { Botao, Cartao, Pagina, Selo, Tabela, Vazio } from "@/components/ui";
 import { brl, num, pct, rotulo } from "@/lib/formato";
 import { diasAtras, hojeManaus } from "@/lib/motor";
 import { usuarioAtual } from "@/lib/supabase/server";
+import { CasasForjaOS } from "@/components/casas-os";
+import { casasDoForjaOS } from "@/lib/forja-os";
 
 export const metadata = { title: "Visão geral" };
 
@@ -54,6 +56,7 @@ export default async function Painel({ searchParams }: PageProps<"/painel">) {
   const { sb } = await usuarioAtual();
   const mes = hojeManaus().slice(0, 7) + "-01";
 
+  const osP = casasDoForjaOS();
   const [{ data: ev }, { data: prosp }, { data: rec }, { data: opps }, { data: metas }] = await Promise.all([
     sb.from("lp_eventos").select("sessao,evento,alvo,utm_source,criado_em").gte("criado_em", desde).limit(20000),
     sb.from("prospects").select("id,origem,estagio,criado_em"),
@@ -247,6 +250,8 @@ export default async function Painel({ searchParams }: PageProps<"/painel">) {
           )}
         </Cartao>
       </div>
+
+      <CasasForjaOS r={await osP} compacto />
 
       <Cartao titulo="Produtos no período" acao={<Botao href="/financeiro" variante="secundario">Financeiro</Botao>}>
         {porProduto.size ? (

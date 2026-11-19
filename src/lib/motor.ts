@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { FONTES, REGRAS_FORJA, SETORES, type NomeFonte } from "./agentes";
 import { PERMITIDO, TABELAS_ACAO, validarAcao, type Acao } from "./execucao";
+import { casasDoForjaOS, resumoParaAgente } from "./forja-os";
 
 export const MODELO = process.env.FORJA_MODELO || "anthropic/claude-sonnet-5.5";
 export const PASSOS_MAX = 12;
@@ -109,6 +110,21 @@ export function ferramentas({ sb, codigo, conversaId, profundidade = 0 }: Ctx): 
       },
     }),
   };
+
+  // Casas reais, lidas do FORJA OS (só leitura). Quem cuida de cozinha, custo e conteúdo enxerga.
+  if (["A0", "A2", "A3", "A4", "A5", "A7"].includes(codigo)) {
+    t.casas_forja_os = tool({
+      description:
+        "Lê as casas (restaurantes clientes) no FORJA OS: CMV da semana contra o alvo, checklist cumprido, uso da equipe, desperdício, contas vencidas e as últimas 4 semanas. Use para falar de casa com número real. Para conteúdo público, nunca cite o nome da casa.",
+      inputSchema: z.object({ casa: z.string().optional().describe("Parte do nome para filtrar; vazio traz todas") }),
+      execute: async ({ casa }) => {
+        const r = await casasDoForjaOS();
+        if (!r.ok) return { erro: r.erro };
+        const lista = r.casas.filter((c) => !casa || c.nome.toLowerCase().includes(casa.toLowerCase()));
+        return { gerado: r.gerado, total: lista.length, casas: lista.map(resumoParaAgente) };
+      },
+    });
+  }
 
   // O Diretor de Gestão coordena: pode consultar qualquer setor (um nível só, sem cascata).
   if (codigo === "A0" && profundidade === 0) {
