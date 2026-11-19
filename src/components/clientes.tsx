@@ -4,6 +4,8 @@ import { clsx } from "clsx";
 import { MessageCircle, Search, Send } from "lucide-react";
 import { moverColuna } from "@/app/acoes";
 import { COLUNAS, linkIg, linkWa, type ColunaK } from "@/lib/funil";
+import type { PrecoPlano } from "@/lib/tipos-contrato";
+import { ContratoCasa } from "./contrato-casa";
 import { Selo } from "./ui";
 
 export type ItemCliente = {
@@ -14,12 +16,14 @@ export type ItemCliente = {
   whatsapp: string | null;
   instagram: string | null;
   estadoOS?: "ok" | "at" | "cr" | null;
+  casaId?: number | null;
+  contrato?: string | null;
 };
 
 const ESTADO = { ok: ["ok", "no alvo"], at: ["atencao", "atenção"], cr: ["critico", "crítico"] } as const;
 
 /** Quadro em 4 colunas. No celular, uma coluna por vez (abas); no computador, as 4 lado a lado. */
-export function QuadroClientes({ itens }: { itens: ItemCliente[] }) {
+export function QuadroClientes({ itens, precos = [] }: { itens: ItemCliente[]; precos?: PrecoPlano[] }) {
   const [aba, setAba] = useState<ColunaK>("prospect");
   const [busca, setBusca] = useState("");
   const filtrados = useMemo(() => {
@@ -46,7 +50,7 @@ export function QuadroClientes({ itens }: { itens: ItemCliente[] }) {
         ))}
       </div>
       <div className="md:hidden">
-        <Coluna k={aba} itens={por(aba)} />
+        <Coluna k={aba} itens={por(aba)} precos={precos} />
       </div>
 
       {/* Computador: 4 colunas */}
@@ -57,7 +61,7 @@ export function QuadroClientes({ itens }: { itens: ItemCliente[] }) {
               <h2 className="text-sm font-[650]">{c.t}</h2>
               <span className="num text-sm text-suave">{por(c.k).length}</span>
             </div>
-            <Coluna k={c.k} itens={por(c.k)} />
+            <Coluna k={c.k} itens={por(c.k)} precos={precos} />
           </div>
         ))}
       </div>
@@ -65,13 +69,13 @@ export function QuadroClientes({ itens }: { itens: ItemCliente[] }) {
   );
 }
 
-function Coluna({ k, itens }: { k: ColunaK; itens: ItemCliente[] }) {
+function Coluna({ k, itens, precos }: { k: ColunaK; itens: ItemCliente[]; precos: PrecoPlano[] }) {
   const c = COLUNAS.find((x) => x.k === k)!;
   if (!itens.length) return <p className="px-2 py-6 text-center text-sm text-apagado">Ninguém em {c.t.toLowerCase()}.</p>;
-  return <ul className="space-y-2">{itens.map((i) => <Cartao key={i.id} i={i} />)}</ul>;
+  return <ul className="space-y-2">{itens.map((i) => <Cartao key={i.id} i={i} precos={precos} />)}</ul>;
 }
 
-function Cartao({ i }: { i: ItemCliente }) {
+function Cartao({ i, precos }: { i: ItemCliente; precos: PrecoPlano[] }) {
   const [pend, iniciar] = useTransition();
   const wa = linkWa(i.whatsapp);
   const ig = linkIg(i.instagram);
@@ -84,6 +88,12 @@ function Cartao({ i }: { i: ItemCliente }) {
         </div>
         {i.estadoOS && i.estadoOS in ESTADO && <Selo tom={ESTADO[i.estadoOS][0]}>{ESTADO[i.estadoOS][1]}</Selo>}
       </div>
+      {i.coluna === "cliente" && (
+        <div className="mt-2 flex items-center justify-between gap-2 text-xs text-suave">
+          <span className="truncate">{i.contrato ?? "sem contrato lançado"}</span>
+          <ContratoCasa casa={{ nome: i.nome, id: i.casaId }} precos={precos} rotulo={i.contrato ? "Novo contrato" : "Lançar contrato"} />
+        </div>
+      )}
       <div className="mt-2.5 flex items-center gap-1.5">
         {wa && <a href={wa} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-[10px] border border-linha text-ok" aria-label="WhatsApp"><MessageCircle size={18} /></a>}
         {ig && <a href={ig} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-[10px] border border-linha text-[#b1306e]" aria-label="Instagram"><Send size={17} /></a>}

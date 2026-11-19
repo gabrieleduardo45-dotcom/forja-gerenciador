@@ -5,6 +5,7 @@ import { usuarioAtual } from "@/lib/supabase/server";
 import { diasAtras } from "@/lib/motor";
 import { CasasForjaOS } from "@/components/casas-os";
 import { SobraDescarte } from "@/components/sobra-descarte";
+import { contratosDasCasas } from "@/lib/contratos";
 import { casasDoForjaOS } from "@/lib/forja-os";
 
 export const metadata = { title: "Casas" };
@@ -29,6 +30,8 @@ export default async function Casas() {
   const opcoesCasas = (casas ?? []).filter((c) => c.status === "ativa").map((c) => ({ id: c.id as number, rotulo: `${c.codigo} · ${c.nome ?? ""}` }));
   const foraAlvo = [...ultimoCmv.values()].filter((c) => Number(c.cmv_pct) > Number(c.alvo_pct)).length;
 
+  const os = await osP;
+  const cc = await contratosDasCasas(sb, os.casas);
   return (
     <Pagina titulo="Casas" sub="Restaurantes clientes: CMV, rotina e entregas." acoes={<><Botao href="/agentes/A7" variante="secundario">Operações</Botao><Botao href="/agentes/A4" variante="secundario">Custos</Botao><RegistrarExcecao casas={opcoesCasas} /><LancarCmv casas={opcoesCasas} /><SobraDescarte /></>}>
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -38,7 +41,7 @@ export default async function Casas() {
         <Kpi rotulo="Dados parados" valor={num(parados?.length ?? 0)} sub="campos que o cliente não entregou" />
       </section>
 
-      <CasasForjaOS r={await osP} />
+      <CasasForjaOS r={os} precos={cc.precos} ligadas={cc.ligadas} />
 
       <Desperdicio linhas={((await despP).data ?? []) as LinhaDesp[]} />
 
