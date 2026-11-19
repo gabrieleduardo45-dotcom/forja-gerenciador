@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   title: { default: "Forja · Central", template: "%s · Forja" },
   description: "Central de comando da Forja: setores, agentes de IA e aprovação.",
   manifest: "/manifest.webmanifest",
-  icons: { icon: "/icon-192.png", apple: "/icon-192.png" },
-  appleWebApp: { capable: true, title: "Forja", statusBarStyle: "black-translucent" },
+  icons: { icon: [{ url: "/favicon-32.png", sizes: "32x32" }, { url: "/icone.svg", type: "image/svg+xml" }], apple: "/apple-touch-icon.png" },
+  appleWebApp: { capable: true, title: "Gestão Forja", statusBarStyle: "black-translucent" },
 };
 
 export const viewport: Viewport = { themeColor: "#0e0d0c", width: "device-width", initialScale: 1, viewportFit: "cover" };
