@@ -59,7 +59,7 @@ export async function casasDoForjaOS(): Promise<ResultadoOS> {
 }
 
 /** Casa de demonstração (para apresentar o sistema): nunca conta como cliente real. */
-export const ehDemo = (c: Pick<CasaOS, "nome" | "slug" | "demo">) => !!c.demo || c.slug === "demo" || /demonstra/i.test(c.nome);
+export const ehDemo = (c: Pick<CasaOS, "nome" | "slug" | "demo"> & { id?: string }) => !!c.demo || ["demo", "modelo"].includes(c.slug ?? "") || c.id === "modelo" || /demonstra|casa modelo/i.test(c.nome);
 
 /** Fração (0,32) em porcentagem (32). */
 export const emPct = (v: number | null | undefined) => (v == null ? null : v * 100);
