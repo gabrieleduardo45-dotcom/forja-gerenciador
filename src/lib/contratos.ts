@@ -7,7 +7,7 @@ import type { Ligada, PrecoPlano } from "./tipos-contrato";
 /** Tabela de preços e, para cada casa do FORJA OS, o contrato ativo que ela já tem na Gestão. */
 export async function contratosDasCasas(sb: SupabaseClient, casasOS: CasaOS[]) {
   const [{ data: precos }, { data: casas }, { data: contratos }] = await Promise.all([
-    sb.from("precos").select("produto,fundadora,cheia,unidade").order("id"),
+    sb.from("precos").select("produto,fundadora,cheia,unidade").neq("produto", "Personalizado").order("id"),
     sb.from("casas").select("id,nome,forja_os_id"),
     sb.from("contratos").select("casa_id,produto,valor,unidade,status,criado_em").eq("status", "ativo").order("criado_em", { ascending: false }),
   ]);

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import { LogoForja } from "./logo";
-import { BarChart3, Bot, Building2, Gavel, Inbox, LayoutDashboard, LogOut, Megaphone, MoreHorizontal, Target, Users, Wallet } from "lucide-react";
+import { BarChart3, Bot, Building2, Gavel, Inbox, LayoutDashboard, LogOut, Megaphone, MoreHorizontal, Tag, Target, Users, Wallet } from "lucide-react";
 
 /** Modo simples: 4 lugares. O resto fica em "Mais". */
 const PRINCIPAIS = [
@@ -15,6 +15,7 @@ const PRINCIPAIS = [
 ];
 const EXTRAS = [
   { href: "/propostas", t: "Sugestões dos agentes", I: Inbox, contador: true },
+  { href: "/precos", t: "Preços", I: Tag },
   { href: "/financeiro", t: "Financeiro", I: Wallet },
   { href: "/comercial", t: "Comercial", I: Target },
   { href: "/marketing", t: "Marketing", I: Megaphone },
