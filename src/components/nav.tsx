@@ -9,12 +9,12 @@ import { BarChart3, Bot, Building2, Gavel, Inbox, LayoutDashboard, LogOut, Megap
 const PRINCIPAIS = [
   { href: "/", t: "Hoje", I: LayoutDashboard },
   { href: "/clientes", t: "Clientes", I: Users },
+  { href: "/casas", t: "Casas", I: Building2 },
   { href: "/numeros", t: "Números", I: BarChart3 },
   { href: "/mais", t: "Mais", I: MoreHorizontal },
 ];
 const EXTRAS = [
   { href: "/propostas", t: "Sugestões dos agentes", I: Inbox, contador: true },
-  { href: "/casas", t: "Casas", I: Building2 },
   { href: "/financeiro", t: "Financeiro", I: Wallet },
   { href: "/comercial", t: "Comercial", I: Target },
   { href: "/marketing", t: "Marketing", I: Megaphone },
@@ -90,7 +90,7 @@ export function Nav({ pendentes, email, nome }: { pendentes: number; email: stri
         </div>
       </aside>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-linha bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_-16px_rgba(20,16,14,0.2)] backdrop-blur md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-linha bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_-16px_rgba(20,16,14,0.2)] backdrop-blur md:hidden">
         {PRINCIPAIS.map(({ href, t, I }) => (
           <Link key={href} href={href} className={clsx("relative flex flex-col items-center gap-1 py-2.5 text-[11.5px] font-medium", ativo(p, href) ? "text-brasa-escuro" : "text-suave")}>
             <I size={21} strokeWidth={1.8} className={ativo(p, href) ? "text-brasa" : undefined} />

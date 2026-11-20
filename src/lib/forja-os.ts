@@ -4,7 +4,7 @@
  * por isso a resposta fica em cache por 5 minutos.
  */
 
-export type SemanaOS = { sem: string; cmv: number | null; desp: number | null; chk: number | null; uso: number | null };
+export type SemanaOS = { sem: string; cmv: number | null; desp: number | null; chk: number | null; uso: number | null; margem?: number | null; fat?: number | null };
 export type CasaOS = {
   id: string;
   nome: string;
@@ -15,7 +15,8 @@ export type CasaOS = {
   usuarios?: number | null;
   estado: "ok" | "at" | "cr" | string;
   metaCmv?: number | null;
-  atual?: { cmv?: number | null; desp?: number | null; chk?: number | null; uso?: number | null; vencido?: number | null; pagar_7d?: number | null } | null;
+  atual?: { cmv?: number | null; desp?: number | null; chk?: number | null; uso?: number | null; vencido?: number | null; pagar_7d?: number | null; margem?: number | null } | null;
+  demo?: boolean | null;
   inicioVal?: { cmv?: number | null; desp?: number | null; chk?: number | null; uso?: number | null } | null;
   semanas?: SemanaOS[];
   mudou?: { tipo: string; t: string; d?: string }[];
@@ -57,18 +58,22 @@ export async function casasDoForjaOS(): Promise<ResultadoOS> {
   }
 }
 
+/** Casa de demonstração (para apresentar o sistema): nunca conta como cliente real. */
+export const ehDemo = (c: Pick<CasaOS, "nome" | "slug" | "demo">) => !!c.demo || c.slug === "demo" || /demonstra/i.test(c.nome);
+
 /** Fração (0,32) em porcentagem (32). */
 export const emPct = (v: number | null | undefined) => (v == null ? null : v * 100);
 
 /** Resumo enxuto para os agentes: sem as 16 semanas inteiras, só a tendência. */
 export function resumoParaAgente(c: CasaOS) {
   const sem = c.semanas ?? [];
-  const ult = sem.slice(-4).map((s) => ({ semana: s.sem, cmv_pct: emPct(s.cmv), checklist_pct: emPct(s.chk), desperdicio: s.desp, uso_equipe_pct: emPct(s.uso) }));
+  const ult = sem.slice(-4).map((s) => ({ semana: s.sem, cmv_pct: emPct(s.cmv), checklist_pct: emPct(s.chk), desperdicio: s.desp, uso_equipe_pct: emPct(s.uso), margem_pct: emPct(s.margem) }));
   return {
     casa: c.nome,
     cidade: c.cidade,
     estado: c.estado === "ok" ? "no alvo" : c.estado === "at" ? "atenção" : c.estado === "cr" ? "crítico" : c.estado,
     cmv_atual_pct: emPct(c.atual?.cmv),
+    margem_liquida_pct: emPct(c.atual?.margem),
     cmv_alvo_pct: emPct(c.metaCmv),
     cmv_no_inicio_pct: emPct(c.inicioVal?.cmv),
     checklist_pct: emPct(c.atual?.chk),

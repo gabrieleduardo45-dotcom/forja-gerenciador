@@ -1,5 +1,5 @@
-import { LancarCmv, RegistrarExcecao, ResolverExcecao } from "@/components/formularios";
-import { Botao, Cartao, Kpi, Pagina, Selo, Tabela } from "@/components/ui";
+import { RegistrarExcecao, ResolverExcecao } from "@/components/formularios";
+import { Cartao, Kpi, Pagina, Selo, Tabela } from "@/components/ui";
 import { brl, data, num, pct } from "@/lib/formato";
 import { usuarioAtual } from "@/lib/supabase/server";
 import { diasAtras } from "@/lib/motor";
@@ -33,7 +33,9 @@ export default async function Casas() {
   const os = await osP;
   const cc = await contratosDasCasas(sb, os.casas);
   return (
-    <Pagina titulo="Casas" sub="Restaurantes clientes: CMV, rotina e entregas." acoes={<><Botao href="/agentes/A7" variante="secundario">Operações</Botao><Botao href="/agentes/A4" variante="secundario">Custos</Botao><RegistrarExcecao casas={opcoesCasas} /><LancarCmv casas={opcoesCasas} /><SobraDescarte /></>}>
+    <Pagina titulo="Casas" sub="Sua casa sócia, a demonstração e as consultorias." acoes={<><SobraDescarte /><RegistrarExcecao casas={opcoesCasas} /></>}>
+      <CasasForjaOS r={os} precos={cc.precos} ligadas={cc.ligadas} cadastradas={cc.cadastradas} />
+
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Kpi rotulo="Casas ativas" valor={num(ativas)} />
         <Kpi rotulo="Fora do CMV alvo" valor={num(foraAlvo)} tom={foraAlvo ? "critico" : "ok"} />
@@ -41,11 +43,9 @@ export default async function Casas() {
         <Kpi rotulo="Dados parados" valor={num(parados?.length ?? 0)} sub="campos que o cliente não entregou" />
       </section>
 
-      <CasasForjaOS r={os} precos={cc.precos} ligadas={cc.ligadas} />
-
       <Desperdicio linhas={((await despP).data ?? []) as LinhaDesp[]} />
 
-      <Cartao titulo="Carteira">
+      <Cartao titulo="Cadastro e contratos na Gestão">
         <Tabela
           linhas={casas ?? []}
           vazio="Nenhuma casa cadastrada ainda. Quando um Raio-X vira implantação, a casa entra aqui."
