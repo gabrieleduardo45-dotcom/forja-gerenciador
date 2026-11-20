@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { BarChart3, Bot, Building2, Gavel, Inbox, Megaphone, Target, Wallet } from "lucide-react";
+import { BarChart3, Bot, Gavel, Inbox, Megaphone, Target, Wallet } from "lucide-react";
 import { Pagina } from "@/components/ui";
 
 export const metadata = { title: "Mais" };
 
 const LINKS = [
   { href: "/propostas", t: "Tudo que os agentes sugeriram", d: "a fila completa de aprovação", I: Inbox },
-  { href: "/casas", t: "Casas (detalhe)", d: "CMV, exceções, sobra e descarte", I: Building2 },
   { href: "/financeiro", t: "Financeiro", d: "recebimentos, contratos e metas", I: Wallet },
   { href: "/comercial", t: "Comercial (detalhe)", d: "estágios, oportunidades e toques", I: Target },
   { href: "/marketing", t: "Marketing", d: "página de vendas e links marcados", I: Megaphone },

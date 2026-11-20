@@ -12,13 +12,16 @@ export async function contratosDasCasas(sb: SupabaseClient, casasOS: CasaOS[]) {
     sb.from("contratos").select("casa_id,produto,valor,unidade,status,criado_em").eq("status", "ativo").order("criado_em", { ascending: false }),
   ]);
   const ligadas = new Map<string, Ligada>();
+  const cadastradas = new Set<string>();
   for (const os of casasOS) {
     const c = (casas ?? []).find((x) => x.forja_os_id === os.id) ?? (casas ?? []).find((x) => normalizar(x.nome ?? "") === normalizar(os.nome));
+    if (c) cadastradas.add(os.id);
     const k = c && (contratos ?? []).find((x) => x.casa_id === c.id);
     if (k) ligadas.set(os.id, { contrato: k.produto, valor: Number(k.valor), mensal: k.unidade === "mes" });
   }
   return {
     precos: (precos ?? []).map((p) => ({ produto: p.produto, fundadora: p.fundadora == null ? null : Number(p.fundadora), cheia: p.cheia == null ? null : Number(p.cheia), unidade: p.unidade })) as PrecoPlano[],
     ligadas,
+    cadastradas,
   };
 }

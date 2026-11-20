@@ -3,7 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { FONTES, REGRAS_FORJA, SETORES, type NomeFonte } from "./agentes";
 import { PERMITIDO, TABELAS_ACAO, validarAcao, type Acao } from "./execucao";
-import { casasDoForjaOS, resumoParaAgente } from "./forja-os";
+import { casasDoForjaOS, ehDemo, resumoParaAgente } from "./forja-os";
 
 export const MODELO = process.env.FORJA_MODELO || "anthropic/claude-sonnet-5.5";
 export const PASSOS_MAX = 12;
@@ -141,7 +141,8 @@ export function ferramentas({ sb, codigo, conversaId, profundidade = 0 }: Ctx): 
       execute: async ({ casa }) => {
         const r = await casasDoForjaOS();
         if (!r.ok) return { erro: r.erro };
-        const lista = r.casas.filter((c) => !casa || c.nome.toLowerCase().includes(casa.toLowerCase()));
+        // A casa de demonstração é só para apresentar o sistema: fica fora da análise dos agentes.
+        const lista = r.casas.filter((c) => !ehDemo(c)).filter((c) => !casa || c.nome.toLowerCase().includes(casa.toLowerCase()));
         return { gerado: r.gerado, total: lista.length, casas: lista.map(resumoParaAgente) };
       },
     });

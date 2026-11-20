@@ -105,7 +105,7 @@ export default async function Hoje() {
         )}
       </Cartao>
 
-      <CasasForjaOS r={os} compacto precos={cc.precos} ligadas={cc.ligadas} />
+      <CasasForjaOS r={os} compacto precos={cc.precos} ligadas={cc.ligadas} cadastradas={cc.cadastradas} />
 
       {resumo && (
         <details className="rounded-cartao border border-linha bg-painel p-4 shadow-cartao">

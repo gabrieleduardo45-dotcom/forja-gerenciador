@@ -34,7 +34,7 @@ export const FONTES = {
   casas: { descricao: "Restaurantes clientes: código, setor, porte, status, frentes, início", ordem: "criado_em" },
   cmv: { descricao: "CMV semanal por casa: % real, alvo, estado, principais insumos", ordem: "semana_inicio" },
   rdo: { descricao: "Relatório diário de operação: produzido x planejado, sobra, descarte, aderência", ordem: "data" },
-  desperdicio: { descricao: "Sobra e descarte lançados por foto: casa, item, tipo (sobra/descarte), peso em kg, motivo", ordem: "data" },
+  desperdicio: { descricao: "Sobra e descarte lançados por foto: casa, item, tipo (sobra/descarte), peso em kg, motivo. Linhas com obs = demo são da casa de demonstração: ignore", ordem: "data" },
   v_desperdicio_semana: { descricao: "Sobra e descarte por casa e semana: registros e kg", ordem: "semana" },
   excecoes: { descricao: "Exceções na cozinha: o que houve, causa, ação, prazo, repetições", ordem: "data" },
   v_excecoes_abertas: { descricao: "Exceções ainda abertas" },
