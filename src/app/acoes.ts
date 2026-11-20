@@ -552,3 +552,11 @@ export async function definirMetaCasa(_: Resultado | null, f: FormData): Promise
   revalidatePath("/", "layout");
   return { ok: true, msg: r.repetido ? "Essa meta já estava gravada." : "Meta gravada no FORJA OS." };
 }
+
+/** Manda a tabela de preços (fonte única) para o FORJA OS. */
+export async function enviarCatalogoOS(): Promise<Resultado> {
+  const { sb } = await sessao();
+  const { enviarCatalogo } = await import("@/lib/catalogo");
+  const r = await enviarCatalogo(sb);
+  return r.ok ? { ok: true, msg: `Catálogo enviado: ${r.produtos} produtos no FORJA OS.` } : { ok: false, msg: r.erro };
+}
